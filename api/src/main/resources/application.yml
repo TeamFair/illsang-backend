@@ -1,0 +1,15 @@
+server:
+  port: 8080
+spring:
+  profiles:
+    default: local
+  batch:
+    jdbc:
+      initialize-schema: always
+
+cloud:
+  bucket:
+    name: ilsang-bucket-1
+
+multipart:
+  max-upload-size: 100KB

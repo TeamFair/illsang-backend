@@ -1,0 +1,39 @@
+server:
+  port: 9090
+spring:
+  config:
+    import:
+      - aws-parameterstore:/ilsang/backend_dev
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: ${.rds_url}
+    username: ${.rds_username}
+    password: ${.rds_password}
+    hikari:
+      connection-timeout: 5000
+      maximum-pool-size: 10
+      minimum-idle: 2
+      data-source-properties:
+        cachePrepStmts: true
+        prepStmtCacheSize: 250
+        prepStmtCacheSqlLimit: 2048
+        useServerPrepStmts: true
+  jpa:
+    hibernate:
+      ddl-auto: none
+    database-platform: org.hibernate.dialect.MariaDBDialect
+    properties:
+      hibernate:
+        default_batch_fetch_size: 100
+  data:
+    redis:
+      host: ${.elastic_cache_endpoint}
+      port: ${.elastic_cache_port}
+      useSsl: true
+
+file:
+  upload-dir: /images/
+
+ec2:
+  host: ${.ec2_host}
+  port: ${.ec2_port}
