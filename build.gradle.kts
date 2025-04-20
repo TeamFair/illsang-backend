@@ -88,6 +88,7 @@ subprojects {
 
 		// 개발용 도구
 		developmentOnly("org.springframework.boot:spring-boot-devtools")
+		implementation("org.springframework.boot:spring-boot-starter-actuator")
 
 		// DB Driver
 		runtimeOnly("com.h2database:h2")

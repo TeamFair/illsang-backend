@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: module-management
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"  # ?? ??? ??: "health", "info", "metrics"
