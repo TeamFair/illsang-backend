@@ -1,13 +1,13 @@
-package com.teamfair.modulefile
+package com.teamfair.modulemanagement
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
 
 @SpringBootTest
-class ModuleFileApplicationTests {
+class ModuleManagementApplicationTests {
 
-    @Test
-    fun contextLoads() {
-    }
+	@Test
+	fun contextLoads() {
+	}
 
 }

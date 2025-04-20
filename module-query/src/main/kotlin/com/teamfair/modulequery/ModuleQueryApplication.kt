@@ -1,11 +1,11 @@
-package com.teamfair.modulefile
+package com.teamfair.modulequery
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class ModuleFileApplication
+class ModuleQueryApplication
 
 fun main(args: Array<String>) {
-    runApplication<ModuleFileApplication>(*args)
+    runApplication<ModuleQueryApplication>(*args)
 }
