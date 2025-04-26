@@ -2,6 +2,7 @@ FROM eclipse-temurin:21-jdk
 
 WORKDIR /app
 
-COPY build/libs/module-bootstrap.jar app.jar
+ARG JAR_FILE
+COPY ${JAR_FILE} app.jar
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
