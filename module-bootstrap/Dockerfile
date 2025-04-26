@@ -7,7 +7,8 @@ COPY . .
 RUN ./gradlew :module-bootstrap:bootJar
 
 # 2단계: 런타임 (JRE만)
-FROM eclipse-temurin:21-jre-alpine
+#FROM eclipse-temurin:21-jre-alpine
+FROM gcr.io/distroless/java17-debian11
 
 WORKDIR /app
 
