@@ -1,8 +1,16 @@
-FROM eclipse-temurin:21-jdk
+# 1단계: 빌더 (Gradle + JDK)
+FROM gradle:8.7-jdk21-alpine AS builder
+
+WORKDIR /workspace
+COPY . .
+
+RUN ./gradlew :module-bootstrap:bootJar
+
+# 2단계: 런타임 (JRE만)
+FROM eclipse-temurin:21-jre-alpine
 
 WORKDIR /app
 
-ARG JAR_FILE
-COPY ${JAR_FILE} app.jar
+COPY --from=builder /workspace/module-bootstrap/build/libs/*.jar app.jar
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
