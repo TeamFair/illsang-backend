@@ -1,0 +1,28 @@
+package com.teamfair.moduleuser.domain.model
+
+import com.illsang.common.model.BaseModel
+import java.time.LocalDateTime
+import java.util.*
+
+data class UserModel(
+    val id: Long? = null,
+    val email: String,
+    val nickname: String,
+    val status: UserStatus,
+    val statusUpdatedAt: LocalDateTime? = null,
+    val profileImageId: UUID? = null,
+    val userXps: List<UserXpModel> = emptyList(),
+    val xpHistories: List<UserXpHistoryModel> = emptyList(),
+    val emojis: List<UserEmojiModel> = emptyList(),
+    override val createdBy: String? = null,
+    override val createdAt: LocalDateTime? = null,
+    override val updatedBy: String? = null,
+    override val updatedAt: LocalDateTime? = null
+) : BaseModel(createdBy, createdAt, updatedBy, updatedAt) {
+    fun validate() {
+        require(email.isNotBlank()) { "Email is required" }
+        require(nickname.isNotBlank()) { "Nickname is required" }
+        require(email.length <= 100) { "Email must be less than 100 characters" }
+        require(nickname.length <= 25) { "Nickname must be less than 25 characters" }
+    }
+} 
