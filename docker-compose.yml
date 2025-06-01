@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: illsang-postgres
+    environment:
+      POSTGRES_USER: illsang
+      POSTGRES_PASSWORD: illsang
+      POSTGRES_DB: illsang
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - illsang-network
+    restart: always
+
+  redis:
+    image: redis:7
+    container_name: illsang-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - illsang-network
+    restart: always
+    command: redis-server --save 60 1 --loglevel warning
+
+networks:
+  illsang-network:
+    driver: bridge
+
+volumes:
+  postgres-data:
+  redis-data:
