@@ -15,12 +15,18 @@ class UserEmojiController(
     private val userEmojiService: UserEmojiService
 ) {
 
+    /**
+     * create user emoji
+     */
     @PostMapping
     fun createUserEmoji(@RequestBody command: CreateUserEmojiCommand): ResponseEntity<UserEmojiModel> {
         val userEmoji = userEmojiService.createUserEmoji(command)
         return ResponseEntity.status(HttpStatus.CREATED).body(userEmoji)
     }
 
+    /**
+     * find user emoji by id
+     */
     @GetMapping("/{id}")
     fun getUserEmoji(@PathVariable id: Long): ResponseEntity<UserEmojiModel> {
         val userEmoji = userEmojiService.getUserEmojiById(id)
@@ -31,12 +37,18 @@ class UserEmojiController(
         }
     }
 
+    /**
+     * find user emoji by user id
+     */
     @GetMapping("/user/{userId}")
     fun getUserEmojisByUserId(@PathVariable userId: Long): ResponseEntity<List<UserEmojiModel>> {
         val userEmojis = userEmojiService.getUserEmojisByUserId(userId)
         return ResponseEntity.ok(userEmojis)
     }
 
+    /**
+     * update user emoji
+     */
     @PutMapping("/{id}")
     fun updateUserEmoji(
         @PathVariable id: Long,
@@ -51,6 +63,9 @@ class UserEmojiController(
         }
     }
 
+    /**
+     * delete user emoji
+     */
     @DeleteMapping("/{id}")
     fun deleteUserEmoji(@PathVariable id: Long): ResponseEntity<ResponseMsg> {
         val deleted = userEmojiService.deleteUserEmoji(id)

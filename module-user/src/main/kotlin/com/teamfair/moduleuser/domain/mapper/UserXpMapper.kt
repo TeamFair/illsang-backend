@@ -2,6 +2,8 @@ package com.teamfair.moduleuser.domain.mapper
 
 import com.teamfair.moduleuser.adapter.out.persistence.entity.UserEntity
 import com.teamfair.moduleuser.adapter.out.persistence.entity.UserXpEntity
+import com.teamfair.moduleuser.application.command.CreateUserXpCommand
+import com.teamfair.moduleuser.application.command.UpdateUserXpCommand
 import com.teamfair.moduleuser.domain.model.UserXpModel
 
 object UserXpMapper {
@@ -30,5 +32,20 @@ object UserXpMapper {
             updatedBy = model.updatedBy
             updatedAt = model.updatedAt
         }
+    }
+
+    fun toModel(command: CreateUserXpCommand): UserXpModel {
+        return UserXpModel(
+            userId = command.userId,
+            xpType = command.xpType,
+            point = command.point
+        )
+    }
+
+    fun toModel(command: UpdateUserXpCommand, existing: UserXpModel): UserXpModel {
+        return existing.copy(
+            xpType = command.xpType ?: existing.xpType,
+            point = command.point ?: existing.point
+        )
     }
 } 
