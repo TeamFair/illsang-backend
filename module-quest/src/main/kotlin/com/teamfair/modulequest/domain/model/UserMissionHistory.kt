@@ -1,5 +1,6 @@
 package com.teamfair.modulequest.domain.model
 
+import com.illsang.common.model.BaseModel
 import com.teamfair.modulequest.domain.model.enums.MissionStatus
 import java.time.LocalDateTime
 
@@ -9,9 +10,10 @@ data class UserMissionHistory(
     var status: MissionStatus = MissionStatus.PENDING,
     var submissionImageUrl: String? = null,
     var submittedAt: LocalDateTime? = null,
-    val quizHistories: MutableList<UserQuizHistory> = mutableListOf(),
-    val createdBy: String? = null,
-    val createdAt: String? = null,
-    val updatedBy: String? = null,
-    val updatedAt: String? = null
-) 
+    val missionId: Long,
+    val userQuestHistoryId: Long,
+    override val createdBy: String? = null,
+    override val createdAt: LocalDateTime? = null,
+    override val updatedBy: String? = null,
+    override val updatedAt: LocalDateTime? = null
+) : BaseModel(createdBy, createdAt, updatedBy, updatedAt) 

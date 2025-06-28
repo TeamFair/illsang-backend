@@ -1,6 +1,6 @@
-package com.teamfair.modulequest.application.command
+package com.teamfair.modulequest.adapter.`in`.web.model.request
 
-data class CreateQuizCommand(
+data class CreateQuizRequest(
     val question: String,
     val hint: String? = null,
     val sortOrder: Int = 0,

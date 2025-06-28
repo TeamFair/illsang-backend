@@ -2,6 +2,8 @@ package com.teamfair.modulequest.domain.mapper
 
 import com.teamfair.modulequest.adapter.out.persistence.entity.MissionEntity
 import com.teamfair.modulequest.adapter.out.persistence.entity.QuizEntity
+import com.teamfair.modulequest.application.command.CreateQuizCommand
+import com.teamfair.modulequest.application.command.UpdateQuizCommand
 import com.teamfair.modulequest.domain.model.Quiz
 
 object QuizMapper {
@@ -11,24 +13,43 @@ object QuizMapper {
             question = entity.question,
             hint = entity.hint,
             sortOrder = entity.sortOrder,
-            answers = entity.answers.map { QuizAnswerMapper.toModel(it) }.toMutableList(),
-            userHistories = entity.userHistories.map { UserQuizHistoryMapper.toModel(it) }.toMutableList(),
+            missionId = entity.mission.id!!,
             createdBy = entity.createdBy,
-            createdAt = entity.createdAt?.toString(),
+            createdAt = entity.createdAt,
             updatedBy = entity.updatedBy,
-            updatedAt = entity.updatedAt?.toString()
+            updatedAt = entity.updatedAt
         )
     }
 
-    fun toEntity(model: Quiz, mission: MissionEntity): QuizEntity {
+    fun toEntity(model: Quiz, missionEntity: MissionEntity): QuizEntity {
         return QuizEntity(
             id = model.id,
-            mission = mission,
             question = model.question,
             hint = model.hint,
-            sortOrder = model.sortOrder
+            sortOrder = model.sortOrder,
+            mission = missionEntity
         ).apply {
-            model.answers.forEach { addAnswer(QuizAnswerMapper.toEntity(it, this)) }
+            createdBy = model.createdBy
+            createdAt = model.createdAt
+            updatedBy = model.updatedBy
+            updatedAt = model.updatedAt
         }
+    }
+
+    fun toModel(command: CreateQuizCommand): Quiz {
+        return Quiz(
+            question = command.question,
+            hint = command.hint,
+            sortOrder = command.sortOrder,
+            missionId = command.missionId
+        )
+    }
+
+    fun toModel(command: UpdateQuizCommand, existing: Quiz): Quiz {
+        return existing.copy(
+            question = command.question ?: existing.question,
+            hint = command.hint ?: existing.hint,
+            sortOrder = command.sortOrder ?: existing.sortOrder
+        )
     }
 } 
