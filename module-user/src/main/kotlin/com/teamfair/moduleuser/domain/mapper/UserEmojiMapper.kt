@@ -1,16 +1,17 @@
 package com.teamfair.moduleuser.domain.mapper
 
-import com.teamfair.moduleuser.adapter.out.persistence.entity.UserEntity
 import com.teamfair.moduleuser.adapter.out.persistence.entity.UserEmojiEntity
+import com.teamfair.moduleuser.application.command.CreateUserEmojiCommand
+import com.teamfair.moduleuser.application.command.UpdateUserEmojiCommand
 import com.teamfair.moduleuser.domain.model.UserEmojiModel
 
 object UserEmojiMapper {
     fun toModel(entity: UserEmojiEntity): UserEmojiModel {
         return UserEmojiModel(
             id = entity.id,
-            userId = entity.userEntity.id!!,
-            targetId = entity.targetId,
-            targetType = entity.targetType,
+            userId = entity.userId,
+            emojiId = entity.emojiId,
+            isEquipped = entity.isEquipped,
             createdBy = entity.createdBy,
             createdAt = entity.createdAt,
             updatedBy = entity.updatedBy,
@@ -18,17 +19,33 @@ object UserEmojiMapper {
         )
     }
 
-    fun toEntity(model: UserEmojiModel, userEntity: UserEntity): UserEmojiEntity {
+    fun toEntity(model: UserEmojiModel): UserEmojiEntity {
         return UserEmojiEntity(
             id = model.id,
-            userEntity = userEntity,
-            targetId = model.targetId,
-            targetType = model.targetType
+            userId = model.userId,
+            emojiId = model.emojiId,
+            isEquipped = model.isEquipped
         ).apply {
             createdBy = model.createdBy
             createdAt = model.createdAt
             updatedBy = model.updatedBy
             updatedAt = model.updatedAt
         }
+    }
+
+    fun toModel(command: CreateUserEmojiCommand): UserEmojiModel {
+        return UserEmojiModel(
+            userId = command.userId,
+            emojiId = command.emojiId,
+            isEquipped = command.isEquipped
+        )
+    }
+
+    fun toModel(command: UpdateUserEmojiCommand, existing: UserEmojiModel): UserEmojiModel {
+        return existing.copy(
+            userId = command.userId,
+            emojiId = command.emojiId,
+            isEquipped = command.isEquipped
+        )
     }
 } 
