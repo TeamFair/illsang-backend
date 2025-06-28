@@ -8,17 +8,16 @@ import org.springframework.stereotype.Component
 
 @Component
 class ImagePersistenceAdapter(
-    private val imageRepository: ImageRepository,
-    private val imageMapper: ImageMapper
+    private val imageRepository: ImageRepository
 ) : ImagePersistencePort {
 
     /**
      * save image
      */
     override fun save(imageModel: ImageModel): ImageModel {
-        val entity = imageMapper.toEntity(imageModel)
+        val entity = ImageMapper.toEntity(imageModel)
         val savedEntity = imageRepository.save(entity)
-        return imageMapper.toModel(savedEntity)
+        return ImageMapper.toModel(savedEntity)
     }
 
     /**
@@ -26,7 +25,7 @@ class ImagePersistenceAdapter(
      */
     override fun findById(id: Long): ImageModel? {
         return imageRepository.findById(id)
-            .map { imageMapper.toModel(it) }
+            .map { ImageMapper.toModel(it) }
             .orElse(null)
     }
 
@@ -35,7 +34,7 @@ class ImagePersistenceAdapter(
      */
     override fun findAll(): List<ImageModel> {
         return imageRepository.findAll()
-            .map { imageMapper.toModel(it) }
+            .map { ImageMapper.toModel(it) }
     }
 
     /**
@@ -43,7 +42,7 @@ class ImagePersistenceAdapter(
      */
     override fun findByType(type: String): List<ImageModel> {
         return imageRepository.findByType(type)
-            .map { imageMapper.toModel(it) }
+            .map { ImageMapper.toModel(it) }
     }
 
     /**

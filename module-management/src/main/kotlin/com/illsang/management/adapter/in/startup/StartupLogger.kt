@@ -1,4 +1,4 @@
-package com.teamfair.modulemanagement.adapter.`in`.startup
+package com.illsang.management.adapter.`in`.startup
 
 import jakarta.annotation.PostConstruct
 import lombok.extern.slf4j.Slf4j

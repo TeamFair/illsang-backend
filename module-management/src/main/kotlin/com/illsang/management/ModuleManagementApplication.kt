@@ -1,4 +1,4 @@
-package com.teamfair.modulemanagement
+package com.illsang.management
 
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication

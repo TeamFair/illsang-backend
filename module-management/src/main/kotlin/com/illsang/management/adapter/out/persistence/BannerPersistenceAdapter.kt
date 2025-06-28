@@ -1,6 +1,5 @@
 package com.illsang.management.adapter.out.persistence
 
-import com.illsang.management.adapter.out.persistence.entity.BannerEntity
 import com.illsang.management.adapter.out.persistence.repository.BannerRepository
 import com.illsang.management.application.port.out.BannerPersistencePort
 import com.illsang.management.domain.mapper.BannerMapper
@@ -9,30 +8,29 @@ import org.springframework.stereotype.Component
 
 @Component
 class BannerPersistenceAdapter(
-    private val bannerRepository: BannerRepository,
-    private val bannerMapper: BannerMapper
+    private val bannerRepository: BannerRepository
 ) : BannerPersistencePort {
     
     override fun save(bannerModel: BannerModel): BannerModel {
-        val entity = bannerMapper.toEntity(bannerModel)
+        val entity = BannerMapper.toEntity(bannerModel)
         val savedEntity = bannerRepository.save(entity)
-        return bannerMapper.toModel(savedEntity)
+        return BannerMapper.toModel(savedEntity)
     }
     
     override fun findById(id: Long): BannerModel? {
         return bannerRepository.findById(id)
-            .map { bannerMapper.toModel(it) }
+            .map { BannerMapper.toModel(it) }
             .orElse(null)
     }
     
     override fun findAll(): List<BannerModel> {
         return bannerRepository.findAll()
-            .map { bannerMapper.toModel(it) }
+            .map { BannerMapper.toModel(it) }
     }
     
     override fun findByActiveYn(activeYn: Boolean): List<BannerModel> {
         return bannerRepository.findByActiveYn(activeYn)
-            .map { bannerMapper.toModel(it) }
+            .map { BannerMapper.toModel(it) }
     }
     
     override fun deleteById(id: Long) {
