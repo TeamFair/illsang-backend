@@ -1,5 +1,8 @@
 package com.teamfair.modulequest.domain.model
 
+import com.illsang.common.model.BaseModel
+import java.time.LocalDateTime
+
 data class Quest(
     val id: Long? = null,
     var imageId: Long? = null,
@@ -9,11 +12,8 @@ data class Quest(
     var type: String,
     var repeatFrequency: String? = null,
     var sortOrder: Int = 0,
-    val missions: MutableList<Mission> = mutableListOf(),
-    val rewards: MutableList<QuestReward> = mutableListOf(),
-    val userHistories: MutableList<UserQuestHistory> = mutableListOf(),
-    val createdBy: String? = null,
-    val createdAt: String? = null,
-    val updatedBy: String? = null,
-    val updatedAt: String? = null
-) 
+    override val createdBy: String? = null,
+    override val createdAt: LocalDateTime? = null,
+    override val updatedBy: String? = null,
+    override val updatedAt: LocalDateTime? = null
+) : BaseModel(createdBy, createdAt, updatedBy, updatedAt) 

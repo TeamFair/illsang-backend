@@ -1,6 +1,8 @@
 package com.teamfair.modulequest.domain.mapper
 
 import com.teamfair.modulequest.adapter.out.persistence.entity.QuestEntity
+import com.teamfair.modulequest.application.command.CreateQuestCommand
+import com.teamfair.modulequest.application.command.UpdateQuestCommand
 import com.teamfair.modulequest.domain.model.Quest
 
 object QuestMapper {
@@ -14,13 +16,10 @@ object QuestMapper {
             type = entity.type,
             repeatFrequency = entity.repeatFrequency,
             sortOrder = entity.sortOrder,
-            missions = entity.missions.map { MissionMapper.toModel(it) }.toMutableList(),
-            rewards = entity.rewards.map { QuestRewardMapper.toModel(it) }.toMutableList(),
-            userHistories = entity.userHistories.map { UserQuestHistoryMapper.toModel(it) }.toMutableList(),
             createdBy = entity.createdBy,
-            createdAt = entity.createdAt?.toString(),
+            createdAt = entity.createdAt,
             updatedBy = entity.updatedBy,
-            updatedAt = entity.updatedAt?.toString()
+            updatedAt = entity.updatedAt
         )
     }
 
@@ -35,8 +34,34 @@ object QuestMapper {
             repeatFrequency = model.repeatFrequency,
             sortOrder = model.sortOrder
         ).apply {
-            model.missions.forEach { addMission(MissionMapper.toEntity(it, this)) }
-            model.rewards.forEach { addReward(QuestRewardMapper.toEntity(it, this)) }
+            createdBy = model.createdBy
+            createdAt = model.createdAt
+            updatedBy = model.updatedBy
+            updatedAt = model.updatedAt
         }
+    }
+
+    fun toModel(command: CreateQuestCommand): Quest {
+        return Quest(
+            imageId = command.imageId,
+            writerName = command.writerName,
+            mainImageId = command.mainImageId,
+            popularYn = command.popularYn,
+            type = command.type,
+            repeatFrequency = command.repeatFrequency,
+            sortOrder = command.sortOrder
+        )
+    }
+
+    fun toModel(command: UpdateQuestCommand, existing: Quest): Quest {
+        return existing.copy(
+            imageId = command.imageId ?: existing.imageId,
+            writerName = command.writerName ?: existing.writerName,
+            mainImageId = command.mainImageId ?: existing.mainImageId,
+            popularYn = command.popularYn ?: existing.popularYn,
+            type = command.type ?: existing.type,
+            repeatFrequency = command.repeatFrequency ?: existing.repeatFrequency,
+            sortOrder = command.sortOrder ?: existing.sortOrder
+        )
     }
 } 

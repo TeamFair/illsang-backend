@@ -1,6 +1,6 @@
-package com.teamfair.modulequest.application.command
+package com.teamfair.modulequest.adapter.`in`.web.model.request
 
-data class CreateMissionCommand(
+data class CreateMissionRequest(
     val type: String,
     val title: String,
     val sortOrder: Int = 0,

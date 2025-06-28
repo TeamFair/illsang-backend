@@ -1,14 +1,16 @@
 package com.teamfair.modulequest.domain.model
 
+import com.illsang.common.model.BaseModel
+import java.time.LocalDateTime
+
 data class Mission(
     val id: Long? = null,
     var type: String,
     var title: String,
     var sortOrder: Int = 0,
-    val quizzes: MutableList<Quiz> = mutableListOf(),
-    val userHistories: MutableList<UserMissionHistory> = mutableListOf(),
-    val createdBy: String? = null,
-    val createdAt: String? = null,
-    val updatedBy: String? = null,
-    val updatedAt: String? = null
-) 
+    val questId: Long,
+    override val createdBy: String? = null,
+    override val createdAt: LocalDateTime? = null,
+    override val updatedBy: String? = null,
+    override val updatedAt: LocalDateTime? = null
+) : BaseModel(createdBy, createdAt, updatedBy, updatedAt) 
