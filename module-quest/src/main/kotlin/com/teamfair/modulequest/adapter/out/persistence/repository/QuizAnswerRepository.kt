@@ -3,4 +3,6 @@ package com.teamfair.modulequest.adapter.out.persistence.repository
 import com.teamfair.modulequest.adapter.out.persistence.entity.QuizAnswerEntity
 import org.springframework.data.jpa.repository.JpaRepository
 
-interface QuizAnswerRepository : JpaRepository<QuizAnswerEntity, Long> 
+interface QuizAnswerRepository : JpaRepository<QuizAnswerEntity, Long> {
+    fun findByQuizId(quizId: Long): List<QuizAnswerEntity>
+} 

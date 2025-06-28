@@ -1,81 +1,80 @@
 package com.teamfair.modulequest.adapter.`in`.web
 
-import com.teamfair.modulequest.application.port.`in`.QuizUseCase
-import com.teamfair.modulequest.domain.model.QuizAnswer
+import com.illsang.common.enums.ResponseMsg
+import com.teamfair.modulequest.adapter.`in`.web.model.request.CreateQuizAnswerRequest
+import com.teamfair.modulequest.adapter.`in`.web.model.request.UpdateQuizAnswerRequest
+import com.teamfair.modulequest.adapter.`in`.web.model.response.QuizAnswerResponse
+import com.teamfair.modulequest.application.command.CreateQuizAnswerCommand
+import com.teamfair.modulequest.application.command.UpdateQuizAnswerCommand
+import com.teamfair.modulequest.application.service.QuizAnswerService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/quiz-answers")
-class QuizAnswerController(private val quizUseCase: QuizUseCase) {
+class QuizAnswerController(
+    private val quizAnswerService: QuizAnswerService
+) {
 
-    @PostMapping("/quiz/{quizId}")
-    fun createQuizAnswer(@PathVariable quizId: Long, @RequestBody answerRequest: QuizAnswerRequest): ResponseEntity<QuizAnswerResponse> {
-        val quizAnswer = answerRequest.toDomain()
-        val createdAnswer = quizUseCase.createQuizAnswer(quizAnswer, quizId)
-        return ResponseEntity(QuizAnswerResponse.fromDomain(createdAnswer), HttpStatus.CREATED)
+    @PostMapping
+    fun createQuizAnswer(@RequestBody request: CreateQuizAnswerRequest): ResponseEntity<QuizAnswerResponse> {
+        val command = CreateQuizAnswerCommand(
+            answer = request.answer,
+            sortOrder = request.sortOrder,
+            quizId = request.quizId
+        )
+        val quizAnswer = quizAnswerService.createQuizAnswer(command)
+        return ResponseEntity.status(HttpStatus.CREATED).body(QuizAnswerResponse.from(quizAnswer))
     }
 
     @GetMapping("/{id}")
     fun getQuizAnswer(@PathVariable id: Long): ResponseEntity<QuizAnswerResponse> {
-        val answer = quizUseCase.getQuizAnswer(id)
-        return ResponseEntity.ok(QuizAnswerResponse.fromDomain(answer))
+        val quizAnswer = quizAnswerService.getQuizAnswerById(id)
+        return if (quizAnswer != null) {
+            ResponseEntity.ok(QuizAnswerResponse.from(quizAnswer))
+        } else {
+            ResponseEntity.notFound().build()
+        }
+    }
+
+    @GetMapping
+    fun getAllQuizAnswers(): ResponseEntity<List<QuizAnswerResponse>> {
+        val quizAnswers = quizAnswerService.getAllQuizAnswers()
+        return ResponseEntity.ok(quizAnswers.map { QuizAnswerResponse.from(it) })
     }
 
     @GetMapping("/quiz/{quizId}")
     fun getQuizAnswersByQuizId(@PathVariable quizId: Long): ResponseEntity<List<QuizAnswerResponse>> {
-        val answers = quizUseCase.getQuizAnswersByQuizId(quizId)
-        return ResponseEntity.ok(answers.map { QuizAnswerResponse.fromDomain(it) })
+        val quizAnswers = quizAnswerService.getQuizAnswersByQuizId(quizId)
+        return ResponseEntity.ok(quizAnswers.map { QuizAnswerResponse.from(it) })
     }
 
     @PutMapping("/{id}")
-    fun updateQuizAnswer(@PathVariable id: Long, @RequestBody answerRequest: QuizAnswerRequest): ResponseEntity<QuizAnswerResponse> {
-        val quizAnswer = answerRequest.toDomain()
-        val updatedAnswer = quizUseCase.updateQuizAnswer(id, quizAnswer)
-        return ResponseEntity.ok(QuizAnswerResponse.fromDomain(updatedAnswer))
-    }
-
-    @DeleteMapping("/{id}")
-    fun deleteQuizAnswer(@PathVariable id: Long): ResponseEntity<Void> {
-        quizUseCase.deleteQuizAnswer(id)
-        return ResponseEntity.noContent().build()
-    }
-
-    // DTO classes
-    data class QuizAnswerRequest(
-        val answer: String,
-        val sortOrder: Int = 0
-    ) {
-        fun toDomain(): QuizAnswer {
-            return QuizAnswer(
-                answer = answer,
-                sortOrder = sortOrder
-            )
+    fun updateQuizAnswer(
+        @PathVariable id: Long,
+        @RequestBody request: UpdateQuizAnswerRequest
+    ): ResponseEntity<QuizAnswerResponse> {
+        val command = UpdateQuizAnswerCommand(
+            id = id,
+            answer = request.answer,
+            sortOrder = request.sortOrder
+        )
+        val quizAnswer = quizAnswerService.updateQuizAnswer(command)
+        return if (quizAnswer != null) {
+            ResponseEntity.ok(QuizAnswerResponse.from(quizAnswer))
+        } else {
+            ResponseEntity.notFound().build()
         }
     }
 
-    data class QuizAnswerResponse(
-        val id: Long?,
-        val answer: String,
-        val sortOrder: Int,
-        val createdBy: String?,
-        val createdAt: String?,
-        val updatedBy: String?,
-        val updatedAt: String?
-    ) {
-        companion object {
-            fun fromDomain(quizAnswer: QuizAnswer): QuizAnswerResponse {
-                return QuizAnswerResponse(
-                    id = quizAnswer.id,
-                    answer = quizAnswer.answer,
-                    sortOrder = quizAnswer.sortOrder,
-                    createdBy = quizAnswer.createdBy,
-                    createdAt = quizAnswer.createdAt,
-                    updatedBy = quizAnswer.updatedBy,
-                    updatedAt = quizAnswer.updatedAt
-                )
-            }
+    @DeleteMapping("/{id}")
+    fun deleteQuizAnswer(@PathVariable id: Long): ResponseEntity<ResponseMsg> {
+        val deleted = quizAnswerService.deleteQuizAnswer(id)
+        return if (deleted) {
+            ResponseEntity.ok(ResponseMsg.SUCCESS)
+        } else {
+            ResponseEntity.notFound().build()
         }
     }
 }
