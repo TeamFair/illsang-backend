@@ -10,20 +10,26 @@ class QuestEntity(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    @Column(nullable = false)
-    var title: String,
+    @Column(name = "image_id")
+    var imageId: Long? = null,
 
-    @Column(columnDefinition = "TEXT")
-    var description: String? = null,
+    @Column(name = "writer_name", length = 100)
+    var writerName: String? = null,
 
-    @Column(name = "image_url", length = 512)
-    var imageUrl: String? = null,
+    @Column(name = "main_image_id")
+    var mainImageId: Long? = null,
 
-    @Column(name = "is_repeatable")
-    var isRepeatable: Boolean = false,
+    @Column(name = "popular_yn")
+    var popularYn: Boolean = false,
 
-    @Column(name = "is_published")
-    var isPublished: Boolean = false,
+    @Column(nullable = false, length = 50)
+    var type: String,
+
+    @Column(name = "repeat_frequency", length = 50)
+    var repeatFrequency: String? = null,
+
+    @Column(name = "sort_order")
+    var sortOrder: Int = 0,
 
     @OneToMany(mappedBy = "quest", cascade = [CascadeType.ALL], orphanRemoval = true)
     val missions: MutableList<MissionEntity> = mutableListOf(),

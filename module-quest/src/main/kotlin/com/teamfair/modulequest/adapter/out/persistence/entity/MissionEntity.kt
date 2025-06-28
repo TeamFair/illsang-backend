@@ -10,15 +10,15 @@ class MissionEntity(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
+    @Column(nullable = false, length = 50)
+    var type: String,
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "quest_id", nullable = false)
     var quest: QuestEntity,
 
     @Column(nullable = false)
     var title: String,
-
-    @Column(columnDefinition = "TEXT")
-    var description: String? = null,
 
     @Column(name = "sort_order")
     var sortOrder: Int = 0,

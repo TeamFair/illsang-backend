@@ -16,6 +16,9 @@ class UserEntity(
     @Column(nullable = false, unique = true, length = 100)
     var email: String,
 
+    @Column(nullable = false, length = 50)
+    var channel: String,
+
     @Column(nullable = false, length = 25)
     var nickname: String,
 

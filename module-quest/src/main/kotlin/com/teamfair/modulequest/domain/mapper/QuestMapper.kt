@@ -7,11 +7,13 @@ object QuestMapper {
     fun toModel(entity: QuestEntity): Quest {
         return Quest(
             id = entity.id,
-            title = entity.title,
-            description = entity.description,
-            imageUrl = entity.imageUrl,
-            isRepeatable = entity.isRepeatable,
-            isPublished = entity.isPublished,
+            imageId = entity.imageId,
+            writerName = entity.writerName,
+            mainImageId = entity.mainImageId,
+            popularYn = entity.popularYn,
+            type = entity.type,
+            repeatFrequency = entity.repeatFrequency,
+            sortOrder = entity.sortOrder,
             missions = entity.missions.map { MissionMapper.toModel(it) }.toMutableList(),
             rewards = entity.rewards.map { QuestRewardMapper.toModel(it) }.toMutableList(),
             userHistories = entity.userHistories.map { UserQuestHistoryMapper.toModel(it) }.toMutableList(),
@@ -25,11 +27,13 @@ object QuestMapper {
     fun toEntity(model: Quest): QuestEntity {
         return QuestEntity(
             id = model.id,
-            title = model.title,
-            description = model.description,
-            imageUrl = model.imageUrl,
-            isRepeatable = model.isRepeatable,
-            isPublished = model.isPublished
+            imageId = model.imageId,
+            writerName = model.writerName,
+            mainImageId = model.mainImageId,
+            popularYn = model.popularYn,
+            type = model.type,
+            repeatFrequency = model.repeatFrequency,
+            sortOrder = model.sortOrder
         ).apply {
             model.missions.forEach { addMission(MissionMapper.toEntity(it, this)) }
             model.rewards.forEach { addReward(QuestRewardMapper.toEntity(it, this)) }

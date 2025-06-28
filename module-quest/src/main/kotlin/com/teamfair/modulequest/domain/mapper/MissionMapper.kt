@@ -8,8 +8,8 @@ object MissionMapper {
     fun toModel(entity: MissionEntity): Mission {
         return Mission(
             id = entity.id,
+            type = entity.type,
             title = entity.title,
-            description = entity.description,
             sortOrder = entity.sortOrder,
             quizzes = entity.quizzes.map { QuizMapper.toModel(it) }.toMutableList(),
             userHistories = entity.userHistories.map { UserMissionHistoryMapper.toModel(it) }.toMutableList(),
@@ -23,9 +23,9 @@ object MissionMapper {
     fun toEntity(model: Mission, quest: QuestEntity): MissionEntity {
         return MissionEntity(
             id = model.id,
+            type = model.type,
             quest = quest,
             title = model.title,
-            description = model.description,
             sortOrder = model.sortOrder
         ).apply {
             model.quizzes.forEach { addQuiz(QuizMapper.toEntity(it, this)) }

@@ -8,6 +8,7 @@ object UserMapper {
         return UserModel(
             id = entity.id,
             email = entity.email,
+            channel = entity.channel,
             nickname = entity.nickname,
             status = entity.status,
             statusUpdatedAt = entity.statusUpdatedAt,
@@ -26,6 +27,7 @@ object UserMapper {
         return UserEntity(
             id = model.id,
             email = model.email,
+            channel = model.channel,
             nickname = model.nickname,
             status = model.status,
             statusUpdatedAt = model.statusUpdatedAt,

@@ -1,3 +1,7 @@
+springBoot {
+    mainClass.set("com.teamfair.modulequery")
+}
+
 dependencies {
     implementation(project(":module-common"))
     implementation(project(":module-management"))

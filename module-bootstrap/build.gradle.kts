@@ -1,3 +1,7 @@
+springBoot {
+    mainClass.set("com.teamfair.modulebootstrap")
+}
+
 dependencies {
     implementation(project(":module-common"))
     implementation(project(":module-management"))

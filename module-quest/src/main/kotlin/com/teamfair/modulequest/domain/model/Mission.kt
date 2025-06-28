@@ -2,8 +2,8 @@ package com.teamfair.modulequest.domain.model
 
 data class Mission(
     val id: Long? = null,
+    var type: String,
     var title: String,
-    var description: String? = null,
     var sortOrder: Int = 0,
     val quizzes: MutableList<Quiz> = mutableListOf(),
     val userHistories: MutableList<UserMissionHistory> = mutableListOf(),
