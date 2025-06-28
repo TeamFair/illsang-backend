@@ -3,6 +3,8 @@ package com.teamfair.modulequest.domain.mapper
 import com.teamfair.modulequest.adapter.out.persistence.entity.QuizEntity
 import com.teamfair.modulequest.adapter.out.persistence.entity.UserMissionHistoryEntity
 import com.teamfair.modulequest.adapter.out.persistence.entity.UserQuizHistoryEntity
+import com.teamfair.modulequest.application.command.CreateUserQuizHistoryCommand
+import com.teamfair.modulequest.application.command.UpdateUserQuizHistoryCommand
 import com.teamfair.modulequest.domain.model.UserQuizHistory
 
 object UserQuizHistoryMapper {
@@ -12,25 +14,49 @@ object UserQuizHistoryMapper {
             userId = entity.userId,
             answer = entity.answer,
             submittedAt = entity.submittedAt,
+            quizId = entity.quiz.id!!,
+            userMissionHistoryId = entity.userMissionHistory.id!!,
             createdBy = entity.createdBy,
-            createdAt = entity.createdAt?.toString(),
+            createdAt = entity.createdAt,
             updatedBy = entity.updatedBy,
-            updatedAt = entity.updatedAt?.toString()
+            updatedAt = entity.updatedAt
         )
     }
 
     fun toEntity(
-        model: UserQuizHistory,
-        quiz: QuizEntity,
-        userMissionHistory: UserMissionHistoryEntity
+        model: UserQuizHistory, 
+        quizEntity: QuizEntity, 
+        userMissionHistoryEntity: UserMissionHistoryEntity
     ): UserQuizHistoryEntity {
         return UserQuizHistoryEntity(
             id = model.id,
             userId = model.userId,
-            quiz = quiz,
-            userMissionHistory = userMissionHistory,
             answer = model.answer,
-            submittedAt = model.submittedAt
+            submittedAt = model.submittedAt,
+            quiz = quizEntity,
+            userMissionHistory = userMissionHistoryEntity
+        ).apply {
+            createdBy = model.createdBy
+            createdAt = model.createdAt
+            updatedBy = model.updatedBy
+            updatedAt = model.updatedAt
+        }
+    }
+
+    fun toModel(command: CreateUserQuizHistoryCommand): UserQuizHistory {
+        return UserQuizHistory(
+            userId = command.userId,
+            answer = command.answer,
+            submittedAt = command.submittedAt,
+            quizId = command.quizId,
+            userMissionHistoryId = command.userMissionHistoryId
+        )
+    }
+
+    fun toModel(command: UpdateUserQuizHistoryCommand, existing: UserQuizHistory): UserQuizHistory {
+        return existing.copy(
+            answer = command.answer ?: existing.answer,
+            submittedAt = command.submittedAt ?: existing.submittedAt
         )
     }
 } 

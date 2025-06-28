@@ -7,6 +7,7 @@ import com.teamfair.moduleuser.adapter.`in`.web.model.response.UserXpHistoryResp
 import com.teamfair.moduleuser.application.command.CreateUserXpHistoryCommand
 import com.teamfair.moduleuser.application.command.UpdateUserXpHistoryCommand
 import com.teamfair.moduleuser.application.service.UserXpHistoryService
+import com.teamfair.moduleuser.domain.model.XpType
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -47,7 +48,7 @@ class UserXpHistoryController(
     @GetMapping("/user/{userId}/type/{xpType}")
     fun getUserXpHistoriesByUserIdAndXpType(
         @PathVariable userId: Long,
-        @PathVariable xpType: com.teamfair.moduleuser.domain.model.XpType
+        @PathVariable xpType: XpType
     ): ResponseEntity<List<UserXpHistoryResponse>> {
         val userXpHistories = userXpHistoryService.getUserXpHistoriesByUserIdAndXpType(userId, xpType)
         return ResponseEntity.ok(userXpHistories.map { UserXpHistoryResponse.from(it) })
