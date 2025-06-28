@@ -5,11 +5,11 @@ import com.teamfair.modulequest.adapter.out.persistence.entity.UserMissionHistor
 import com.teamfair.modulequest.adapter.out.persistence.entity.UserQuizHistoryEntity
 import com.teamfair.modulequest.application.command.CreateUserQuizHistoryCommand
 import com.teamfair.modulequest.application.command.UpdateUserQuizHistoryCommand
-import com.teamfair.modulequest.domain.model.UserQuizHistory
+import com.teamfair.modulequest.domain.model.UserQuizHistoryModel
 
 object UserQuizHistoryMapper {
-    fun toModel(entity: UserQuizHistoryEntity): UserQuizHistory {
-        return UserQuizHistory(
+    fun toModel(entity: UserQuizHistoryEntity): UserQuizHistoryModel {
+        return UserQuizHistoryModel(
             id = entity.id,
             userId = entity.userId,
             answer = entity.answer,
@@ -24,8 +24,8 @@ object UserQuizHistoryMapper {
     }
 
     fun toEntity(
-        model: UserQuizHistory, 
-        quizEntity: QuizEntity, 
+        model: UserQuizHistoryModel,
+        quizEntity: QuizEntity,
         userMissionHistoryEntity: UserMissionHistoryEntity
     ): UserQuizHistoryEntity {
         return UserQuizHistoryEntity(
@@ -43,8 +43,8 @@ object UserQuizHistoryMapper {
         }
     }
 
-    fun toModel(command: CreateUserQuizHistoryCommand): UserQuizHistory {
-        return UserQuizHistory(
+    fun toModel(command: CreateUserQuizHistoryCommand): UserQuizHistoryModel {
+        return UserQuizHistoryModel(
             userId = command.userId,
             answer = command.answer,
             submittedAt = command.submittedAt,
@@ -53,7 +53,7 @@ object UserQuizHistoryMapper {
         )
     }
 
-    fun toModel(command: UpdateUserQuizHistoryCommand, existing: UserQuizHistory): UserQuizHistory {
+    fun toModel(command: UpdateUserQuizHistoryCommand, existing: UserQuizHistoryModel): UserQuizHistoryModel {
         return existing.copy(
             answer = command.answer ?: existing.answer,
             submittedAt = command.submittedAt ?: existing.submittedAt

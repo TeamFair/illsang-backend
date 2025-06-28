@@ -1,6 +1,6 @@
 package com.teamfair.modulequest.adapter.`in`.web.model.response
 
-import com.teamfair.modulequest.domain.model.UserMissionHistory
+import com.teamfair.modulequest.domain.model.UserMissionHistoryModel
 import com.teamfair.modulequest.domain.model.enums.MissionStatus
 import java.time.LocalDateTime
 
@@ -18,19 +18,19 @@ data class UserMissionHistoryResponse(
     val updatedAt: LocalDateTime?
 ) {
     companion object {
-        fun from(userMissionHistory: UserMissionHistory): UserMissionHistoryResponse {
+        fun from(userMissionHistoryModel: UserMissionHistoryModel): UserMissionHistoryResponse {
             return UserMissionHistoryResponse(
-                id = userMissionHistory.id,
-                userId = userMissionHistory.userId,
-                status = userMissionHistory.status,
-                submissionImageUrl = userMissionHistory.submissionImageUrl,
-                submittedAt = userMissionHistory.submittedAt,
-                missionId = userMissionHistory.missionId,
-                userQuestHistoryId = userMissionHistory.userQuestHistoryId,
-                createdBy = userMissionHistory.createdBy,
-                createdAt = userMissionHistory.createdAt,
-                updatedBy = userMissionHistory.updatedBy,
-                updatedAt = userMissionHistory.updatedAt
+                id = userMissionHistoryModel.id,
+                userId = userMissionHistoryModel.userId,
+                status = userMissionHistoryModel.status,
+                submissionImageUrl = userMissionHistoryModel.submissionImageUrl,
+                submittedAt = userMissionHistoryModel.submittedAt,
+                missionId = userMissionHistoryModel.missionId,
+                userQuestHistoryId = userMissionHistoryModel.userQuestHistoryId,
+                createdBy = userMissionHistoryModel.createdBy,
+                createdAt = userMissionHistoryModel.createdAt,
+                updatedBy = userMissionHistoryModel.updatedBy,
+                updatedAt = userMissionHistoryModel.updatedAt
             )
         }
     }

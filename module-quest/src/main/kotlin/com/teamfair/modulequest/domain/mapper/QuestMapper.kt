@@ -3,11 +3,11 @@ package com.teamfair.modulequest.domain.mapper
 import com.teamfair.modulequest.adapter.out.persistence.entity.QuestEntity
 import com.teamfair.modulequest.application.command.CreateQuestCommand
 import com.teamfair.modulequest.application.command.UpdateQuestCommand
-import com.teamfair.modulequest.domain.model.Quest
+import com.teamfair.modulequest.domain.model.QuestModel
 
 object QuestMapper {
-    fun toModel(entity: QuestEntity): Quest {
-        return Quest(
+    fun toModel(entity: QuestEntity): QuestModel {
+        return QuestModel(
             id = entity.id,
             imageId = entity.imageId,
             writerName = entity.writerName,
@@ -23,7 +23,7 @@ object QuestMapper {
         )
     }
 
-    fun toEntity(model: Quest): QuestEntity {
+    fun toEntity(model: QuestModel): QuestEntity {
         return QuestEntity(
             id = model.id,
             imageId = model.imageId,
@@ -41,8 +41,8 @@ object QuestMapper {
         }
     }
 
-    fun toModel(command: CreateQuestCommand): Quest {
-        return Quest(
+    fun toModel(command: CreateQuestCommand): QuestModel {
+        return QuestModel(
             imageId = command.imageId,
             writerName = command.writerName,
             mainImageId = command.mainImageId,
@@ -53,7 +53,7 @@ object QuestMapper {
         )
     }
 
-    fun toModel(command: UpdateQuestCommand, existing: Quest): Quest {
+    fun toModel(command: UpdateQuestCommand, existing: QuestModel): QuestModel {
         return existing.copy(
             imageId = command.imageId ?: existing.imageId,
             writerName = command.writerName ?: existing.writerName,

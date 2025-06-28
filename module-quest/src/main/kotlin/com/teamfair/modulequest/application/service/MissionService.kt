@@ -4,7 +4,7 @@ import com.teamfair.modulequest.application.command.CreateMissionCommand
 import com.teamfair.modulequest.application.command.UpdateMissionCommand
 import com.teamfair.modulequest.application.port.out.MissionPersistencePort
 import com.teamfair.modulequest.domain.mapper.MissionMapper
-import com.teamfair.modulequest.domain.model.Mission
+import com.teamfair.modulequest.domain.model.MissionModel
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -15,25 +15,25 @@ class MissionService(
 ) {
 
     @Transactional
-    fun createMission(command: CreateMissionCommand): Mission {
+    fun createMission(command: CreateMissionCommand): MissionModel {
         val missionModel = MissionMapper.toModel(command)
         return missionPersistencePort.save(missionModel)
     }
 
-    fun getMissionById(id: Long): Mission? {
+    fun getMissionById(id: Long): MissionModel? {
         return missionPersistencePort.findById(id)
     }
 
-    fun getAllMissions(): List<Mission> {
+    fun getAllMissions(): List<MissionModel> {
         return missionPersistencePort.findAll()
     }
 
-    fun getMissionsByQuestId(questId: Long): List<Mission> {
+    fun getMissionsByQuestId(questId: Long): List<MissionModel> {
         return missionPersistencePort.findByQuestId(questId)
     }
 
     @Transactional
-    fun updateMission(command: UpdateMissionCommand): Mission? {
+    fun updateMission(command: UpdateMissionCommand): MissionModel? {
         val existingMission = missionPersistencePort.findById(command.id) ?: return null
         val updatedMission = MissionMapper.toModel(command, existingMission)
         return missionPersistencePort.save(updatedMission)

@@ -1,13 +1,13 @@
 package com.teamfair.modulequest.application.port.out
 
-import com.teamfair.modulequest.domain.model.UserQuestHistory
+import com.teamfair.modulequest.domain.model.UserQuestHistoryModel
 
 interface UserQuestHistoryPersistencePort {
-    fun save(userQuestHistory: UserQuestHistory): UserQuestHistory
-    fun findById(id: Long): UserQuestHistory?
-    fun findAll(): List<UserQuestHistory>
-    fun findByUserId(userId: Long): List<UserQuestHistory>
-    fun findByQuestId(questId: Long): List<UserQuestHistory>
+    fun save(userQuestHistoryModel: UserQuestHistoryModel): UserQuestHistoryModel
+    fun findById(id: Long): UserQuestHistoryModel?
+    fun findAll(): List<UserQuestHistoryModel>
+    fun findByUserId(userId: Long): List<UserQuestHistoryModel>
+    fun findByQuestId(questId: Long): List<UserQuestHistoryModel>
     fun deleteById(id: Long)
     fun existsById(id: Long): Boolean
 } 

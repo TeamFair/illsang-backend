@@ -3,7 +3,7 @@ package com.teamfair.modulequest.adapter.out.persistence
 import com.teamfair.modulequest.adapter.out.persistence.repository.QuestRepository
 import com.teamfair.modulequest.application.port.out.QuestPersistencePort
 import com.teamfair.modulequest.domain.mapper.QuestMapper
-import com.teamfair.modulequest.domain.model.Quest
+import com.teamfair.modulequest.domain.model.QuestModel
 import org.springframework.stereotype.Component
 
 @Component
@@ -14,8 +14,8 @@ class QuestPersistenceAdapter(
     /**
      * save quest
      */
-    override fun save(quest: Quest): Quest {
-        val entity = QuestMapper.toEntity(quest)
+    override fun save(questModel: QuestModel): QuestModel {
+        val entity = QuestMapper.toEntity(questModel)
         val savedEntity = questRepository.save(entity)
         return QuestMapper.toModel(savedEntity)
     }
@@ -23,7 +23,7 @@ class QuestPersistenceAdapter(
     /**
      * find quest by id
      */
-    override fun findById(id: Long): Quest? {
+    override fun findById(id: Long): QuestModel? {
         return questRepository.findById(id)
             .map { QuestMapper.toModel(it) }
             .orElse(null)
@@ -32,7 +32,7 @@ class QuestPersistenceAdapter(
     /**
      * find all quests
      */
-    override fun findAll(): List<Quest> {
+    override fun findAll(): List<QuestModel> {
         return questRepository.findAll()
             .map { QuestMapper.toModel(it) }
     }
@@ -40,7 +40,7 @@ class QuestPersistenceAdapter(
     /**
      * find quests by type
      */
-    override fun findByType(type: String): List<Quest> {
+    override fun findByType(type: String): List<QuestModel> {
         return questRepository.findByType(type)
             .map { QuestMapper.toModel(it) }
     }
@@ -48,7 +48,7 @@ class QuestPersistenceAdapter(
     /**
      * find quests by popular yn
      */
-    override fun findByPopularYn(popularYn: Boolean): List<Quest> {
+    override fun findByPopularYn(popularYn: Boolean): List<QuestModel> {
         return questRepository.findByPopularYn(popularYn)
             .map { QuestMapper.toModel(it) }
     }

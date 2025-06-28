@@ -1,14 +1,11 @@
 package com.teamfair.modulequest.adapter.out.persistence
 
-import com.teamfair.modulequest.adapter.out.persistence.entity.MissionEntity
-import com.teamfair.modulequest.adapter.out.persistence.entity.UserMissionHistoryEntity
-import com.teamfair.modulequest.adapter.out.persistence.entity.UserQuestHistoryEntity
 import com.teamfair.modulequest.adapter.out.persistence.repository.MissionRepository
 import com.teamfair.modulequest.adapter.out.persistence.repository.UserMissionHistoryRepository
 import com.teamfair.modulequest.adapter.out.persistence.repository.UserQuestHistoryRepository
 import com.teamfair.modulequest.application.port.out.UserMissionHistoryPersistencePort
 import com.teamfair.modulequest.domain.mapper.UserMissionHistoryMapper
-import com.teamfair.modulequest.domain.model.UserMissionHistory
+import com.teamfair.modulequest.domain.model.UserMissionHistoryModel
 import org.springframework.stereotype.Component
 
 @Component
@@ -18,35 +15,35 @@ class UserMissionHistoryPersistenceAdapter(
     private val userQuestHistoryRepository: UserQuestHistoryRepository
 ) : UserMissionHistoryPersistencePort {
 
-    override fun save(userMissionHistory: UserMissionHistory): UserMissionHistory {
-        val missionEntity = missionRepository.findById(userMissionHistory.missionId)
-            .orElseThrow { IllegalArgumentException("Mission not found with id: ${userMissionHistory.missionId}") }
+    override fun save(userMissionHistoryModel: UserMissionHistoryModel): UserMissionHistoryModel {
+        val missionEntity = missionRepository.findById(userMissionHistoryModel.missionId)
+            .orElseThrow { IllegalArgumentException("Mission not found with id: ${userMissionHistoryModel.missionId}") }
         
-        val userQuestHistoryEntity = userQuestHistoryRepository.findById(userMissionHistory.userQuestHistoryId)
-            .orElseThrow { IllegalArgumentException("UserQuestHistory not found with id: ${userMissionHistory.userQuestHistoryId}") }
+        val userQuestHistoryEntity = userQuestHistoryRepository.findById(userMissionHistoryModel.userQuestHistoryId)
+            .orElseThrow { IllegalArgumentException("UserQuestHistory not found with id: ${userMissionHistoryModel.userQuestHistoryId}") }
         
-        val entity = UserMissionHistoryMapper.toEntity(userMissionHistory, missionEntity, userQuestHistoryEntity)
+        val entity = UserMissionHistoryMapper.toEntity(userMissionHistoryModel, missionEntity, userQuestHistoryEntity)
         val savedEntity = userMissionHistoryRepository.save(entity)
         return UserMissionHistoryMapper.toModel(savedEntity)
     }
 
-    override fun findById(id: Long): UserMissionHistory? {
+    override fun findById(id: Long): UserMissionHistoryModel? {
         return userMissionHistoryRepository.findById(id)
             .map { UserMissionHistoryMapper.toModel(it) }
             .orElse(null)
     }
 
-    override fun findAll(): List<UserMissionHistory> {
+    override fun findAll(): List<UserMissionHistoryModel> {
         return userMissionHistoryRepository.findAll()
             .map { UserMissionHistoryMapper.toModel(it) }
     }
 
-    override fun findByUserId(userId: Long): List<UserMissionHistory> {
+    override fun findByUserId(userId: Long): List<UserMissionHistoryModel> {
         return userMissionHistoryRepository.findByUserId(userId)
             .map { UserMissionHistoryMapper.toModel(it) }
     }
 
-    override fun findByMissionId(missionId: Long): List<UserMissionHistory> {
+    override fun findByMissionId(missionId: Long): List<UserMissionHistoryModel> {
         return userMissionHistoryRepository.findByMissionId(missionId)
             .map { UserMissionHistoryMapper.toModel(it) }
     }

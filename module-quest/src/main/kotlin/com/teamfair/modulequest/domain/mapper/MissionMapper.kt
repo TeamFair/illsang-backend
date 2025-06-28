@@ -4,11 +4,11 @@ import com.teamfair.modulequest.adapter.out.persistence.entity.MissionEntity
 import com.teamfair.modulequest.adapter.out.persistence.entity.QuestEntity
 import com.teamfair.modulequest.application.command.CreateMissionCommand
 import com.teamfair.modulequest.application.command.UpdateMissionCommand
-import com.teamfair.modulequest.domain.model.Mission
+import com.teamfair.modulequest.domain.model.MissionModel
 
 object MissionMapper {
-    fun toModel(entity: MissionEntity): Mission {
-        return Mission(
+    fun toModel(entity: MissionEntity): MissionModel {
+        return MissionModel(
             id = entity.id,
             type = entity.type,
             title = entity.title,
@@ -21,7 +21,7 @@ object MissionMapper {
         )
     }
 
-    fun toEntity(model: Mission, questEntity: QuestEntity): MissionEntity {
+    fun toEntity(model: MissionModel, questEntity: QuestEntity): MissionEntity {
         return MissionEntity(
             id = model.id,
             type = model.type,
@@ -36,8 +36,8 @@ object MissionMapper {
         }
     }
 
-    fun toModel(command: CreateMissionCommand): Mission {
-        return Mission(
+    fun toModel(command: CreateMissionCommand): MissionModel {
+        return MissionModel(
             type = command.type,
             title = command.title,
             sortOrder = command.sortOrder,
@@ -45,7 +45,7 @@ object MissionMapper {
         )
     }
 
-    fun toModel(command: UpdateMissionCommand, existing: Mission): Mission {
+    fun toModel(command: UpdateMissionCommand, existing: MissionModel): MissionModel {
         return existing.copy(
             type = command.type ?: existing.type,
             title = command.title ?: existing.title,

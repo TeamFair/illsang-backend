@@ -1,6 +1,6 @@
 package com.teamfair.modulequest.adapter.`in`.web.model.response
 
-import com.teamfair.modulequest.domain.model.Quest
+import com.teamfair.modulequest.domain.model.QuestModel
 import java.time.LocalDateTime
 
 data class QuestResponse(
@@ -18,20 +18,20 @@ data class QuestResponse(
     val updatedAt: LocalDateTime?
 ) {
     companion object {
-        fun from(quest: Quest): QuestResponse {
+        fun from(questModel: QuestModel): QuestResponse {
             return QuestResponse(
-                id = quest.id,
-                imageId = quest.imageId,
-                writerName = quest.writerName,
-                mainImageId = quest.mainImageId,
-                popularYn = quest.popularYn,
-                type = quest.type,
-                repeatFrequency = quest.repeatFrequency,
-                sortOrder = quest.sortOrder,
-                createdBy = quest.createdBy,
-                createdAt = quest.createdAt,
-                updatedBy = quest.updatedBy,
-                updatedAt = quest.updatedAt
+                id = questModel.id,
+                imageId = questModel.imageId,
+                writerName = questModel.writerName,
+                mainImageId = questModel.mainImageId,
+                popularYn = questModel.popularYn,
+                type = questModel.type,
+                repeatFrequency = questModel.repeatFrequency,
+                sortOrder = questModel.sortOrder,
+                createdBy = questModel.createdBy,
+                createdAt = questModel.createdAt,
+                updatedBy = questModel.updatedBy,
+                updatedAt = questModel.updatedAt
             )
         }
     }

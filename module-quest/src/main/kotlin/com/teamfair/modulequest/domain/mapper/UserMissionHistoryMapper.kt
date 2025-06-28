@@ -5,11 +5,11 @@ import com.teamfair.modulequest.adapter.out.persistence.entity.UserMissionHistor
 import com.teamfair.modulequest.adapter.out.persistence.entity.UserQuestHistoryEntity
 import com.teamfair.modulequest.application.command.CreateUserMissionHistoryCommand
 import com.teamfair.modulequest.application.command.UpdateUserMissionHistoryCommand
-import com.teamfair.modulequest.domain.model.UserMissionHistory
+import com.teamfair.modulequest.domain.model.UserMissionHistoryModel
 
 object UserMissionHistoryMapper {
-    fun toModel(entity: UserMissionHistoryEntity): UserMissionHistory {
-        return UserMissionHistory(
+    fun toModel(entity: UserMissionHistoryEntity): UserMissionHistoryModel {
+        return UserMissionHistoryModel(
             id = entity.id,
             userId = entity.userId,
             status = entity.status,
@@ -24,7 +24,7 @@ object UserMissionHistoryMapper {
         )
     }
 
-    fun toEntity(model: UserMissionHistory, missionEntity: MissionEntity, userQuestHistoryEntity: UserQuestHistoryEntity): UserMissionHistoryEntity {
+    fun toEntity(model: UserMissionHistoryModel, missionEntity: MissionEntity, userQuestHistoryEntity: UserQuestHistoryEntity): UserMissionHistoryEntity {
         return UserMissionHistoryEntity(
             id = model.id,
             userId = model.userId,
@@ -41,8 +41,8 @@ object UserMissionHistoryMapper {
         }
     }
 
-    fun toModel(command: CreateUserMissionHistoryCommand): UserMissionHistory {
-        return UserMissionHistory(
+    fun toModel(command: CreateUserMissionHistoryCommand): UserMissionHistoryModel {
+        return UserMissionHistoryModel(
             userId = command.userId,
             status = command.status,
             submissionImageUrl = command.submissionImageUrl,
@@ -52,7 +52,7 @@ object UserMissionHistoryMapper {
         )
     }
 
-    fun toModel(command: UpdateUserMissionHistoryCommand, existing: UserMissionHistory): UserMissionHistory {
+    fun toModel(command: UpdateUserMissionHistoryCommand, existing: UserMissionHistoryModel): UserMissionHistoryModel {
         return existing.copy(
             status = command.status ?: existing.status,
             submissionImageUrl = command.submissionImageUrl ?: existing.submissionImageUrl,

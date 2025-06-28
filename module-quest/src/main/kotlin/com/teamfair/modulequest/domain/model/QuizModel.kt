@@ -1,14 +1,14 @@
 package com.teamfair.modulequest.domain.model
 
 import com.illsang.common.model.BaseModel
-import com.teamfair.modulequest.domain.model.enums.RewardType
 import java.time.LocalDateTime
 
-data class QuestReward(
+data class QuizModel(
     val id: Long? = null,
-    var type: RewardType,
-    var amount: Int,
-    val questId: Long,
+    var question: String,
+    var hint: String? = null,
+    var sortOrder: Int = 0,
+    val missionId: Long,
     override val createdBy: String? = null,
     override val createdAt: LocalDateTime? = null,
     override val updatedBy: String? = null,

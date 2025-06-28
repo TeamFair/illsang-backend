@@ -4,11 +4,11 @@ import com.teamfair.modulequest.adapter.out.persistence.entity.QuestEntity
 import com.teamfair.modulequest.adapter.out.persistence.entity.QuestRewardEntity
 import com.teamfair.modulequest.application.command.CreateQuestRewardCommand
 import com.teamfair.modulequest.application.command.UpdateQuestRewardCommand
-import com.teamfair.modulequest.domain.model.QuestReward
+import com.teamfair.modulequest.domain.model.QuestRewardModel
 
 object QuestRewardMapper {
-    fun toModel(entity: QuestRewardEntity): QuestReward {
-        return QuestReward(
+    fun toModel(entity: QuestRewardEntity): QuestRewardModel {
+        return QuestRewardModel(
             id = entity.id,
             type = entity.type,
             amount = entity.amount,
@@ -20,7 +20,7 @@ object QuestRewardMapper {
         )
     }
 
-    fun toEntity(model: QuestReward, questEntity: QuestEntity): QuestRewardEntity {
+    fun toEntity(model: QuestRewardModel, questEntity: QuestEntity): QuestRewardEntity {
         return QuestRewardEntity(
             id = model.id,
             type = model.type,
@@ -34,15 +34,15 @@ object QuestRewardMapper {
         }
     }
 
-    fun toModel(command: CreateQuestRewardCommand): QuestReward {
-        return QuestReward(
+    fun toModel(command: CreateQuestRewardCommand): QuestRewardModel {
+        return QuestRewardModel(
             type = command.type,
             amount = command.amount,
             questId = command.questId
         )
     }
 
-    fun toModel(command: UpdateQuestRewardCommand, existing: QuestReward): QuestReward {
+    fun toModel(command: UpdateQuestRewardCommand, existing: QuestRewardModel): QuestRewardModel {
         return existing.copy(
             type = command.type ?: existing.type,
             amount = command.amount ?: existing.amount

@@ -4,7 +4,7 @@ import com.teamfair.modulequest.application.command.CreateQuizAnswerCommand
 import com.teamfair.modulequest.application.command.UpdateQuizAnswerCommand
 import com.teamfair.modulequest.application.port.out.QuizAnswerPersistencePort
 import com.teamfair.modulequest.domain.mapper.QuizAnswerMapper
-import com.teamfair.modulequest.domain.model.QuizAnswer
+import com.teamfair.modulequest.domain.model.QuizAnswerModel
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -15,25 +15,25 @@ class QuizAnswerService(
 ) {
 
     @Transactional
-    fun createQuizAnswer(command: CreateQuizAnswerCommand): QuizAnswer {
+    fun createQuizAnswer(command: CreateQuizAnswerCommand): QuizAnswerModel {
         val quizAnswerModel = QuizAnswerMapper.toModel(command)
         return quizAnswerPersistencePort.save(quizAnswerModel)
     }
 
-    fun getQuizAnswerById(id: Long): QuizAnswer? {
+    fun getQuizAnswerById(id: Long): QuizAnswerModel? {
         return quizAnswerPersistencePort.findById(id)
     }
 
-    fun getAllQuizAnswers(): List<QuizAnswer> {
+    fun getAllQuizAnswers(): List<QuizAnswerModel> {
         return quizAnswerPersistencePort.findAll()
     }
 
-    fun getQuizAnswersByQuizId(quizId: Long): List<QuizAnswer> {
+    fun getQuizAnswersByQuizId(quizId: Long): List<QuizAnswerModel> {
         return quizAnswerPersistencePort.findByQuizId(quizId)
     }
 
     @Transactional
-    fun updateQuizAnswer(command: UpdateQuizAnswerCommand): QuizAnswer? {
+    fun updateQuizAnswer(command: UpdateQuizAnswerCommand): QuizAnswerModel? {
         val existingQuizAnswer = quizAnswerPersistencePort.findById(command.id) ?: return null
         val updatedQuizAnswer = QuizAnswerMapper.toModel(command, existingQuizAnswer)
         return quizAnswerPersistencePort.save(updatedQuizAnswer)

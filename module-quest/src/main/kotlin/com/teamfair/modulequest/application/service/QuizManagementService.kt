@@ -4,7 +4,7 @@ import com.teamfair.modulequest.application.command.CreateQuizCommand
 import com.teamfair.modulequest.application.command.UpdateQuizCommand
 import com.teamfair.modulequest.application.port.out.QuizPersistencePort
 import com.teamfair.modulequest.domain.mapper.QuizMapper
-import com.teamfair.modulequest.domain.model.Quiz
+import com.teamfair.modulequest.domain.model.QuizModel
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -15,25 +15,25 @@ class QuizManagementService(
 ) {
 
     @Transactional
-    fun createQuiz(command: CreateQuizCommand): Quiz {
+    fun createQuiz(command: CreateQuizCommand): QuizModel {
         val quizModel = QuizMapper.toModel(command)
         return quizPersistencePort.save(quizModel)
     }
 
-    fun getQuizById(id: Long): Quiz? {
+    fun getQuizById(id: Long): QuizModel? {
         return quizPersistencePort.findById(id)
     }
 
-    fun getAllQuizzes(): List<Quiz> {
+    fun getAllQuizzes(): List<QuizModel> {
         return quizPersistencePort.findAll()
     }
 
-    fun getQuizzesByMissionId(missionId: Long): List<Quiz> {
+    fun getQuizzesByMissionId(missionId: Long): List<QuizModel> {
         return quizPersistencePort.findByMissionId(missionId)
     }
 
     @Transactional
-    fun updateQuiz(command: UpdateQuizCommand): Quiz? {
+    fun updateQuiz(command: UpdateQuizCommand): QuizModel? {
         val existingQuiz = quizPersistencePort.findById(command.id) ?: return null
         val updatedQuiz = QuizMapper.toModel(command, existingQuiz)
         return quizPersistencePort.save(updatedQuiz)

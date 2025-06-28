@@ -1,6 +1,6 @@
 package com.teamfair.modulequest.adapter.`in`.web.model.response
 
-import com.teamfair.modulequest.domain.model.Mission
+import com.teamfair.modulequest.domain.model.MissionModel
 import java.time.LocalDateTime
 
 data class MissionResponse(
@@ -15,17 +15,17 @@ data class MissionResponse(
     val updatedAt: LocalDateTime?
 ) {
     companion object {
-        fun from(mission: Mission): MissionResponse {
+        fun from(missionModel: MissionModel): MissionResponse {
             return MissionResponse(
-                id = mission.id,
-                type = mission.type,
-                title = mission.title,
-                sortOrder = mission.sortOrder,
-                questId = mission.questId,
-                createdBy = mission.createdBy,
-                createdAt = mission.createdAt,
-                updatedBy = mission.updatedBy,
-                updatedAt = mission.updatedAt
+                id = missionModel.id,
+                type = missionModel.type,
+                title = missionModel.title,
+                sortOrder = missionModel.sortOrder,
+                questId = missionModel.questId,
+                createdBy = missionModel.createdBy,
+                createdAt = missionModel.createdAt,
+                updatedBy = missionModel.updatedBy,
+                updatedAt = missionModel.updatedAt
             )
         }
     }

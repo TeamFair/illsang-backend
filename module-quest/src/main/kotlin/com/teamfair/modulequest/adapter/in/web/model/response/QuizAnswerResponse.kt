@@ -1,6 +1,6 @@
 package com.teamfair.modulequest.adapter.`in`.web.model.response
 
-import com.teamfair.modulequest.domain.model.QuizAnswer
+import com.teamfair.modulequest.domain.model.QuizAnswerModel
 import java.time.LocalDateTime
 
 data class QuizAnswerResponse(
@@ -14,16 +14,16 @@ data class QuizAnswerResponse(
     val updatedAt: LocalDateTime?
 ) {
     companion object {
-        fun from(quizAnswer: QuizAnswer): QuizAnswerResponse {
+        fun from(quizAnswerModel: QuizAnswerModel): QuizAnswerResponse {
             return QuizAnswerResponse(
-                id = quizAnswer.id,
-                answer = quizAnswer.answer,
-                sortOrder = quizAnswer.sortOrder,
-                quizId = quizAnswer.quizId,
-                createdBy = quizAnswer.createdBy,
-                createdAt = quizAnswer.createdAt,
-                updatedBy = quizAnswer.updatedBy,
-                updatedAt = quizAnswer.updatedAt
+                id = quizAnswerModel.id,
+                answer = quizAnswerModel.answer,
+                sortOrder = quizAnswerModel.sortOrder,
+                quizId = quizAnswerModel.quizId,
+                createdBy = quizAnswerModel.createdBy,
+                createdAt = quizAnswerModel.createdAt,
+                updatedBy = quizAnswerModel.updatedBy,
+                updatedAt = quizAnswerModel.updatedAt
             )
         }
     }

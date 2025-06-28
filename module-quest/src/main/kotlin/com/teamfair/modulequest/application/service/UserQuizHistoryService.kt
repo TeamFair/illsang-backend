@@ -4,7 +4,7 @@ import com.teamfair.modulequest.application.command.CreateUserQuizHistoryCommand
 import com.teamfair.modulequest.application.command.UpdateUserQuizHistoryCommand
 import com.teamfair.modulequest.application.port.out.UserQuizHistoryPersistencePort
 import com.teamfair.modulequest.domain.mapper.UserQuizHistoryMapper
-import com.teamfair.modulequest.domain.model.UserQuizHistory
+import com.teamfair.modulequest.domain.model.UserQuizHistoryModel
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -15,33 +15,33 @@ class UserQuizHistoryService(
 ) {
 
     @Transactional
-    fun createUserQuizHistory(command: CreateUserQuizHistoryCommand): UserQuizHistory {
+    fun createUserQuizHistory(command: CreateUserQuizHistoryCommand): UserQuizHistoryModel {
         val userQuizHistoryModel = UserQuizHistoryMapper.toModel(command)
         return userQuizHistoryPersistencePort.save(userQuizHistoryModel)
     }
 
-    fun getUserQuizHistoryById(id: Long): UserQuizHistory? {
+    fun getUserQuizHistoryById(id: Long): UserQuizHistoryModel? {
         return userQuizHistoryPersistencePort.findById(id)
     }
 
-    fun getAllUserQuizHistories(): List<UserQuizHistory> {
+    fun getAllUserQuizHistories(): List<UserQuizHistoryModel> {
         return userQuizHistoryPersistencePort.findAll()
     }
 
-    fun getUserQuizHistoriesByUserId(userId: Long): List<UserQuizHistory> {
+    fun getUserQuizHistoriesByUserId(userId: Long): List<UserQuizHistoryModel> {
         return userQuizHistoryPersistencePort.findByUserId(userId)
     }
 
-    fun getUserQuizHistoriesByQuizId(quizId: Long): List<UserQuizHistory> {
+    fun getUserQuizHistoriesByQuizId(quizId: Long): List<UserQuizHistoryModel> {
         return userQuizHistoryPersistencePort.findByQuizId(quizId)
     }
 
-    fun getUserQuizHistoriesByUserMissionHistoryId(userMissionHistoryId: Long): List<UserQuizHistory> {
+    fun getUserQuizHistoriesByUserMissionHistoryId(userMissionHistoryId: Long): List<UserQuizHistoryModel> {
         return userQuizHistoryPersistencePort.findByUserMissionHistoryId(userMissionHistoryId)
     }
 
     @Transactional
-    fun updateUserQuizHistory(command: UpdateUserQuizHistoryCommand): UserQuizHistory? {
+    fun updateUserQuizHistory(command: UpdateUserQuizHistoryCommand): UserQuizHistoryModel? {
         val existingUserQuizHistory = userQuizHistoryPersistencePort.findById(command.id) ?: return null
         val updatedUserQuizHistory = UserQuizHistoryMapper.toModel(command, existingUserQuizHistory)
         return userQuizHistoryPersistencePort.save(updatedUserQuizHistory)

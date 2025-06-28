@@ -4,11 +4,11 @@ import com.teamfair.modulequest.adapter.out.persistence.entity.QuestEntity
 import com.teamfair.modulequest.adapter.out.persistence.entity.UserQuestHistoryEntity
 import com.teamfair.modulequest.application.command.CreateUserQuestHistoryCommand
 import com.teamfair.modulequest.application.command.UpdateUserQuestHistoryCommand
-import com.teamfair.modulequest.domain.model.UserQuestHistory
+import com.teamfair.modulequest.domain.model.UserQuestHistoryModel
 
 object UserQuestHistoryMapper {
-    fun toModel(entity: UserQuestHistoryEntity): UserQuestHistory {
-        return UserQuestHistory(
+    fun toModel(entity: UserQuestHistoryEntity): UserQuestHistoryModel {
+        return UserQuestHistoryModel(
             id = entity.id,
             userId = entity.userId,
             status = entity.status,
@@ -23,7 +23,7 @@ object UserQuestHistoryMapper {
         )
     }
 
-    fun toEntity(model: UserQuestHistory, questEntity: QuestEntity): UserQuestHistoryEntity {
+    fun toEntity(model: UserQuestHistoryModel, questEntity: QuestEntity): UserQuestHistoryEntity {
         return UserQuestHistoryEntity(
             id = model.id,
             userId = model.userId,
@@ -40,8 +40,8 @@ object UserQuestHistoryMapper {
         }
     }
 
-    fun toModel(command: CreateUserQuestHistoryCommand): UserQuestHistory {
-        return UserQuestHistory(
+    fun toModel(command: CreateUserQuestHistoryCommand): UserQuestHistoryModel {
+        return UserQuestHistoryModel(
             userId = command.userId,
             status = command.status,
             liked = command.liked,
@@ -51,7 +51,7 @@ object UserQuestHistoryMapper {
         )
     }
 
-    fun toModel(command: UpdateUserQuestHistoryCommand, existing: UserQuestHistory): UserQuestHistory {
+    fun toModel(command: UpdateUserQuestHistoryCommand, existing: UserQuestHistoryModel): UserQuestHistoryModel {
         return existing.copy(
             status = command.status ?: existing.status,
             liked = command.liked ?: existing.liked,

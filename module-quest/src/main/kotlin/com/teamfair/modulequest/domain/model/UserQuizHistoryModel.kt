@@ -3,12 +3,13 @@ package com.teamfair.modulequest.domain.model
 import com.illsang.common.model.BaseModel
 import java.time.LocalDateTime
 
-data class Mission(
+data class UserQuizHistoryModel(
     val id: Long? = null,
-    var type: String,
-    var title: String,
-    var sortOrder: Int = 0,
-    val questId: Long,
+    val userId: Long,
+    var answer: String? = null,
+    var submittedAt: LocalDateTime? = null,
+    val quizId: Long,
+    val userMissionHistoryId: Long,
     override val createdBy: String? = null,
     override val createdAt: LocalDateTime? = null,
     override val updatedBy: String? = null,

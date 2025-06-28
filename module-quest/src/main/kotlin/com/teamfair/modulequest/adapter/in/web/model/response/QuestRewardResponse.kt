@@ -1,6 +1,6 @@
 package com.teamfair.modulequest.adapter.`in`.web.model.response
 
-import com.teamfair.modulequest.domain.model.QuestReward
+import com.teamfair.modulequest.domain.model.QuestRewardModel
 import com.teamfair.modulequest.domain.model.enums.RewardType
 import java.time.LocalDateTime
 
@@ -15,16 +15,16 @@ data class QuestRewardResponse(
     val updatedAt: LocalDateTime?
 ) {
     companion object {
-        fun from(questReward: QuestReward): QuestRewardResponse {
+        fun from(questRewardModel: QuestRewardModel): QuestRewardResponse {
             return QuestRewardResponse(
-                id = questReward.id,
-                type = questReward.type,
-                amount = questReward.amount,
-                questId = questReward.questId,
-                createdBy = questReward.createdBy,
-                createdAt = questReward.createdAt,
-                updatedBy = questReward.updatedBy,
-                updatedAt = questReward.updatedAt
+                id = questRewardModel.id,
+                type = questRewardModel.type,
+                amount = questRewardModel.amount,
+                questId = questRewardModel.questId,
+                createdBy = questRewardModel.createdBy,
+                createdAt = questRewardModel.createdAt,
+                updatedBy = questRewardModel.updatedBy,
+                updatedAt = questRewardModel.updatedAt
             )
         }
     }

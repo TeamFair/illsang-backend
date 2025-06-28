@@ -3,10 +3,10 @@ package com.teamfair.modulequest.adapter.`in`.web
 import com.illsang.common.enums.ResponseMsg
 import com.teamfair.modulequest.adapter.`in`.web.model.request.CreateUserQuestHistoryRequest
 import com.teamfair.modulequest.adapter.`in`.web.model.request.UpdateUserQuestHistoryRequest
-import com.teamfair.modulequest.adapter.`in`.web.model.response.UserQuestHistoryResponse
 import com.teamfair.modulequest.application.command.CreateUserQuestHistoryCommand
 import com.teamfair.modulequest.application.command.UpdateUserQuestHistoryCommand
 import com.teamfair.modulequest.application.service.UserQuestHistoryService
+import com.teamfair.modulequest.domain.model.UserQuestHistoryModel
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -28,107 +28,35 @@ class UserQuestHistoryController(
         )
         
         val userQuestHistory = userQuestHistoryService.createUserQuestHistory(command)
-        val response = UserQuestHistoryResponse(
-            id = userQuestHistory.id!!,
-            userId = userQuestHistory.userId,
-            status = userQuestHistory.status,
-            liked = userQuestHistory.liked,
-            disliked = userQuestHistory.disliked,
-            viewCount = userQuestHistory.viewCount,
-            questId = userQuestHistory.questId,
-            createdBy = userQuestHistory.createdBy,
-            createdAt = userQuestHistory.createdAt,
-            updatedBy = userQuestHistory.updatedBy,
-            updatedAt = userQuestHistory.updatedAt
-        )
-        
-        return ResponseEntity.ok(response)
+        return ResponseEntity.ok(userQuestHistory)
     }
 
     @GetMapping("/{id}")
     fun getUserQuestHistoryById(@PathVariable id: Long): ResponseEntity<Any> {
         val userQuestHistory = userQuestHistoryService.getUserQuestHistoryById(id)
         return if (userQuestHistory != null) {
-            val response = UserQuestHistoryResponse(
-                id = userQuestHistory.id!!,
-                userId = userQuestHistory.userId,
-                status = userQuestHistory.status,
-                liked = userQuestHistory.liked,
-                disliked = userQuestHistory.disliked,
-                viewCount = userQuestHistory.viewCount,
-                questId = userQuestHistory.questId,
-                createdBy = userQuestHistory.createdBy,
-                createdAt = userQuestHistory.createdAt,
-                updatedBy = userQuestHistory.updatedBy,
-                updatedAt = userQuestHistory.updatedAt
-            )
-            ResponseEntity.ok(response)
+            ResponseEntity.ok(userQuestHistory)
         } else {
             ResponseEntity.notFound().build()
         }
     }
 
     @GetMapping
-    fun getAllUserQuestHistories(): ResponseEntity<List<UserQuestHistoryResponse>> {
+    fun getAllUserQuestHistories(): ResponseEntity<List<UserQuestHistoryModel>> {
         val userQuestHistories = userQuestHistoryService.getAllUserQuestHistories()
-        val responses = userQuestHistories.map { userQuestHistory ->
-            UserQuestHistoryResponse(
-                id = userQuestHistory.id!!,
-                userId = userQuestHistory.userId,
-                status = userQuestHistory.status,
-                liked = userQuestHistory.liked,
-                disliked = userQuestHistory.disliked,
-                viewCount = userQuestHistory.viewCount,
-                questId = userQuestHistory.questId,
-                createdBy = userQuestHistory.createdBy,
-                createdAt = userQuestHistory.createdAt,
-                updatedBy = userQuestHistory.updatedBy,
-                updatedAt = userQuestHistory.updatedAt
-            )
-        }
-        return ResponseEntity.ok(responses)
+        return ResponseEntity.ok(userQuestHistories)
     }
 
     @GetMapping("/user/{userId}")
-    fun getUserQuestHistoriesByUserId(@PathVariable userId: Long): ResponseEntity<List<UserQuestHistoryResponse>> {
+    fun getUserQuestHistoriesByUserId(@PathVariable userId: Long): ResponseEntity<List<UserQuestHistoryModel>> {
         val userQuestHistories = userQuestHistoryService.getUserQuestHistoriesByUserId(userId)
-        val responses = userQuestHistories.map { userQuestHistory ->
-            UserQuestHistoryResponse(
-                id = userQuestHistory.id!!,
-                userId = userQuestHistory.userId,
-                status = userQuestHistory.status,
-                liked = userQuestHistory.liked,
-                disliked = userQuestHistory.disliked,
-                viewCount = userQuestHistory.viewCount,
-                questId = userQuestHistory.questId,
-                createdBy = userQuestHistory.createdBy,
-                createdAt = userQuestHistory.createdAt,
-                updatedBy = userQuestHistory.updatedBy,
-                updatedAt = userQuestHistory.updatedAt
-            )
-        }
-        return ResponseEntity.ok(responses)
+        return ResponseEntity.ok(userQuestHistories)
     }
 
     @GetMapping("/quest/{questId}")
-    fun getUserQuestHistoriesByQuestId(@PathVariable questId: Long): ResponseEntity<List<UserQuestHistoryResponse>> {
+    fun getUserQuestHistoriesByQuestId(@PathVariable questId: Long): ResponseEntity<List<UserQuestHistoryModel>> {
         val userQuestHistories = userQuestHistoryService.getUserQuestHistoriesByQuestId(questId)
-        val responses = userQuestHistories.map { userQuestHistory ->
-            UserQuestHistoryResponse(
-                id = userQuestHistory.id!!,
-                userId = userQuestHistory.userId,
-                status = userQuestHistory.status,
-                liked = userQuestHistory.liked,
-                disliked = userQuestHistory.disliked,
-                viewCount = userQuestHistory.viewCount,
-                questId = userQuestHistory.questId,
-                createdBy = userQuestHistory.createdBy,
-                createdAt = userQuestHistory.createdAt,
-                updatedBy = userQuestHistory.updatedBy,
-                updatedAt = userQuestHistory.updatedAt
-            )
-        }
-        return ResponseEntity.ok(responses)
+        return ResponseEntity.ok(userQuestHistories)
     }
 
     @PutMapping("/{id}")
@@ -146,20 +74,7 @@ class UserQuestHistoryController(
         
         val userQuestHistory = userQuestHistoryService.updateUserQuestHistory(command)
         return if (userQuestHistory != null) {
-            val response = UserQuestHistoryResponse(
-                id = userQuestHistory.id!!,
-                userId = userQuestHistory.userId,
-                status = userQuestHistory.status,
-                liked = userQuestHistory.liked,
-                disliked = userQuestHistory.disliked,
-                viewCount = userQuestHistory.viewCount,
-                questId = userQuestHistory.questId,
-                createdBy = userQuestHistory.createdBy,
-                createdAt = userQuestHistory.createdAt,
-                updatedBy = userQuestHistory.updatedBy,
-                updatedAt = userQuestHistory.updatedAt
-            )
-            ResponseEntity.ok(response)
+            ResponseEntity.ok(ResponseMsg.SUCCESS)
         } else {
             ResponseEntity.notFound().build()
         }

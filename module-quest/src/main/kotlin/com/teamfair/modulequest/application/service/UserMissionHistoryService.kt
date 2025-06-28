@@ -4,7 +4,7 @@ import com.teamfair.modulequest.application.command.CreateUserMissionHistoryComm
 import com.teamfair.modulequest.application.command.UpdateUserMissionHistoryCommand
 import com.teamfair.modulequest.application.port.out.UserMissionHistoryPersistencePort
 import com.teamfair.modulequest.domain.mapper.UserMissionHistoryMapper
-import com.teamfair.modulequest.domain.model.UserMissionHistory
+import com.teamfair.modulequest.domain.model.UserMissionHistoryModel
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -15,29 +15,29 @@ class UserMissionHistoryService(
 ) {
 
     @Transactional
-    fun createUserMissionHistory(command: CreateUserMissionHistoryCommand): UserMissionHistory {
+    fun createUserMissionHistory(command: CreateUserMissionHistoryCommand): UserMissionHistoryModel {
         val userMissionHistoryModel = UserMissionHistoryMapper.toModel(command)
         return userMissionHistoryPersistencePort.save(userMissionHistoryModel)
     }
 
-    fun getUserMissionHistoryById(id: Long): UserMissionHistory? {
+    fun getUserMissionHistoryById(id: Long): UserMissionHistoryModel? {
         return userMissionHistoryPersistencePort.findById(id)
     }
 
-    fun getAllUserMissionHistories(): List<UserMissionHistory> {
+    fun getAllUserMissionHistories(): List<UserMissionHistoryModel> {
         return userMissionHistoryPersistencePort.findAll()
     }
 
-    fun getUserMissionHistoriesByUserId(userId: Long): List<UserMissionHistory> {
+    fun getUserMissionHistoriesByUserId(userId: Long): List<UserMissionHistoryModel> {
         return userMissionHistoryPersistencePort.findByUserId(userId)
     }
 
-    fun getUserMissionHistoriesByMissionId(missionId: Long): List<UserMissionHistory> {
+    fun getUserMissionHistoriesByMissionId(missionId: Long): List<UserMissionHistoryModel> {
         return userMissionHistoryPersistencePort.findByMissionId(missionId)
     }
 
     @Transactional
-    fun updateUserMissionHistory(command: UpdateUserMissionHistoryCommand): UserMissionHistory? {
+    fun updateUserMissionHistory(command: UpdateUserMissionHistoryCommand): UserMissionHistoryModel? {
         val existingUserMissionHistory = userMissionHistoryPersistencePort.findById(command.id) ?: return null
         val updatedUserMissionHistory = UserMissionHistoryMapper.toModel(command, existingUserMissionHistory)
         return userMissionHistoryPersistencePort.save(updatedUserMissionHistory)

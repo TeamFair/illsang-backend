@@ -1,12 +1,12 @@
 package com.teamfair.modulequest.application.port.out
 
-import com.teamfair.modulequest.domain.model.QuizAnswer
+import com.teamfair.modulequest.domain.model.QuizAnswerModel
 
 interface QuizAnswerPersistencePort {
-    fun save(quizAnswer: QuizAnswer): QuizAnswer
-    fun findById(id: Long): QuizAnswer?
-    fun findAll(): List<QuizAnswer>
-    fun findByQuizId(quizId: Long): List<QuizAnswer>
+    fun save(quizAnswerModel: QuizAnswerModel): QuizAnswerModel
+    fun findById(id: Long): QuizAnswerModel?
+    fun findAll(): List<QuizAnswerModel>
+    fun findByQuizId(quizId: Long): List<QuizAnswerModel>
     fun deleteById(id: Long)
     fun existsById(id: Long): Boolean
 } 

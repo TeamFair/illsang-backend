@@ -1,17 +1,17 @@
 package com.teamfair.modulequest.domain.model
 
 import com.illsang.common.model.BaseModel
+import com.teamfair.modulequest.domain.model.enums.QuestStatus
 import java.time.LocalDateTime
 
-data class Quest(
+data class UserQuestHistoryModel(
     val id: Long? = null,
-    var imageId: Long? = null,
-    var writerName: String? = null,
-    var mainImageId: Long? = null,
-    var popularYn: Boolean = false,
-    var type: String,
-    var repeatFrequency: String? = null,
-    var sortOrder: Int = 0,
+    val userId: Long,
+    var status: QuestStatus = QuestStatus.PROGRESSING,
+    var liked: Boolean = false,
+    var disliked: Boolean = false,
+    var viewCount: Int = 0,
+    val questId: Long,
     override val createdBy: String? = null,
     override val createdAt: LocalDateTime? = null,
     override val updatedBy: String? = null,

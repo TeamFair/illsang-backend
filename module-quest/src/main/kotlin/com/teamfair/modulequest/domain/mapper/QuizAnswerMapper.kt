@@ -4,11 +4,11 @@ import com.teamfair.modulequest.adapter.out.persistence.entity.QuizAnswerEntity
 import com.teamfair.modulequest.adapter.out.persistence.entity.QuizEntity
 import com.teamfair.modulequest.application.command.CreateQuizAnswerCommand
 import com.teamfair.modulequest.application.command.UpdateQuizAnswerCommand
-import com.teamfair.modulequest.domain.model.QuizAnswer
+import com.teamfair.modulequest.domain.model.QuizAnswerModel
 
 object QuizAnswerMapper {
-    fun toModel(entity: QuizAnswerEntity): QuizAnswer {
-        return QuizAnswer(
+    fun toModel(entity: QuizAnswerEntity): QuizAnswerModel {
+        return QuizAnswerModel(
             id = entity.id,
             answer = entity.answer,
             sortOrder = entity.sortOrder,
@@ -20,7 +20,7 @@ object QuizAnswerMapper {
         )
     }
 
-    fun toEntity(model: QuizAnswer, quizEntity: QuizEntity): QuizAnswerEntity {
+    fun toEntity(model: QuizAnswerModel, quizEntity: QuizEntity): QuizAnswerEntity {
         return QuizAnswerEntity(
             id = model.id,
             answer = model.answer,
@@ -34,15 +34,15 @@ object QuizAnswerMapper {
         }
     }
 
-    fun toModel(command: CreateQuizAnswerCommand): QuizAnswer {
-        return QuizAnswer(
+    fun toModel(command: CreateQuizAnswerCommand): QuizAnswerModel {
+        return QuizAnswerModel(
             answer = command.answer,
             sortOrder = command.sortOrder,
             quizId = command.quizId
         )
     }
 
-    fun toModel(command: UpdateQuizAnswerCommand, existing: QuizAnswer): QuizAnswer {
+    fun toModel(command: UpdateQuizAnswerCommand, existing: QuizAnswerModel): QuizAnswerModel {
         return existing.copy(
             answer = command.answer ?: existing.answer,
             sortOrder = command.sortOrder ?: existing.sortOrder

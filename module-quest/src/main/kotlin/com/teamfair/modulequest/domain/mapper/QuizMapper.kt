@@ -4,11 +4,11 @@ import com.teamfair.modulequest.adapter.out.persistence.entity.MissionEntity
 import com.teamfair.modulequest.adapter.out.persistence.entity.QuizEntity
 import com.teamfair.modulequest.application.command.CreateQuizCommand
 import com.teamfair.modulequest.application.command.UpdateQuizCommand
-import com.teamfair.modulequest.domain.model.Quiz
+import com.teamfair.modulequest.domain.model.QuizModel
 
 object QuizMapper {
-    fun toModel(entity: QuizEntity): Quiz {
-        return Quiz(
+    fun toModel(entity: QuizEntity): QuizModel {
+        return QuizModel(
             id = entity.id,
             question = entity.question,
             hint = entity.hint,
@@ -21,7 +21,7 @@ object QuizMapper {
         )
     }
 
-    fun toEntity(model: Quiz, missionEntity: MissionEntity): QuizEntity {
+    fun toEntity(model: QuizModel, missionEntity: MissionEntity): QuizEntity {
         return QuizEntity(
             id = model.id,
             question = model.question,
@@ -36,8 +36,8 @@ object QuizMapper {
         }
     }
 
-    fun toModel(command: CreateQuizCommand): Quiz {
-        return Quiz(
+    fun toModel(command: CreateQuizCommand): QuizModel {
+        return QuizModel(
             question = command.question,
             hint = command.hint,
             sortOrder = command.sortOrder,
@@ -45,7 +45,7 @@ object QuizMapper {
         )
     }
 
-    fun toModel(command: UpdateQuizCommand, existing: Quiz): Quiz {
+    fun toModel(command: UpdateQuizCommand, existing: QuizModel): QuizModel {
         return existing.copy(
             question = command.question ?: existing.question,
             hint = command.hint ?: existing.hint,
