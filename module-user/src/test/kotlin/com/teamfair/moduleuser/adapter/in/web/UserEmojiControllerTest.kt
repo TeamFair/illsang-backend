@@ -35,13 +35,15 @@ class UserEmojiControllerTest {
         val command = CreateUserEmojiCommand(
             userId = 1L,
             emojiId = 100L,
-            isEquipped = false
+            isEquipped = false,
+            targetId = 1L
         )
         val createdUserEmoji = UserEmojiModel(
             id = 1L,
             userId = command.userId,
             emojiId = command.emojiId,
-            isEquipped = command.isEquipped
+            isEquipped = command.isEquipped,
+            targetId = command.targetId
         )
         given(userEmojiService.createUserEmoji(command)).willReturn(createdUserEmoji)
 
@@ -67,7 +69,8 @@ class UserEmojiControllerTest {
             id = 1L,
             userId = 1L,
             emojiId = 100L,
-            isEquipped = false
+            isEquipped = false,
+            targetId = 1L
         )
         given(userEmojiService.getUserEmojiById(1L)).willReturn(userEmoji)
 
@@ -92,13 +95,15 @@ class UserEmojiControllerTest {
                 id = 1L,
                 userId = 1L,
                 emojiId = 100L,
-                isEquipped = false
+                isEquipped = false,
+                targetId = 1L
             ),
             UserEmojiModel(
                 id = 2L,
                 userId = 1L,
                 emojiId = 101L,
-                isEquipped = true
+                isEquipped = true,
+                targetId = 2L
             )
         )
         given(userEmojiService.getUserEmojisByUserId(1L)).willReturn(userEmojis)
@@ -126,13 +131,15 @@ class UserEmojiControllerTest {
             id = 1L,
             userId = 1L,
             emojiId = 102L,
-            isEquipped = true
+            isEquipped = true,
+            targetId = 1L
         )
         val updatedUserEmoji = UserEmojiModel(
             id = 1L,
             userId = 1L,
             emojiId = updateCommand.emojiId,
-            isEquipped = updateCommand.isEquipped
+            isEquipped = updateCommand.isEquipped,
+            targetId = updateCommand.targetId
         )
         given(userEmojiService.updateUserEmoji(updateCommand)).willReturn(updatedUserEmoji)
 
@@ -184,7 +191,8 @@ class UserEmojiControllerTest {
             id = 999L,
             userId = 1L,
             emojiId = 102L,
-            isEquipped = true
+            isEquipped = true,
+            targetId = 1L
         )
         given(userEmojiService.updateUserEmoji(updateCommand)).willReturn(null)
 

@@ -8,6 +8,7 @@ data class UserEmojiModel(
     val userId: Long,
     val emojiId: Long,
     val isEquipped: Boolean = false,
+    val targetId: Long,
     override val createdBy: String? = null,
     override val createdAt: LocalDateTime? = null,
     override val updatedBy: String? = null,

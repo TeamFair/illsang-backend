@@ -15,7 +15,8 @@ object UserEmojiMapper {
             createdBy = entity.createdBy,
             createdAt = entity.createdAt,
             updatedBy = entity.updatedBy,
-            updatedAt = entity.updatedAt
+            updatedAt = entity.updatedAt,
+            targetId = entity.targetId
         )
     }
 
@@ -24,7 +25,8 @@ object UserEmojiMapper {
             id = model.id,
             userId = model.userId,
             emojiId = model.emojiId,
-            isEquipped = model.isEquipped
+            isEquipped = model.isEquipped,
+            targetId = model.targetId
         ).apply {
             createdBy = model.createdBy
             createdAt = model.createdAt
@@ -33,11 +35,13 @@ object UserEmojiMapper {
         }
     }
 
+
     fun toModel(command: CreateUserEmojiCommand): UserEmojiModel {
         return UserEmojiModel(
             userId = command.userId,
             emojiId = command.emojiId,
-            isEquipped = command.isEquipped
+            isEquipped = command.isEquipped,
+            targetId = command.targetId
         )
     }
 
@@ -45,7 +49,8 @@ object UserEmojiMapper {
         return existing.copy(
             userId = command.userId,
             emojiId = command.emojiId,
-            isEquipped = command.isEquipped
+            isEquipped = command.isEquipped,
+            targetId = command.targetId
         )
     }
 } 
