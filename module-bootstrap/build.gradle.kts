@@ -1,5 +1,5 @@
 springBoot {
-    mainClass.set("com.teamfair.modulebootstrap")
+    mainClass.set("com.illsang.modulebootstrap")
 }
 
 dependencies {

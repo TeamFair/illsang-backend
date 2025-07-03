@@ -1,6 +1,6 @@
 package com.illsang.management.adapter.out.persistence.entity
 
-import com.illsang.common.entity.BaseEntity
+import com.illsang.common.adapter.out.persistence.entity.BaseEntity
 import jakarta.persistence.*
 
 @Entity
@@ -21,4 +21,4 @@ class BannerEntity(
 
     @Column(name = "active_yn", nullable = false)
     var activeYn: Boolean = true
-) : BaseEntity() 
+) : BaseEntity()

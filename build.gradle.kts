@@ -6,7 +6,7 @@ plugins {
 	id("io.spring.dependency-management") version "1.1.7"
 }
 
-group = "com.teamfair"
+group = "com.illsang"
 version = "0.0.1"
 
 java {
@@ -95,6 +95,7 @@ subprojects {
 
 		// 개발용 도구
 		developmentOnly("org.springframework.boot:spring-boot-devtools")
+		testImplementation("com.github.codemonstur:embedded-redis:1.4.3")
 		implementation("org.springframework.boot:spring-boot-starter-actuator")
 
 		// DB Driver

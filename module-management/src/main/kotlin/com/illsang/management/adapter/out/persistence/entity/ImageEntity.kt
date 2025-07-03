@@ -1,6 +1,6 @@
 package com.illsang.management.adapter.out.persistence.entity
 
-import com.illsang.common.entity.BaseEntity
+import com.illsang.common.adapter.out.persistence.entity.BaseEntity
 import jakarta.persistence.*
 
 @Entity
@@ -18,4 +18,4 @@ class ImageEntity(
 
     @Column(nullable = false)
     var size: Long
-) : BaseEntity() 
+) : BaseEntity()

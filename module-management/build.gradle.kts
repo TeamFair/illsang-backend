@@ -1,5 +1,5 @@
 springBoot {
-    mainClass.set("com.teamfair.modulemanagement")
+    mainClass.set("com.illsang.modulemanagement")
 }
 
 dependencies {

@@ -1,0 +1,14 @@
+spring:
+  profiles:
+    active: test
+  data:
+    redis:
+      host: localhost
+      port: 0  # Will be set dynamically by embedded Redis
+      useSsl: false
+
+oauth:
+  token:
+    timeout:
+      access-token: 1
+      refresh-token: 24

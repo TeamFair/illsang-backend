@@ -1,6 +1,6 @@
 package com.illsang.management.domain.model
 
-import com.illsang.common.model.BaseModel
+import com.illsang.common.domain.model.BaseModel
 import java.time.LocalDateTime
 
 data class BannerModel(
@@ -18,4 +18,4 @@ data class BannerModel(
         require(title.isNotBlank()) { "Title is required" }
         require(title.length <= 255) { "Title must be less than 255 characters" }
     }
-} 
+}

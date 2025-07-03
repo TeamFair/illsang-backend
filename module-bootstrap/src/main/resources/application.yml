@@ -14,6 +14,17 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
     show-sql: true
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      useSsl: false
+
+oauth:
+  token:
+    timeout:
+      access-token: 1
+      refresh-token: 2
 
 server:
   port: 8080
@@ -27,6 +38,6 @@ management:
 logging:
   level:
     root: INFO
-    com.teamfair: INFO
+    com.illsang: INFO
     org.hibernate.SQL: DEBUG
     org.hibernate.type.descriptor.sql.BasicBinder: TRACE

@@ -1,6 +1,6 @@
 package com.illsang.management.domain.model
 
-import com.illsang.common.model.BaseModel
+import com.illsang.common.domain.model.BaseModel
 import java.time.LocalDateTime
 
 data class ImageModel(
@@ -20,4 +20,4 @@ data class ImageModel(
         require(type.length <= 50) { "Type must be less than 50 characters" }
         require(name.length <= 255) { "Name must be less than 255 characters" }
     }
-} 
+}
