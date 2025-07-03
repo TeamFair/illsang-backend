@@ -36,7 +36,7 @@ class SecurityConfig(
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests { authz ->
                 authz.requestMatchers("/h2-console/**").permitAll()  // H2 Console for development
-                    .requestMatchers("/open/**").permitAll()
+                    .requestMatchers("/api/v1/open/**").permitAll()
                     .anyRequest().authenticated()  // All other requests require authentication, authorization handled by method-level annotations
             }
             .headers { headers -> headers.frameOptions { it.sameOrigin() } }

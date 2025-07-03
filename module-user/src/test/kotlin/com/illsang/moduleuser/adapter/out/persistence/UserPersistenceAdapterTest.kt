@@ -1,6 +1,7 @@
 package com.illsang.moduleuser.adapter.out.persistence
 
 import com.illsang.moduleuser.adapter.out.persistence.repository.UserRepository
+import com.illsang.moduleuser.domain.enums.OAuthProvider
 import com.illsang.moduleuser.domain.model.UserModel
 import com.illsang.moduleuser.domain.model.UserStatus
 import org.junit.jupiter.api.Assertions.*
@@ -32,7 +33,7 @@ class UserPersistenceAdapterTest {
         // Given
         val userModel = UserModel(
             email = "test@example.com",
-            channel = "EMAIL",
+            channel = OAuthProvider.GOOGLE,
             nickname = "테스트유저",
             status = UserStatus.ACTIVE
         )
@@ -55,7 +56,7 @@ class UserPersistenceAdapterTest {
         // Given
         val userModel = UserModel(
             email = "test@example.com",
-            channel = "EMAIL",
+            channel = OAuthProvider.GOOGLE,
             nickname = "테스트유저",
             status = UserStatus.ACTIVE
         )
@@ -86,13 +87,13 @@ class UserPersistenceAdapterTest {
         // Given
         userPersistenceAdapter.save(UserModel(
             email = "user1@example.com",
-            channel = "EMAIL",
+            channel = OAuthProvider.GOOGLE,
             nickname = "유저1",
             status = UserStatus.ACTIVE
         ))
         userPersistenceAdapter.save(UserModel(
             email = "user2@example.com",
-            channel = "GOOGLE",
+            channel = OAuthProvider.GOOGLE,
             nickname = "유저2",
             status = UserStatus.INACTIVE
         ))
@@ -112,7 +113,7 @@ class UserPersistenceAdapterTest {
         // Given
         val saved = userPersistenceAdapter.save(UserModel(
             email = "delete@example.com",
-            channel = "EMAIL",
+            channel = OAuthProvider.GOOGLE,
             nickname = "삭제유저",
             status = UserStatus.ACTIVE
         ))
@@ -131,7 +132,7 @@ class UserPersistenceAdapterTest {
         // Given
         val saved = userPersistenceAdapter.save(UserModel(
             email = "exists@example.com",
-            channel = "EMAIL",
+            channel = OAuthProvider.GOOGLE,
             nickname = "존재유저",
             status = UserStatus.ACTIVE
         ))
@@ -151,7 +152,7 @@ class UserPersistenceAdapterTest {
         // Given
         userPersistenceAdapter.save(UserModel(
             email = "exists@example.com",
-            channel = "EMAIL",
+            channel = OAuthProvider.GOOGLE,
             nickname = "존재유저",
             status = UserStatus.ACTIVE
         ))
@@ -181,13 +182,13 @@ class UserPersistenceAdapterTest {
         // Given
         val activeUser = userPersistenceAdapter.save(UserModel(
             email = "active@example.com",
-            channel = "EMAIL",
+            channel = OAuthProvider.GOOGLE,
             nickname = "활성유저",
             status = UserStatus.ACTIVE
         ))
         val dormantUser = userPersistenceAdapter.save(UserModel(
             email = "dormant@example.com",
-            channel = "GOOGLE",
+            channel = OAuthProvider.GOOGLE,
             nickname = "휴면유저",
             status = UserStatus.INACTIVE
         ))

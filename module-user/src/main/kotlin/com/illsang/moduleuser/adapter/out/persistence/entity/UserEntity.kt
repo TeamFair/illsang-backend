@@ -1,6 +1,7 @@
 package com.illsang.moduleuser.adapter.out.persistence.entity
 
 import com.illsang.common.adapter.out.persistence.entity.BaseEntity
+import com.illsang.moduleuser.domain.enums.OAuthProvider
 import com.illsang.moduleuser.domain.model.UserStatus
 import jakarta.persistence.*
 import java.time.LocalDateTime
@@ -17,7 +18,8 @@ class UserEntity(
     var email: String,
 
     @Column(nullable = false, length = 50)
-    var channel: String,
+    @Enumerated(EnumType.STRING)
+    var channel: OAuthProvider,
 
     @Column(nullable = false, length = 25)
     var nickname: String,

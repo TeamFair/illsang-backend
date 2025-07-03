@@ -65,4 +65,11 @@ class UserPersistenceAdapter(
     override fun existsByEmail(email: String): Boolean {
         return userRepository.findByEmail(email) != null
     }
+
+    /**
+     * Check if nickname already exists
+     */
+    override fun existsByNickname(nickname: String): Boolean {
+        return userRepository.findByNickname(nickname) != null
+    }
 }

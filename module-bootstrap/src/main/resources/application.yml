@@ -24,7 +24,15 @@ oauth:
   token:
     timeout:
       access-token: 1
-      refresh-token: 2
+      refresh-token: 24
+
+  client:
+    google:
+      ios: "654001951429-ne4ev00taadiag4tr4euigqlv3jgkvr8.apps.googleusercontent.com"
+      aos: "702150906844-l4mc5liud2nt5qi04n4dfsqc6epve4t2.apps.googleusercontent.com"
+    apple:
+      ios: "com.ilsang240615.dev"
+      aos: "test-apple-aos-client-id"
 
 server:
   port: 8080

@@ -3,6 +3,7 @@ package com.illsang.moduleuser.adapter.out.persistence
 import com.illsang.moduleuser.adapter.out.persistence.entity.UserEntity
 import com.illsang.moduleuser.adapter.out.persistence.repository.UserEmojiRepository
 import com.illsang.moduleuser.adapter.out.persistence.repository.UserRepository
+import com.illsang.moduleuser.domain.enums.OAuthProvider
 import com.illsang.moduleuser.domain.model.UserEmojiModel
 import com.illsang.moduleuser.domain.model.UserModel
 import com.illsang.moduleuser.domain.model.UserStatus
@@ -38,7 +39,7 @@ class UserEmojiPersistencePersistenceAdapterTest {
         testUser = userRepository.save(
             UserEntity(
                 email = "test@example.com",
-                channel = "EMAIL",
+                channel = OAuthProvider.GOOGLE,
                 nickname = "테스트유저",
                 status = UserStatus.ACTIVE
             )

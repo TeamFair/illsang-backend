@@ -10,4 +10,5 @@ interface UserPersistencePort {
     fun deleteById(id: Long)
     fun existsById(id: Long): Boolean
     fun existsByEmail(email: String): Boolean
+    fun existsByNickname(nickname: String): Boolean
 }

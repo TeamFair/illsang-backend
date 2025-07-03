@@ -4,6 +4,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.illsang.moduleuser.application.command.CreateUserCommand
 import com.illsang.moduleuser.application.command.UpdateUserCommand
 import com.illsang.moduleuser.application.service.UserService
+import com.illsang.moduleuser.domain.enums.OAuthProvider
 import com.illsang.moduleuser.domain.model.UserModel
 import com.illsang.moduleuser.domain.model.UserStatus
 import org.junit.jupiter.api.DisplayName
@@ -37,14 +38,14 @@ class UserControllerTest {
         // Given
         val command = CreateUserCommand(
             email = "test@example.com",
-            channel = "EMAIL",
+            channel = "GOOGLE",
             nickname = "테스트유저",
             status = UserStatus.ACTIVE
         )
         val createdUser = UserModel(
             id = 1L,
             email = command.email,
-            channel = command.channel,
+            channel = OAuthProvider.fromString(command.channel),
             nickname = command.nickname,
             status = command.status,
             statusUpdatedAt = LocalDateTime.now(),
@@ -69,7 +70,7 @@ class UserControllerTest {
         val user = UserModel(
             id = 1L,
             email = "test@example.com",
-            channel = "EMAIL",
+            channel = OAuthProvider.GOOGLE,
             nickname = "테스트유저",
             status = UserStatus.ACTIVE,
             statusUpdatedAt = LocalDateTime.now(),
@@ -92,7 +93,7 @@ class UserControllerTest {
         val user = UserModel(
             id = 1L,
             email = "test@example.com",
-            channel = "EMAIL",
+            channel = OAuthProvider.GOOGLE,
             nickname = "테스트유저",
             status = UserStatus.ACTIVE,
             statusUpdatedAt = LocalDateTime.now(),
@@ -116,7 +117,7 @@ class UserControllerTest {
             UserModel(
                 id = 1L,
                 email = "user1@example.com",
-                channel = "EMAIL",
+                channel = OAuthProvider.GOOGLE,
                 nickname = "유저1",
                 status = UserStatus.ACTIVE,
                 statusUpdatedAt = LocalDateTime.now()
@@ -124,7 +125,7 @@ class UserControllerTest {
             UserModel(
                 id = 2L,
                 email = "user2@example.com",
-                channel = "GOOGLE",
+                channel = OAuthProvider.GOOGLE,
                 nickname = "유저2",
                 status = UserStatus.INACTIVE,
                 statusUpdatedAt = LocalDateTime.now()
@@ -153,7 +154,7 @@ class UserControllerTest {
         val updatedUser = UserModel(
             id = 1L,
             email = "test@example.com",
-            channel = "EMAIL",
+            channel = OAuthProvider.GOOGLE,
             nickname = updateCommand.nickname!!,
             status = updateCommand.status!!,
             statusUpdatedAt = LocalDateTime.now()

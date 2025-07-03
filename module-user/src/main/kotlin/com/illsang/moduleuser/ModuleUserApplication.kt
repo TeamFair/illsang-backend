@@ -3,7 +3,7 @@ package com.illsang.moduleuser
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = ["com.illsang.moduleuser", "com.illsang.common"])
 class ModuleUserApplication
 
 fun main(args: Array<String>) {

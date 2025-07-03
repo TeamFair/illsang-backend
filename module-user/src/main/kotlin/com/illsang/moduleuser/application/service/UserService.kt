@@ -3,6 +3,7 @@ package com.illsang.moduleuser.application.service
 import com.illsang.moduleuser.application.command.CreateUserCommand
 import com.illsang.moduleuser.application.command.UpdateUserCommand
 import com.illsang.moduleuser.application.port.out.UserPersistencePort
+import com.illsang.moduleuser.domain.enums.OAuthProvider
 import com.illsang.moduleuser.domain.model.UserModel
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -22,13 +23,12 @@ class UserService(
             else -> {
                 val userModel = UserModel(
                     email = command.email,
-                    channel = command.channel,
+                    channel = OAuthProvider.fromString(command.channel),
                     nickname = command.nickname,
                     status = command.status,
                     statusUpdatedAt = LocalDateTime.now(),
                     profileImageId = command.profileImageId
                 )
-                userModel.validate()
                 return userPersistencePort.save(userModel)
             }
         }
@@ -68,7 +68,7 @@ class UserService(
 
         val updatedUser = existingUser.copy(
             email = command.email ?: existingUser.email,
-            channel = command.channel ?: existingUser.channel,
+            channel = if (command.channel != null) OAuthProvider.fromString(command.channel) else existingUser.channel,
             nickname = command.nickname ?: existingUser.nickname,
             status = command.status ?: existingUser.status,
             statusUpdatedAt = if (command.status != null && command.status != existingUser.status) {
@@ -78,7 +78,6 @@ class UserService(
             },
             profileImageId = command.profileImageId ?: existingUser.profileImageId
         )
-        updatedUser.validate()
         return userPersistencePort.save(updatedUser)
     }
 

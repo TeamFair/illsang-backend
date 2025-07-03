@@ -3,13 +3,19 @@ spring:
     url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
     driver-class-name: org.h2.Driver
     username: sa
-    password: 
-  
+    password:
+
   h2:
     console:
       enabled: true
       path: /h2-console
-  
+
+  data:
+    redis:
+      host: localhost
+      port: 0  # Will be set dynamically by embedded Redis
+      useSsl: false
+
   jpa:
     hibernate:
       ddl-auto: create-drop
@@ -20,7 +26,20 @@ spring:
         dialect: org.hibernate.dialect.H2Dialect
     defer-datasource-initialization: true
 
+oauth:
+  token:
+    timeout:
+      access-token: 1
+      refresh-token: 2
+  client:
+    google:
+      ios: "test-google-ios-client-id"
+      aos: "test-google-aos-client-id"
+    apple:
+      ios: "test-apple-ios-client-id"
+      aos: "test-apple-aos-client-id"
+
 logging:
   level:
     org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE 
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
