@@ -1,5 +1,6 @@
 package com.illsang.moduleuser.application.service
 
+import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.security.Keys
@@ -50,4 +51,14 @@ class JwtTokenService {
 
     fun getAccessTokenExpirationMinutes(): Long = accessTokenExpirationMinutes
     fun getRefreshTokenExpirationMinutes(): Long = refreshTokenExpirationMinutes
+
+    fun getUserIdFromToken(token: String): Long {
+        val claims = Jwts.parser()
+            .verifyWith(key)
+            .build()
+            .parseSignedClaims(token)
+            .payload
+
+        return claims.subject.toLong()
+    }
 }

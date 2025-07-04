@@ -41,7 +41,7 @@ class AuthControllerTest {
         )
 
         mockMvc.perform(
-            post("/api/v1/auth/oauth/login")
+            post("/api/v1/open/login/oauth")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))
         )
@@ -57,7 +57,7 @@ class AuthControllerTest {
         )
 
         mockMvc.perform(
-            post("/api/v1/auth/oauth/login")
+            post("/api/v1/open/login/oauth")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))
         )
@@ -73,7 +73,7 @@ class AuthControllerTest {
         )
 
         mockMvc.perform(
-            post("/api/v1/auth/oauth/login")
+            post("/api/v1/open/login/oauth")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))
         )
@@ -91,7 +91,7 @@ class AuthControllerTest {
         // This test just verifies the endpoint exists and accepts the request format
         // It will return 400 due to invalid token, but that's expected
         mockMvc.perform(
-            post("/api/v1/auth/oauth/login")
+            post("/api/v1/open/login/oauth")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request))
         )

@@ -1,6 +1,6 @@
 package com.illsang.moduleuser.adapter.`in`.web.model.response
 
-data class OAuthLoginResponse(
+data class LoginResponse(
     val accessToken: String,
     val refreshToken: String
 )

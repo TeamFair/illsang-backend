@@ -1,16 +1,20 @@
 package com.illsang.moduleuser.application.service
 
 import com.illsang.common.application.port.out.TokenPersistencePort
+import com.illsang.common.domain.model.AuthenticationModel
 import com.illsang.moduleuser.adapter.`in`.web.model.request.OAuthLoginRequest
-import com.illsang.moduleuser.adapter.`in`.web.model.response.OAuthLoginResponse
+import com.illsang.moduleuser.adapter.`in`.web.model.request.RefreshLoginRequest
+import com.illsang.moduleuser.adapter.`in`.web.model.response.LoginResponse
 import com.illsang.moduleuser.application.command.CreateUserCommand
 import com.illsang.moduleuser.domain.enums.OAuthProvider
 import com.illsang.moduleuser.domain.enums.OSType
 import com.illsang.moduleuser.domain.model.UserModel
 import com.illsang.moduleuser.domain.model.UserStatus
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
+@Transactional(readOnly = true)
 class AuthService(
     private val googleTokenValidationService: GoogleTokenValidationService,
     private val appleTokenValidationService: AppleTokenValidationService,
@@ -20,7 +24,8 @@ class AuthService(
     private val nicknameGenerationService: NicknameGenerationService
 ) {
 
-    fun processOAuthLogin(request: OAuthLoginRequest): OAuthLoginResponse {
+    @Transactional
+    fun oauthLogin(request: OAuthLoginRequest): LoginResponse {
         // Validate the OAuth token based on provider
         val userInfo = validateOAuthToken(request)
 
@@ -36,6 +41,39 @@ class AuthService(
 
         // Generate and store tokens
         return generateAndStoreTokens(user)
+    }
+
+    fun refreshLogin(request: RefreshLoginRequest): LoginResponse {
+        // Extract user ID from access token
+        val userId = jwtTokenService.getUserIdFromToken(request.accessToken)
+
+        // Validate user exists
+        val user = userService.getUser(userId)
+
+        // Get stored tokens from Redis
+        val storedRefreshTokenData = tokenPersistencePort.getRefreshTokenData(userId.toString())
+            ?: throw IllegalArgumentException("No refresh token found for user")
+
+        // Compare tokens with stored ones
+        if (storedRefreshTokenData.accessToken != request.accessToken ||
+            storedRefreshTokenData.refreshToken != request.refreshToken) {
+            throw IllegalArgumentException("Invalid tokens")
+        }
+
+        // Generate new tokens
+        return generateAndStoreTokens(user)
+    }
+
+    @Transactional
+    fun logout(authenticationModel: AuthenticationModel) {
+        if (!authenticationModel.isAuthenticated()) {
+            throw IllegalArgumentException("User is not authenticated")
+        }
+
+        val userId = authenticationModel.userId!!
+
+        // Delete both access token and refresh token from Redis
+        tokenPersistencePort.deleteTokens(userId)
     }
 
     private fun validateOAuthToken(request: OAuthLoginRequest): Map<String, String> {
@@ -77,7 +115,7 @@ class AuthService(
         }
     }
 
-    private fun generateAndStoreTokens(user: UserModel): OAuthLoginResponse {
+    private fun generateAndStoreTokens(user: UserModel): LoginResponse {
         // Generate tokens
         val accessToken = jwtTokenService.generateAccessToken(user.id!!)
         val refreshToken = jwtTokenService.generateRefreshToken(user.id)
@@ -96,7 +134,7 @@ class AuthService(
             jwtTokenService.getRefreshTokenExpirationMinutes()
         )
 
-        return OAuthLoginResponse(
+        return LoginResponse(
             accessToken = accessToken,
             refreshToken = refreshToken
         )
