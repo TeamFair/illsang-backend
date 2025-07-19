@@ -1,8 +1,6 @@
 package com.illsang.common.application.service
 
 import com.illsang.common.application.port.out.TokenPersistencePort
-import com.illsang.common.domain.model.AuthenticationModel
-import com.illsang.common.domain.model.UserType
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith

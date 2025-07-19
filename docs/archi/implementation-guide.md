@@ -26,7 +26,7 @@
 
 ```kotlin
 // module-user/src/main/kotlin/com/illsang/moduleuser/adapter/out/persistence/entity/ExampleEntity.kt
-package com.illsang.moduleuser.adapter.out.persistence.entity
+package com.illsang.user.adapter.out.persistence.entity
 
 import com.illsang.common.entity.BaseEntity
 import jakarta.persistence.*
@@ -50,7 +50,7 @@ class ExampleEntity(
 
 ```kotlin
 // module-user/src/main/kotlin/com/illsang/moduleuser/domain/model/ExampleModel.kt
-package com.illsang.moduleuser.domain.model
+package com.illsang.user.domain.model
 
 import com.illsang.common.model.BaseModel
 import java.time.LocalDateTime
@@ -70,12 +70,12 @@ data class ExampleModel(
 
 ```kotlin
 // module-user/src/main/kotlin/com/illsang/moduleuser/domain/mapper/ExampleMapper.kt
-package com.illsang.moduleuser.domain.mapper
+package com.illsang.user.domain.mapper
 
-import com.illsang.moduleuser.adapter.out.persistence.entity.ExampleEntity
-import com.illsang.moduleuser.application.command.CreateExampleCommand
-import com.illsang.moduleuser.application.command.UpdateExampleCommand
-import com.illsang.moduleuser.domain.model.ExampleModel
+import com.illsang.user.adapter.out.persistence.entity.ExampleEntity
+import com.illsang.user.application.command.CreateExampleCommand
+import com.illsang.user.application.command.UpdateExampleCommand
+import com.illsang.user.domain.model.ExampleModel
 
 object ExampleMapper {
     fun toModel(entity: ExampleEntity): ExampleModel {
@@ -123,7 +123,7 @@ object ExampleMapper {
 
 ```kotlin
 // module-user/src/main/kotlin/com/illsang/moduleuser/application/command/CreateExampleCommand.kt
-package com.illsang.moduleuser.application.command
+package com.illsang.user.application.command
 
 data class CreateExampleCommand(
     val name: String,
@@ -133,7 +133,7 @@ data class CreateExampleCommand(
 
 ```kotlin
 // module-user/src/main/kotlin/com/illsang/moduleuser/application/command/UpdateExampleCommand.kt
-package com.illsang.moduleuser.application.command
+package com.illsang.user.application.command
 
 data class UpdateExampleCommand(
     val id: Long,
@@ -146,9 +146,9 @@ data class UpdateExampleCommand(
 
 ```kotlin
 // module-user/src/main/kotlin/com/illsang/moduleuser/application/port/out/ExamplePersistencePort.kt
-package com.illsang.moduleuser.application.port.out
+package com.illsang.user.application.port.out
 
-import com.illsang.moduleuser.domain.model.ExampleModel
+import com.illsang.user.domain.model.ExampleModel
 
 interface ExamplePersistencePort {
     fun save(example: ExampleModel): ExampleModel
@@ -163,9 +163,9 @@ interface ExamplePersistencePort {
 
 ```kotlin
 // module-user/src/main/kotlin/com/illsang/moduleuser/adapter/out/persistence/repository/ExampleRepository.kt
-package com.illsang.moduleuser.adapter.out.persistence.repository
+package com.illsang.user.adapter.out.persistence.repository
 
-import com.illsang.moduleuser.adapter.out.persistence.entity.ExampleEntity
+import com.illsang.user.adapter.out.persistence.entity.ExampleEntity
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface ExampleRepository : JpaRepository<ExampleEntity, Long>
@@ -175,12 +175,12 @@ interface ExampleRepository : JpaRepository<ExampleEntity, Long>
 
 ```kotlin
 // module-user/src/main/kotlin/com/illsang/moduleuser/adapter/out/persistence/ExamplePersistenceAdapter.kt
-package com.illsang.moduleuser.adapter.out.persistence
+package com.illsang.user.adapter.out.persistence
 
-import com.illsang.moduleuser.adapter.out.persistence.repository.ExampleRepository
-import com.illsang.moduleuser.application.port.out.ExamplePersistencePort
-import com.illsang.moduleuser.domain.mapper.ExampleMapper
-import com.illsang.moduleuser.domain.model.ExampleModel
+import com.illsang.user.adapter.out.persistence.repository.ExampleRepository
+import com.illsang.user.application.port.out.ExamplePersistencePort
+import com.illsang.user.domain.mapper.ExampleMapper
+import com.illsang.user.domain.model.ExampleModel
 import org.springframework.stereotype.Component
 
 @Component
@@ -219,13 +219,13 @@ class ExamplePersistenceAdapter(
 
 ```kotlin
 // module-user/src/main/kotlin/com/illsang/moduleuser/application/service/ExampleService.kt
-package com.illsang.moduleuser.application.service
+package com.illsang.user.application.service
 
-import com.illsang.moduleuser.application.command.CreateExampleCommand
-import com.illsang.moduleuser.application.command.UpdateExampleCommand
-import com.illsang.moduleuser.application.port.out.ExamplePersistencePort
-import com.illsang.moduleuser.domain.mapper.ExampleMapper
-import com.illsang.moduleuser.domain.model.ExampleModel
+import com.illsang.user.application.command.CreateExampleCommand
+import com.illsang.user.application.command.UpdateExampleCommand
+import com.illsang.user.application.port.out.ExamplePersistencePort
+import com.illsang.user.domain.mapper.ExampleMapper
+import com.illsang.user.domain.model.ExampleModel
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -272,7 +272,7 @@ class ExampleService(
 
 ```kotlin
 // module-user/src/main/kotlin/com/illsang/moduleuser/adapter/`in`/web/model/request/CreateExampleRequest.kt
-package com.illsang.moduleuser.adapter.`in`.web.model.request
+package com.illsang.user.adapter.`in`.web.model.request
 
 data class CreateExampleRequest(
     val name: String,
@@ -282,7 +282,7 @@ data class CreateExampleRequest(
 
 ```kotlin
 // module-user/src/main/kotlin/com/illsang/moduleuser/adapter/`in`/web/model/request/UpdateExampleRequest.kt
-package com.illsang.moduleuser.adapter.`in`.web.model.request
+package com.illsang.user.adapter.`in`.web.model.request
 
 data class UpdateExampleRequest(
     val name: String? = null,
@@ -292,9 +292,9 @@ data class UpdateExampleRequest(
 
 ```kotlin
 // module-user/src/main/kotlin/com/illsang/moduleuser/adapter/`in`/web/model/response/ExampleResponse.kt
-package com.illsang.moduleuser.adapter.`in`.web.model.response
+package com.illsang.user.adapter.`in`.web.model.response
 
-import com.illsang.moduleuser.domain.model.ExampleModel
+import com.illsang.user.domain.model.ExampleModel
 import java.time.LocalDateTime
 
 data class ExampleResponse(
@@ -326,15 +326,15 @@ data class ExampleResponse(
 
 ```kotlin
 // module-user/src/main/kotlin/com/illsang/moduleuser/adapter/`in`/web/ExampleController.kt
-package com.illsang.moduleuser.adapter.`in`.web
+package com.illsang.user.adapter.`in`.web
 
 import com.illsang.common.enums.ResponseMsg
-import com.illsang.moduleuser.adapter.`in`.web.model.request.CreateExampleRequest
-import com.illsang.moduleuser.adapter.`in`.web.model.request.UpdateExampleRequest
-import com.illsang.moduleuser.adapter.`in`.web.model.response.ExampleResponse
-import com.illsang.moduleuser.application.command.CreateExampleCommand
-import com.illsang.moduleuser.application.command.UpdateExampleCommand
-import com.illsang.moduleuser.application.service.ExampleService
+import com.illsang.user.adapter.`in`.web.model.request.CreateExampleRequest
+import com.illsang.user.adapter.`in`.web.model.request.UpdateExampleRequest
+import com.illsang.user.adapter.`in`.web.model.response.ExampleResponse
+import com.illsang.user.application.command.CreateExampleCommand
+import com.illsang.user.application.command.UpdateExampleCommand
+import com.illsang.user.application.service.ExampleService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -437,7 +437,7 @@ class ExampleServiceTest {
 
 ### 4.1 패키지 네이밍
 - `adapter.in.web` 패키지에서 백틱(`) 사용 시 주의
-- 올바른 패키지명: `com.illsang.moduleuser.adapter.in.web`
+- 올바른 패키지명: `com.illsang.user.adapter.in.web`
 
 ### 4.2 의존성 주입
 - 생성자 주입 사용 권장

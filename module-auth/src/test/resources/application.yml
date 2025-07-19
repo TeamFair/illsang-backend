@@ -1,0 +1,20 @@
+spring:
+  data:
+    redis:
+      host: localhost
+      port: 0  # Will be set dynamically by embedded Redis
+      useSsl: false
+
+oauth:
+  token:
+    timeout:
+      access-token: 1
+      refresh-token: 24
+
+  client:
+    google:
+      ios: "test-google-ios-client-id"
+      aos: "test-google-aos-client-id"
+    apple:
+      ios: "test-apple-ios-client-id"
+      aos: "test-apple-aos-client-id"

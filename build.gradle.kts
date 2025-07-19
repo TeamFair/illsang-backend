@@ -1,9 +1,12 @@
+import org.gradle.kotlin.dsl.implementation
+
 plugins {
 	kotlin("jvm") version "1.9.25"
 	kotlin("plugin.spring") version "1.9.25"
 	kotlin("plugin.jpa") version "1.9.25"
 	id("org.springframework.boot") version "3.4.4"
 	id("io.spring.dependency-management") version "1.1.7"
+	id("com.google.devtools.ksp") version "1.9.25-1.0.20"
 }
 
 group = "com.illsang"
@@ -45,6 +48,7 @@ subprojects {
 	apply(plugin = "org.jetbrains.kotlin.plugin.jpa")
 	apply(plugin = "org.springframework.boot")
 	apply(plugin = "io.spring.dependency-management")
+	apply(plugin = "com.google.devtools.ksp")
 
 	repositories {
 		mavenCentral()
@@ -98,6 +102,16 @@ subprojects {
 		// Lombok
 		compileOnly("org.projectlombok:lombok")
 		annotationProcessor("org.projectlombok:lombok")
+
+		// AWS
+		implementation("software.amazon.awssdk:s3:2.32.2")
+
+		// QueryDSL
+		val querydslVersion = "7.0"
+		implementation("io.github.openfeign.querydsl:querydsl-jpa:${querydslVersion}")
+		annotationProcessor("io.github.openfeign.querydsl:querydsl-apt:${querydslVersion}:jpa")
+		annotationProcessor("jakarta.persistence:jakarta.persistence-api")
+		ksp("io.github.openfeign.querydsl:querydsl-ksp-codegen:$querydslVersion")
 
 		// 개발용 도구
 		developmentOnly("org.springframework.boot:spring-boot-devtools")

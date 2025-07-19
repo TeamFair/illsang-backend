@@ -1,12 +1,13 @@
 package com.illsang.management.domain.model
 
 import com.illsang.common.domain.model.BaseModel
+import com.illsang.management.domain.entity.BannerEntity
 import java.time.LocalDateTime
 
 data class BannerModel(
     val id: Long? = null,
     val title: String,
-    val bannerImageId: Long? = null,
+    val bannerImageId: String? = null,
     val description: String? = null,
     val activeYn: Boolean = true,
     override val createdBy: String? = null,
@@ -14,8 +15,21 @@ data class BannerModel(
     override val updatedBy: String? = null,
     override val updatedAt: LocalDateTime? = null
 ) : BaseModel(createdBy, createdAt, updatedBy, updatedAt) {
-    fun validate() {
-        require(title.isNotBlank()) { "Title is required" }
-        require(title.length <= 255) { "Title must be less than 255 characters" }
+
+    companion object {
+        fun from(banner: BannerEntity): BannerModel {
+            return BannerModel(
+                id = banner.id,
+                title = banner.title,
+                bannerImageId = banner.bannerImageId,
+                description = banner.description,
+                activeYn = banner.activeYn,
+                createdAt = banner.createdAt,
+                createdBy = banner.createdBy,
+                updatedAt = banner.updatedAt,
+                updatedBy = banner.updatedBy,
+            )
+        }
     }
+
 }

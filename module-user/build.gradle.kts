@@ -4,4 +4,5 @@ springBoot {
 
 dependencies {
     implementation(project(":module-common"))
+    implementation(project(":module-auth"))
 }
