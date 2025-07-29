@@ -1,12 +1,15 @@
+import org.gradle.kotlin.dsl.implementation
+
 plugins {
 	kotlin("jvm") version "1.9.25"
 	kotlin("plugin.spring") version "1.9.25"
 	kotlin("plugin.jpa") version "1.9.25"
 	id("org.springframework.boot") version "3.4.4"
 	id("io.spring.dependency-management") version "1.1.7"
+	id("com.google.devtools.ksp") version "1.9.25-1.0.20"
 }
 
-group = "com.teamfair"
+group = "com.illsang"
 version = "0.0.1"
 
 java {
@@ -45,6 +48,7 @@ subprojects {
 	apply(plugin = "org.jetbrains.kotlin.plugin.jpa")
 	apply(plugin = "org.springframework.boot")
 	apply(plugin = "io.spring.dependency-management")
+	apply(plugin = "com.google.devtools.ksp")
 
 	repositories {
 		mavenCentral()
@@ -78,6 +82,12 @@ subprojects {
 		implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 		testImplementation("org.springframework.security:spring-security-test")
 
+		// OAuth Token Validation
+		implementation("com.google.api-client:google-api-client:2.2.0")
+		implementation("io.jsonwebtoken:jjwt-api:0.12.3")
+		implementation("io.jsonwebtoken:jjwt-impl:0.12.3")
+		implementation("io.jsonwebtoken:jjwt-jackson:0.12.3")
+
 		// Spring Web
 		implementation("org.springframework.boot:spring-boot-starter-web")
 		implementation("org.springframework.boot:spring-boot-starter-webflux")
@@ -93,8 +103,19 @@ subprojects {
 		compileOnly("org.projectlombok:lombok")
 		annotationProcessor("org.projectlombok:lombok")
 
+		// AWS
+		implementation("software.amazon.awssdk:s3:2.32.2")
+
+		// QueryDSL
+		val querydslVersion = "7.0"
+		implementation("io.github.openfeign.querydsl:querydsl-jpa:${querydslVersion}")
+		annotationProcessor("io.github.openfeign.querydsl:querydsl-apt:${querydslVersion}:jpa")
+		annotationProcessor("jakarta.persistence:jakarta.persistence-api")
+		ksp("io.github.openfeign.querydsl:querydsl-ksp-codegen:$querydslVersion")
+
 		// 개발용 도구
 		developmentOnly("org.springframework.boot:spring-boot-devtools")
+		testImplementation("com.github.codemonstur:embedded-redis:1.4.3")
 		implementation("org.springframework.boot:spring-boot-starter-actuator")
 
 		// DB Driver

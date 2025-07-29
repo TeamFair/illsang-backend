@@ -25,8 +25,8 @@
 ### 2.1 Entity 생성
 
 ```kotlin
-// module-user/src/main/kotlin/com/teamfair/moduleuser/adapter/out/persistence/entity/ExampleEntity.kt
-package com.teamfair.moduleuser.adapter.out.persistence.entity
+// module-user/src/main/kotlin/com/illsang/moduleuser/adapter/out/persistence/entity/ExampleEntity.kt
+package com.illsang.user.adapter.out.persistence.entity
 
 import com.illsang.common.entity.BaseEntity
 import jakarta.persistence.*
@@ -49,8 +49,8 @@ class ExampleEntity(
 ### 2.2 Model 생성
 
 ```kotlin
-// module-user/src/main/kotlin/com/teamfair/moduleuser/domain/model/ExampleModel.kt
-package com.teamfair.moduleuser.domain.model
+// module-user/src/main/kotlin/com/illsang/moduleuser/domain/model/ExampleModel.kt
+package com.illsang.user.domain.model
 
 import com.illsang.common.model.BaseModel
 import java.time.LocalDateTime
@@ -69,13 +69,13 @@ data class ExampleModel(
 ### 2.3 Mapper 생성
 
 ```kotlin
-// module-user/src/main/kotlin/com/teamfair/moduleuser/domain/mapper/ExampleMapper.kt
-package com.teamfair.moduleuser.domain.mapper
+// module-user/src/main/kotlin/com/illsang/moduleuser/domain/mapper/ExampleMapper.kt
+package com.illsang.user.domain.mapper
 
-import com.teamfair.moduleuser.adapter.out.persistence.entity.ExampleEntity
-import com.teamfair.moduleuser.application.command.CreateExampleCommand
-import com.teamfair.moduleuser.application.command.UpdateExampleCommand
-import com.teamfair.moduleuser.domain.model.ExampleModel
+import com.illsang.user.adapter.out.persistence.entity.ExampleEntity
+import com.illsang.user.application.command.CreateExampleCommand
+import com.illsang.user.application.command.UpdateExampleCommand
+import com.illsang.user.domain.model.ExampleModel
 
 object ExampleMapper {
     fun toModel(entity: ExampleEntity): ExampleModel {
@@ -122,8 +122,8 @@ object ExampleMapper {
 ### 2.4 Command 생성
 
 ```kotlin
-// module-user/src/main/kotlin/com/teamfair/moduleuser/application/command/CreateExampleCommand.kt
-package com.teamfair.moduleuser.application.command
+// module-user/src/main/kotlin/com/illsang/moduleuser/application/command/CreateExampleCommand.kt
+package com.illsang.user.application.command
 
 data class CreateExampleCommand(
     val name: String,
@@ -132,8 +132,8 @@ data class CreateExampleCommand(
 ```
 
 ```kotlin
-// module-user/src/main/kotlin/com/teamfair/moduleuser/application/command/UpdateExampleCommand.kt
-package com.teamfair.moduleuser.application.command
+// module-user/src/main/kotlin/com/illsang/moduleuser/application/command/UpdateExampleCommand.kt
+package com.illsang.user.application.command
 
 data class UpdateExampleCommand(
     val id: Long,
@@ -145,10 +145,10 @@ data class UpdateExampleCommand(
 ### 2.5 Port 생성
 
 ```kotlin
-// module-user/src/main/kotlin/com/teamfair/moduleuser/application/port/out/ExamplePersistencePort.kt
-package com.teamfair.moduleuser.application.port.out
+// module-user/src/main/kotlin/com/illsang/moduleuser/application/port/out/ExamplePersistencePort.kt
+package com.illsang.user.application.port.out
 
-import com.teamfair.moduleuser.domain.model.ExampleModel
+import com.illsang.user.domain.model.ExampleModel
 
 interface ExamplePersistencePort {
     fun save(example: ExampleModel): ExampleModel
@@ -162,10 +162,10 @@ interface ExamplePersistencePort {
 ### 2.6 Repository 생성
 
 ```kotlin
-// module-user/src/main/kotlin/com/teamfair/moduleuser/adapter/out/persistence/repository/ExampleRepository.kt
-package com.teamfair.moduleuser.adapter.out.persistence.repository
+// module-user/src/main/kotlin/com/illsang/moduleuser/adapter/out/persistence/repository/ExampleRepository.kt
+package com.illsang.user.adapter.out.persistence.repository
 
-import com.teamfair.moduleuser.adapter.out.persistence.entity.ExampleEntity
+import com.illsang.user.adapter.out.persistence.entity.ExampleEntity
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface ExampleRepository : JpaRepository<ExampleEntity, Long>
@@ -174,13 +174,13 @@ interface ExampleRepository : JpaRepository<ExampleEntity, Long>
 ### 2.7 Persistence Adapter 생성
 
 ```kotlin
-// module-user/src/main/kotlin/com/teamfair/moduleuser/adapter/out/persistence/ExamplePersistenceAdapter.kt
-package com.teamfair.moduleuser.adapter.out.persistence
+// module-user/src/main/kotlin/com/illsang/moduleuser/adapter/out/persistence/ExamplePersistenceAdapter.kt
+package com.illsang.user.adapter.out.persistence
 
-import com.teamfair.moduleuser.adapter.out.persistence.repository.ExampleRepository
-import com.teamfair.moduleuser.application.port.out.ExamplePersistencePort
-import com.teamfair.moduleuser.domain.mapper.ExampleMapper
-import com.teamfair.moduleuser.domain.model.ExampleModel
+import com.illsang.user.adapter.out.persistence.repository.ExampleRepository
+import com.illsang.user.application.port.out.ExamplePersistencePort
+import com.illsang.user.domain.mapper.ExampleMapper
+import com.illsang.user.domain.model.ExampleModel
 import org.springframework.stereotype.Component
 
 @Component
@@ -218,14 +218,14 @@ class ExamplePersistenceAdapter(
 ### 2.8 Service 생성
 
 ```kotlin
-// module-user/src/main/kotlin/com/teamfair/moduleuser/application/service/ExampleService.kt
-package com.teamfair.moduleuser.application.service
+// module-user/src/main/kotlin/com/illsang/moduleuser/application/service/ExampleService.kt
+package com.illsang.user.application.service
 
-import com.teamfair.moduleuser.application.command.CreateExampleCommand
-import com.teamfair.moduleuser.application.command.UpdateExampleCommand
-import com.teamfair.moduleuser.application.port.out.ExamplePersistencePort
-import com.teamfair.moduleuser.domain.mapper.ExampleMapper
-import com.teamfair.moduleuser.domain.model.ExampleModel
+import com.illsang.user.application.command.CreateExampleCommand
+import com.illsang.user.application.command.UpdateExampleCommand
+import com.illsang.user.application.port.out.ExamplePersistencePort
+import com.illsang.user.domain.mapper.ExampleMapper
+import com.illsang.user.domain.model.ExampleModel
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
@@ -271,8 +271,8 @@ class ExampleService(
 ### 2.9 Request/Response DTOs 생성
 
 ```kotlin
-// module-user/src/main/kotlin/com/teamfair/moduleuser/adapter/`in`/web/model/request/CreateExampleRequest.kt
-package com.teamfair.moduleuser.adapter.`in`.web.model.request
+// module-user/src/main/kotlin/com/illsang/moduleuser/adapter/`in`/web/model/request/CreateExampleRequest.kt
+package com.illsang.user.adapter.`in`.web.model.request
 
 data class CreateExampleRequest(
     val name: String,
@@ -281,8 +281,8 @@ data class CreateExampleRequest(
 ```
 
 ```kotlin
-// module-user/src/main/kotlin/com/teamfair/moduleuser/adapter/`in`/web/model/request/UpdateExampleRequest.kt
-package com.teamfair.moduleuser.adapter.`in`.web.model.request
+// module-user/src/main/kotlin/com/illsang/moduleuser/adapter/`in`/web/model/request/UpdateExampleRequest.kt
+package com.illsang.user.adapter.`in`.web.model.request
 
 data class UpdateExampleRequest(
     val name: String? = null,
@@ -291,10 +291,10 @@ data class UpdateExampleRequest(
 ```
 
 ```kotlin
-// module-user/src/main/kotlin/com/teamfair/moduleuser/adapter/`in`/web/model/response/ExampleResponse.kt
-package com.teamfair.moduleuser.adapter.`in`.web.model.response
+// module-user/src/main/kotlin/com/illsang/moduleuser/adapter/`in`/web/model/response/ExampleResponse.kt
+package com.illsang.user.adapter.`in`.web.model.response
 
-import com.teamfair.moduleuser.domain.model.ExampleModel
+import com.illsang.user.domain.model.ExampleModel
 import java.time.LocalDateTime
 
 data class ExampleResponse(
@@ -325,16 +325,16 @@ data class ExampleResponse(
 ### 2.10 Controller 생성
 
 ```kotlin
-// module-user/src/main/kotlin/com/teamfair/moduleuser/adapter/`in`/web/ExampleController.kt
-package com.teamfair.moduleuser.adapter.`in`.web
+// module-user/src/main/kotlin/com/illsang/moduleuser/adapter/`in`/web/ExampleController.kt
+package com.illsang.user.adapter.`in`.web
 
 import com.illsang.common.enums.ResponseMsg
-import com.teamfair.moduleuser.adapter.`in`.web.model.request.CreateExampleRequest
-import com.teamfair.moduleuser.adapter.`in`.web.model.request.UpdateExampleRequest
-import com.teamfair.moduleuser.adapter.`in`.web.model.response.ExampleResponse
-import com.teamfair.moduleuser.application.command.CreateExampleCommand
-import com.teamfair.moduleuser.application.command.UpdateExampleCommand
-import com.teamfair.moduleuser.application.service.ExampleService
+import com.illsang.user.adapter.`in`.web.model.request.CreateExampleRequest
+import com.illsang.user.adapter.`in`.web.model.request.UpdateExampleRequest
+import com.illsang.user.adapter.`in`.web.model.response.ExampleResponse
+import com.illsang.user.application.command.CreateExampleCommand
+import com.illsang.user.application.command.UpdateExampleCommand
+import com.illsang.user.application.service.ExampleService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -437,7 +437,7 @@ class ExampleServiceTest {
 
 ### 4.1 패키지 네이밍
 - `adapter.in.web` 패키지에서 백틱(`) 사용 시 주의
-- 올바른 패키지명: `com.teamfair.moduleuser.adapter.in.web`
+- 올바른 패키지명: `com.illsang.user.adapter.in.web`
 
 ### 4.2 의존성 주입
 - 생성자 주입 사용 권장

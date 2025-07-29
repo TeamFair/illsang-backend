@@ -1,0 +1,8 @@
+package com.illsang.modulequest.adapter.out.persistence.repository
+
+import com.illsang.modulequest.adapter.out.persistence.entity.QuizEntity
+import org.springframework.data.jpa.repository.JpaRepository
+
+interface QuizRepository : JpaRepository<QuizEntity, Long> {
+    fun findByMissionId(missionId: Long): List<QuizEntity>
+}

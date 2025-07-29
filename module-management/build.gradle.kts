@@ -1,7 +1,8 @@
 springBoot {
-    mainClass.set("com.teamfair.modulemanagement")
+    mainClass.set("com.illsang.management")
 }
 
 dependencies {
     implementation(project(":module-common"))
+    implementation(project(":module-auth"))
 }

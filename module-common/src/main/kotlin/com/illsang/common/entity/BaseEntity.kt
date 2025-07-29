@@ -28,4 +28,4 @@ abstract class BaseEntity {
     @LastModifiedDate
     @Column(name = "updated_at")
     var updatedAt: LocalDateTime? = null
-} 
+}

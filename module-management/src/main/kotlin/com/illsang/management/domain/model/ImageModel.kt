@@ -1,11 +1,13 @@
 package com.illsang.management.domain.model
 
-import com.illsang.common.model.BaseModel
+import com.illsang.common.domain.model.BaseModel
+import com.illsang.management.domain.entity.ImageEntity
+import com.illsang.management.enums.ImageType
 import java.time.LocalDateTime
 
 data class ImageModel(
-    val id: Long? = null,
-    val type: String,
+    val id: String? = null,
+    val type: ImageType,
     val name: String,
     val size: Long,
     override val createdBy: String? = null,
@@ -13,11 +15,20 @@ data class ImageModel(
     override val updatedBy: String? = null,
     override val updatedAt: LocalDateTime? = null
 ) : BaseModel(createdBy, createdAt, updatedBy, updatedAt) {
-    fun validate() {
-        require(type.isNotBlank()) { "Type is required" }
-        require(name.isNotBlank()) { "Name is required" }
-        require(size > 0) { "Size must be greater than 0" }
-        require(type.length <= 50) { "Type must be less than 50 characters" }
-        require(name.length <= 255) { "Name must be less than 255 characters" }
+
+    companion object {
+        fun from(image: ImageEntity): ImageModel {
+            return ImageModel(
+                id = image.id,
+                type = image.type,
+                name = image.name,
+                size = image.size,
+                createdAt = image.createdAt,
+                createdBy = image.createdBy,
+                updatedAt = image.updatedAt,
+                updatedBy = image.updatedBy,
+            )
+        }
     }
-} 
+
+}

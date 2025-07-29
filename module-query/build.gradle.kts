@@ -1,5 +1,5 @@
 springBoot {
-    mainClass.set("com.teamfair.modulequery")
+    mainClass.set("com.illsang.modulequery")
 }
 
 dependencies {
