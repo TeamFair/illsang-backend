@@ -1,5 +1,7 @@
 package com.illsang.quest.service
 
+import com.illsang.common.event.management.area.CommercialAreaExistOrThrowEvent
+import com.illsang.common.event.management.banner.BannerExistOrThrowEvent
 import com.illsang.common.event.management.image.ImageExistOrThrowEvent
 import com.illsang.quest.domain.entity.QuestEntity
 import com.illsang.quest.domain.model.QuestModel
@@ -26,6 +28,10 @@ class QuestService(
         request.mainImageId?.let {
             this.eventPublisher.publishEvent(ImageExistOrThrowEvent(it))
         }
+        request.bannerId?.let {
+            this.eventPublisher.publishEvent(BannerExistOrThrowEvent(it))
+        }
+        this.eventPublisher.publishEvent(CommercialAreaExistOrThrowEvent(request.commercialAreaCode))
 
         val quest = request.toEntity()
         this.questRepository.save(quest)
@@ -43,6 +49,10 @@ class QuestService(
         request.mainImageId?.let {
             this.eventPublisher.publishEvent(ImageExistOrThrowEvent(it))
         }
+        request.bannerId?.let {
+            this.eventPublisher.publishEvent(BannerExistOrThrowEvent(it))
+        }
+        this.eventPublisher.publishEvent(CommercialAreaExistOrThrowEvent(request.commercialAreaCode))
 
         quest.update(request)
 

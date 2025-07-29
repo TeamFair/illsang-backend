@@ -39,11 +39,11 @@ class UserEntity(
     @Column(name = "title_id")
     var titleHistoryId: String? = null,
 
-    @Column(name = "area_zone_code")
-    var areaZoneCode: String? = null,
+    @Column(name = "commercial_area_code")
+    var commercialAreaCode: String? = null,
 
-    @Column(name = "area_zone_updated_at")
-    var areaZoneUpdatedAt: LocalDateTime?,
+    @Column(name = "commercial_area_updated_at")
+    var commercialAreaUpdatedAt: LocalDateTime? = null,
 
     @Column(name = "roles", length = 500)
     @Convert(converter = StringListConverter::class)
@@ -79,14 +79,14 @@ class UserEntity(
     }
 
     fun updateAreaZone(commercialAreaCode: String, currentSeason: CurrentSeason) {
-        this.areaZoneUpdatedAt?.let {
+        this.commercialAreaUpdatedAt?.let {
           if (!it.isBefore(currentSeason.startDate) && !it.isAfter(currentSeason.endDate)) {
               throw IllegalArgumentException("일상존은 시즌 동안 한번만 업데이트 할 수 있습니다.")
           }
         }
 
-        this.areaZoneCode = commercialAreaCode
-        this.areaZoneUpdatedAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"))
+        this.commercialAreaCode = commercialAreaCode
+        this.commercialAreaUpdatedAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"))
     }
 
 }

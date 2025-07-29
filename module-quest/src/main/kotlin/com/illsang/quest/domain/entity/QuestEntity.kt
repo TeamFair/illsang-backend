@@ -5,6 +5,7 @@ import com.illsang.quest.dto.request.QuestUpdateRequest
 import com.illsang.quest.enums.QuestRepeatFrequency
 import com.illsang.quest.enums.QuestType
 import jakarta.persistence.*
+import java.time.LocalDateTime
 
 @Entity
 @Table(name = "quest")
@@ -12,6 +13,9 @@ class QuestEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
+
+    @Column(nullable = false)
+    var title: String,
 
     @Column(name = "image_id")
     var imageId: String? = null,
@@ -36,6 +40,15 @@ class QuestEntity(
     @Column(name = "sort_order")
     var sortOrder: Int = 0,
 
+    @Column(name = "expire_date")
+    var expireDate: LocalDateTime? = null,
+
+    @Column(name = "banner_id")
+    var bannerId: Long? = null,
+
+    @Column(name = "commercial_area_code")
+    var commercialAreaCode: String,
+
     @OneToMany(mappedBy = "quest", cascade = [CascadeType.ALL], orphanRemoval = true)
     val missions: MutableList<MissionEntity> = mutableListOf(),
 
@@ -44,7 +57,7 @@ class QuestEntity(
 ) : BaseEntity() {
 
     init {
-        validateQuestType(this.type, this.repeatFrequency)
+        validateQuestType()
     }
 
     fun addMission(mission: MissionEntity) {
@@ -52,21 +65,24 @@ class QuestEntity(
     }
 
     fun update(request: QuestUpdateRequest) {
+        this.title = request.title
         this.type = request.type
         this.repeatFrequency = request.repeatFrequency
-
-        this.validateQuestType(this.type, this.repeatFrequency)
-
         this.imageId = request.imageId
         this.mainImageId = request.mainImageId
         this.popularYn = request.popularYn
         this.sortOrder = request.sortOrder
         this.writerName = request.writerName
+        this.expireDate = request.expireDate
+        this.bannerId = request.bannerId
+        this.commercialAreaCode = request.commercialAreaCode
+
+        this.validateQuestType()
     }
 
-    private fun validateQuestType(questType: QuestType, repeatFrequency: QuestRepeatFrequency?) {
-        if (questType == QuestType.REPEAT) {
-            requireNotNull(repeatFrequency)
+    private fun validateQuestType() {
+        if (this.type == QuestType.REPEAT) {
+            requireNotNull(this.repeatFrequency)
         }
     }
 

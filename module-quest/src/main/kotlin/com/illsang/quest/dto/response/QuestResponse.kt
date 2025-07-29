@@ -7,6 +7,7 @@ import java.time.LocalDateTime
 
 data class QuestResponse(
     val id: Long?,
+    val title: String,
     val imageId: String?,
     val writerName: String?,
     val mainImageId: String?,
@@ -14,6 +15,8 @@ data class QuestResponse(
     val type: QuestType,
     val repeatFrequency: QuestRepeatFrequency?,
     val sortOrder: Int,
+    val expireDate: LocalDateTime?,
+    val bannerId: Long?,
     val createdBy: String?,
     val createdAt: LocalDateTime?,
     val updatedBy: String?,
@@ -23,6 +26,7 @@ data class QuestResponse(
         fun from(questModel: QuestModel): QuestResponse {
             return QuestResponse(
                 id = questModel.id,
+                title = questModel.title,
                 imageId = questModel.imageId,
                 writerName = questModel.writerName,
                 mainImageId = questModel.mainImageId,
@@ -30,6 +34,8 @@ data class QuestResponse(
                 type = questModel.type,
                 repeatFrequency = questModel.repeatFrequency,
                 sortOrder = questModel.sortOrder,
+                expireDate = questModel.expireDate,
+                bannerId = questModel.bannerId,
                 createdBy = questModel.createdBy,
                 createdAt = questModel.createdAt,
                 updatedBy = questModel.updatedBy,

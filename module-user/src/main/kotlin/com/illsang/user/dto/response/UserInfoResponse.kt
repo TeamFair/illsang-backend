@@ -13,7 +13,7 @@ data class UserInfoResponse (
     val status: UserStatus?,
     val statusUpdatedAt: LocalDateTime?,
     val profileImageId: String?,
-    val areaZoneCode: String?,
+    val commercialAreaCode: String?,
 ) {
     companion object {
         fun from(user: UserModel): UserInfoResponse {
@@ -25,7 +25,7 @@ data class UserInfoResponse (
                 status = user.status,
                 statusUpdatedAt = user.updatedAt,
                 profileImageId = user.profileImageId,
-                areaZoneCode = user.areaZoneCode,
+                commercialAreaCode = user.commercialAreaCode,
             )
         }
     }

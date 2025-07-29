@@ -3,8 +3,10 @@ package com.illsang.quest.dto.request
 import com.illsang.quest.domain.entity.QuestEntity
 import com.illsang.quest.enums.QuestRepeatFrequency
 import com.illsang.quest.enums.QuestType
+import java.time.LocalDateTime
 
 data class QuestCreateRequest(
+    val title: String,
     val imageId: String? = null,
     val writerName: String,
     val mainImageId: String? = null,
@@ -12,10 +14,14 @@ data class QuestCreateRequest(
     val type: QuestType,
     val repeatFrequency: QuestRepeatFrequency? = null,
     val sortOrder: Int = 0,
+    val expireDate: LocalDateTime? = null,
+    val bannerId: Long? = null,
+    val commercialAreaCode: String,
 ) {
 
     fun toEntity(): QuestEntity {
         return QuestEntity(
+            title = this.title,
             imageId = this.imageId,
             writerName = this.writerName,
             mainImageId = this.mainImageId,
@@ -23,12 +29,16 @@ data class QuestCreateRequest(
             type = this.type,
             repeatFrequency = this.repeatFrequency,
             sortOrder = this.sortOrder,
+            expireDate = this.expireDate,
+            bannerId = this.bannerId,
+            commercialAreaCode = this.commercialAreaCode,
         )
     }
 
 }
 
 data class QuestUpdateRequest(
+    val title: String,
     val imageId: String? = null,
     val writerName: String,
     val mainImageId: String? = null,
@@ -36,4 +46,7 @@ data class QuestUpdateRequest(
     val type: QuestType,
     val repeatFrequency: QuestRepeatFrequency? = null,
     val sortOrder: Int = 0,
+    val expireDate: LocalDateTime? = null,
+    val bannerId: Long? = null,
+    val commercialAreaCode: String,
 )

@@ -8,6 +8,7 @@ import java.time.LocalDateTime
 
 data class QuestModel(
     val id: Long? = null,
+    var title: String,
     var imageId: String? = null,
     var writerName: String? = null,
     var mainImageId: String? = null,
@@ -15,6 +16,9 @@ data class QuestModel(
     var type: QuestType,
     var repeatFrequency: QuestRepeatFrequency? = null,
     var sortOrder: Int = 0,
+    var expireDate: LocalDateTime? = null,
+    var bannerId: Long? = null,
+    var commercialAreaCode: String,
     override val createdBy: String? = null,
     override val createdAt: LocalDateTime? = null,
     override val updatedBy: String? = null,
@@ -25,6 +29,7 @@ data class QuestModel(
         fun from(quest: QuestEntity): QuestModel {
             return QuestModel(
                 id = quest.id,
+                title = quest.title,
                 imageId = quest.imageId,
                 writerName = quest.writerName,
                 mainImageId = quest.mainImageId,
@@ -32,6 +37,9 @@ data class QuestModel(
                 type = quest.type,
                 repeatFrequency = quest.repeatFrequency,
                 sortOrder = quest.sortOrder,
+                expireDate = quest.expireDate,
+                bannerId = quest.bannerId,
+                commercialAreaCode = quest.commercialAreaCode,
                 createdBy = quest.createdBy,
                 createdAt = quest.createdAt,
                 updatedBy = quest.updatedBy,

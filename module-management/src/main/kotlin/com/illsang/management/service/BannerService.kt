@@ -58,6 +58,11 @@ class BannerService(
         return banners.map { BannerModel.from(it) }
     }
 
+    fun existOrThrowBanner(bannerId: Long) {
+        this.findById(bannerId)
+    }
+
     private fun findById(id: Long): BannerEntity = (this.bannerRepository.findByIdOrNull(id)
         ?: throw IllegalArgumentException("Banner not found with id: $id"))
+
 }

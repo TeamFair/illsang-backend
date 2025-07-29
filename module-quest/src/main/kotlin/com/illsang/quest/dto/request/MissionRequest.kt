@@ -7,7 +7,6 @@ import com.illsang.quest.enums.MissionType
 data class MissionCreateRequest(
     val questId: Long,
     val type: MissionType,
-    val title: String,
     val sortOrder: Int = 0,
     val quizzes: List<QuizCreateWithMissionRequest>? = null,
 ) {
@@ -15,7 +14,6 @@ data class MissionCreateRequest(
     fun toEntity(quest: QuestEntity): MissionEntity {
         val mission = MissionEntity(
             type = type,
-            title = title,
             sortOrder = sortOrder,
             quest = quest,
         )
@@ -31,6 +29,5 @@ data class MissionCreateRequest(
 
 data class MissionUpdateRequest(
     val type: MissionType,
-    val title: String,
     val sortOrder: Int = 0,
 )

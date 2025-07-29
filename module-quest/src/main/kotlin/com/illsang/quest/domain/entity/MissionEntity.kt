@@ -20,9 +20,6 @@ class MissionEntity(
     @JoinColumn(name = "quest_id", nullable = false)
     var quest: QuestEntity,
 
-    @Column(nullable = false)
-    var title: String,
-
     @Column(name = "sort_order")
     var sortOrder: Int = 0,
 
@@ -42,7 +39,6 @@ class MissionEntity(
 
     fun update(request: MissionUpdateRequest) {
         this.type = request.type
-        this.title = request.title
         this.sortOrder = request.sortOrder
     }
 
