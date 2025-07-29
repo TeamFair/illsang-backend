@@ -1,5 +1,5 @@
 springBoot {
-    mainClass.set("com.illsang.moduleuser")
+    mainClass.set("com.illsang.user")
 }
 
 dependencies {

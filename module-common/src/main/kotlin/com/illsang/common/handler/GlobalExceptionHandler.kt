@@ -1,12 +1,17 @@
 package com.illsang.common.handler
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException
+import jakarta.validation.ValidationException
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.http.converter.HttpMessageNotReadableException
 import org.springframework.security.authentication.BadCredentialsException
+import org.springframework.security.authorization.AuthorizationDeniedException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.servlet.resource.NoResourceFoundException
+import software.amazon.awssdk.services.s3.model.NoSuchBucketException
 import software.amazon.awssdk.services.s3.model.NoSuchKeyException
 
 @ControllerAdvice
@@ -14,10 +19,8 @@ class GlobalExceptionHandler {
 
     private val logger = LoggerFactory.getLogger(GlobalExceptionHandler::class.java)
 
-    @ExceptionHandler(IllegalArgumentException::class)
-    fun handleIllegalArgumentException(ex: IllegalArgumentException): ResponseEntity<ErrorResponse> {
-        logger.error("IllegalArgumentException occurred", ex)
-        ex.printStackTrace()
+    @ExceptionHandler(value = [IllegalArgumentException::class, ValidationException::class, HttpMessageNotReadableException::class])
+    fun handleIllegalArgumentException(ex: Exception): ResponseEntity<ErrorResponse> {
         val errorResponse = ErrorResponse(
             status = HttpStatus.BAD_REQUEST.value(),
             error = "Bad Request",
@@ -40,8 +43,6 @@ class GlobalExceptionHandler {
 
     @ExceptionHandler(BadCredentialsException::class)
     fun handleBadCredentialsException(ex: BadCredentialsException): ResponseEntity<ErrorResponse> {
-        logger.error("BadCredentialsException occurred", ex)
-        ex.printStackTrace()
         val errorResponse = ErrorResponse(
             status = HttpStatus.UNAUTHORIZED.value(),
             error = "Unauthorized",
@@ -50,10 +51,19 @@ class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(errorResponse)
     }
 
+    @ExceptionHandler(AuthorizationDeniedException::class)
+    fun handleAuthorizationDeniedException(ex: AuthorizationDeniedException): ResponseEntity<ErrorResponse> {
+        val errorResponse = ErrorResponse(
+            status = HttpStatus.FORBIDDEN.value(),
+            error = "Unauthorized",
+            message = ex.message ?: "Authorization Denied"
+        )
+
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(errorResponse)
+    }
+
     @ExceptionHandler(NoResourceFoundException::class)
     fun handleNoResourceFoundException(ex: NoResourceFoundException): ResponseEntity<ErrorResponse> {
-        logger.error("NoResourceFoundException occurred", ex)
-        ex.printStackTrace()
         val errorResponse = ErrorResponse(
             status = HttpStatus.NOT_FOUND.value(),
             error = "Not Found",
@@ -62,9 +72,8 @@ class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(errorResponse)
     }
 
-    @ExceptionHandler(NoSuchKeyException::class)
-    fun handleNoSuchKeyException(ex: NoSuchKeyException): ResponseEntity<ErrorResponse> {
-        logger.error("NoSuchKeyException occurred", ex)
+    @ExceptionHandler(value = [NoSuchKeyException::class, NoSuchBucketException::class])
+    fun handleNoSuchKeyException(ex: Exception): ResponseEntity<ErrorResponse> {
         ex.printStackTrace()
         val errorResponse = ErrorResponse(
             status = HttpStatus.NOT_FOUND.value(),
@@ -77,7 +86,6 @@ class GlobalExceptionHandler {
     @ExceptionHandler(Exception::class)
     fun handleGenericException(ex: Exception): ResponseEntity<ErrorResponse> {
         logger.error("Unexpected exception occurred", ex)
-        ex.printStackTrace()
         val errorResponse = ErrorResponse(
             status = HttpStatus.INTERNAL_SERVER_ERROR.value(),
             error = "Internal Server Error",

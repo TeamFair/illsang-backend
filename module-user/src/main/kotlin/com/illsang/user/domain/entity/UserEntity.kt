@@ -1,12 +1,13 @@
 package com.illsang.user.domain.entity
 
-import com.illsang.common.adapter.out.persistence.entity.BaseEntity
 import com.illsang.auth.enums.OAuthProvider
+import com.illsang.common.converter.StringListConverter
 import com.illsang.common.entity.BaseEntity
+import com.illsang.common.event.management.season.CurrentSeason
 import com.illsang.user.enums.UserStatus
 import jakarta.persistence.*
 import java.time.LocalDateTime
-import java.util.*
+import java.time.ZoneId
 
 @Entity
 @Table(name = "users")
@@ -38,14 +39,15 @@ class UserEntity(
     @Column(name = "title_id")
     var titleHistoryId: String? = null,
 
-    @OneToMany(mappedBy = "userEntity", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val userXpEntities: MutableList<UserXpEntity> = mutableListOf(),
+    @Column(name = "area_zone_code")
+    var areaZoneCode: String? = null,
 
-    @OneToMany(mappedBy = "userEntity", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val xpHistories: MutableList<UserXpHistoryEntity> = mutableListOf(),
+    @Column(name = "area_zone_updated_at")
+    var areaZoneUpdatedAt: LocalDateTime?,
 
-    @OneToMany(mappedBy = "userEntity", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val emojis: MutableList<UserEmojiEntity> = mutableListOf()
+    @Column(name = "roles", length = 500)
+    @Convert(converter = StringListConverter::class)
+    var roles: List<String> = emptyList(),
 ) : BaseEntity() {
 
     init {
@@ -53,21 +55,6 @@ class UserEntity(
         require(email.isNotBlank()) { "Email is required" }
         require(email.length <= 100) { "Email must be less than 100 characters" }
         require(nickname.length <= 25) { "Nickname must be less than 25 characters" }
-    }
-
-    fun addXp(xp: UserXpEntity) {
-        userXpEntities.add(xp)
-        xp.userEntity = this
-    }
-
-    fun addXpHistory(history: UserXpHistoryEntity) {
-        xpHistories.add(history)
-        history.userEntity = this
-    }
-
-    fun addEmoji(emoji: UserEmojiEntity) {
-        emojis.add(emoji)
-        emoji.userEntity = this
     }
 
     fun updateNickname(nickName: String) {
@@ -90,4 +77,16 @@ class UserEntity(
             this.titleHistoryId = titleHistoryId
         }
     }
+
+    fun updateAreaZone(commercialAreaCode: String, currentSeason: CurrentSeason) {
+        this.areaZoneUpdatedAt?.let {
+          if (!it.isBefore(currentSeason.startDate) && !it.isAfter(currentSeason.endDate)) {
+              throw IllegalArgumentException("일상존은 시즌 동안 한번만 업데이트 할 수 있습니다.")
+          }
+        }
+
+        this.areaZoneCode = commercialAreaCode
+        this.areaZoneUpdatedAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"))
+    }
+
 }

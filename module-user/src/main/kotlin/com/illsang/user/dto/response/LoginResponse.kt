@@ -1,6 +1,6 @@
 package com.illsang.user.dto.response
 
-import com.illsang.auth.model.TokenModel
+import com.illsang.auth.domain.model.TokenModel
 
 data class LoginResponse(
     val accessToken: String,

@@ -1,7 +1,7 @@
 package com.illsang.user.dto.request
 
-import com.illsang.user.domain.entity.UserEntity
 import com.illsang.auth.enums.OAuthProvider
+import com.illsang.user.domain.entity.UserEntity
 import com.illsang.user.enums.UserStatus
 
 data class CreateUserRequest(
@@ -9,6 +9,7 @@ data class CreateUserRequest(
     val channel: OAuthProvider,
     val nickname: String,
     val status: UserStatus,
+    val roles: List<String> = listOf("USER"), // Default role for new users
 ) {
     fun toEntity(): UserEntity {
         return UserEntity(
@@ -16,6 +17,7 @@ data class CreateUserRequest(
             channel = this.channel,
             nickname = this.nickname,
             status = this.status,
+            roles = this.roles,
         )
     }
 }
@@ -28,3 +30,10 @@ data class UpdateUserProfileImageRequest(
     val imageId: String?,
 )
 
+data class UpdateUserTitleRequest(
+    val titleHistoryId: String? = null,
+)
+
+data class UpdateUserAreaZoneRequest(
+    val commercialAreaCode: String,
+)

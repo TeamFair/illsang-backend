@@ -114,6 +114,7 @@ subprojects {
 		ksp("io.github.openfeign.querydsl:querydsl-ksp-codegen:$querydslVersion")
 
 		// 개발용 도구
+		implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.9")
 		developmentOnly("org.springframework.boot:spring-boot-devtools")
 		testImplementation("com.github.codemonstur:embedded-redis:1.4.3")
 		implementation("org.springframework.boot:spring-boot-starter-actuator")

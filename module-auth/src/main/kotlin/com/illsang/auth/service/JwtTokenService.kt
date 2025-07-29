@@ -1,8 +1,13 @@
 package com.illsang.auth.service
 
 import io.jsonwebtoken.Jwts
+import io.jsonwebtoken.security.Keys
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Service
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
+import java.util.Base64
 import java.util.Date
 import javax.crypto.SecretKey
 
@@ -15,18 +20,23 @@ class JwtTokenService {
     @Value("\${oauth.token.timeout.refresh-token}")
     private val refreshTokenExpirationMinutes: Long = 2
 
-    private val key: SecretKey = Jwts.SIG.HS256.key().build()
+    @Value("\${jwt.token}")
+    private lateinit var secretKey: String
 
-    companion object {
-        private const val MINUTES_TO_MILLISECONDS = 60 * 1000L
+    private val key: SecretKey by lazy {
+        val keyBytes = Base64.getDecoder().decode(secretKey)
+        Keys.hmacShaKeyFor(keyBytes)
     }
 
-    fun generateAccessToken(userId: String): String {
-        val now = Date()
-        val expiryDate = Date(now.time + accessTokenExpirationMinutes * MINUTES_TO_MILLISECONDS)
+    fun generateAccessToken(userId: String, roles: List<String> = emptyList()): String {
+        val now = Date.from(Instant.now())
+        val expiryDate = Date.from(Instant.now().plus(accessTokenExpirationMinutes, ChronoUnit.MINUTES))
+
+        val authorities = roles.map { "ROLE_$it" }
 
         return Jwts.builder()
             .subject(userId)
+            .claim("scope", authorities)
             .issuedAt(now)
             .expiration(expiryDate)
             .signWith(key)
@@ -34,8 +44,8 @@ class JwtTokenService {
     }
 
     fun generateRefreshToken(userId: String): String {
-        val now = Date()
-        val expiryDate = Date(now.time + refreshTokenExpirationMinutes * MINUTES_TO_MILLISECONDS)
+        val now = Date.from(Instant.now())
+        val expiryDate = Date.from(Instant.now().plus(refreshTokenExpirationMinutes, ChronoUnit.MINUTES))
 
         return Jwts.builder()
             .subject(userId)
@@ -49,12 +59,19 @@ class JwtTokenService {
     fun getRefreshTokenExpirationMinutes(): Long = refreshTokenExpirationMinutes
 
     fun getUserIdFromToken(token: String): String {
-        val claims = Jwts.parser()
-            .verifyWith(key)
-            .build()
-            .parseSignedClaims(token)
-            .payload
+        try {
+            val claims = Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token)
+                .payload
 
-        return claims.subject
+            return claims.subject
+        } catch (e: Exception) {
+            throw IllegalArgumentException("Token is invalid")
+        }
     }
+
+    fun getSecretKey(): SecretKey = key
+
 }

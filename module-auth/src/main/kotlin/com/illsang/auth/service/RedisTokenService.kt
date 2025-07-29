@@ -1,7 +1,7 @@
 package com.illsang.auth.service
 
 import com.illsang.auth.constants.TokenConstants
-import com.illsang.auth.model.RefreshTokenData
+import com.illsang.auth.domain.model.RefreshTokenData
 import org.springframework.core.env.Environment
 import org.springframework.data.redis.core.RedisTemplate
 import org.springframework.stereotype.Service

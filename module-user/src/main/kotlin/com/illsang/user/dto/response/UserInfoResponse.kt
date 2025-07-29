@@ -1,10 +1,9 @@
 package com.illsang.user.dto.response
 
-import com.illsang.user.domain.model.UserModel
 import com.illsang.auth.enums.OAuthProvider
+import com.illsang.user.domain.model.UserModel
 import com.illsang.user.enums.UserStatus
 import java.time.LocalDateTime
-import java.util.*
 
 data class UserInfoResponse (
     val id: String?,
@@ -13,7 +12,8 @@ data class UserInfoResponse (
     val nickname: String?,
     val status: UserStatus?,
     val statusUpdatedAt: LocalDateTime?,
-    val profileImageId: UUID?,
+    val profileImageId: String?,
+    val areaZoneCode: String?,
 ) {
     companion object {
         fun from(user: UserModel): UserInfoResponse {
@@ -25,6 +25,7 @@ data class UserInfoResponse (
                 status = user.status,
                 statusUpdatedAt = user.updatedAt,
                 profileImageId = user.profileImageId,
+                areaZoneCode = user.areaZoneCode,
             )
         }
     }

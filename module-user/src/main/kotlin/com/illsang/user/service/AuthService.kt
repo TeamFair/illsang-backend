@@ -1,8 +1,8 @@
 package com.illsang.user.service
 
 import com.illsang.auth.enums.OAuthProvider
-import com.illsang.auth.model.AuthenticationModel
-import com.illsang.auth.model.RefreshTokenData
+import com.illsang.auth.domain.model.AuthenticationModel
+import com.illsang.auth.domain.model.RefreshTokenData
 import com.illsang.auth.service.AuthenticationService
 import com.illsang.auth.service.JwtTokenService
 import com.illsang.user.domain.model.UserModel
@@ -37,23 +37,23 @@ class AuthService(
             throw IllegalArgumentException("Email cannot be blank from OAuth provider")
         }
 
-        val provider = OAuthProvider.fromString(request.provider)
+        val provider = OAuthProvider.fromString(request.provider.name)
 
         val user = findOrCreateUser(email, provider)
 
-        // Generate and store tokens
-        return LoginResponse.from(this.authenticationService.generateAndStoreTokens(user.id!!))
+        return LoginResponse.from(this.authenticationService.generateAndStoreTokens(user.id!!, user.roles))
     }
 
     fun refreshLogin(request: RefreshLoginRequest): LoginResponse {
         val userId = jwtTokenService.getUserIdFromToken(request.accessToken)
 
-        // Validate user exists
-        this.userService.getUser(userId)
+        // Validate user exists and get roles
+        val user = this.userService.getUser(userId)
 
         val token = this.authenticationService.createByRefreshToken(
             userId,
-            RefreshTokenData(accessToken = request.accessToken, refreshToken = request.refreshToken)
+            RefreshTokenData(accessToken = request.accessToken, refreshToken = request.refreshToken),
+            user.roles,
         )
 
         return LoginResponse.from(token)
@@ -75,15 +75,15 @@ class AuthService(
     }
 
     private fun findOrCreateUser(email: String, provider: OAuthProvider): UserModel {
-        return try {
-            userService.getUserByEmail(email)
-        } catch (_: IllegalArgumentException) {
+
+        return userService.getUserByEmail(email) ?: run {
             val uniqueNickname = this.generateUniqueNickname()
             val userRequest = CreateUserRequest(
                 email = email,
                 channel = provider,
                 nickname = uniqueNickname,
                 status = UserStatus.ACTIVE,
+                roles = listOf("USER"),
             )
 
             userService.createUser(userRequest)
@@ -111,5 +111,4 @@ class AuthService(
         val number = Random.nextInt(1, 100000000) // 8-digit number (10000000 to 99999999)
         return number
     }
-
 }

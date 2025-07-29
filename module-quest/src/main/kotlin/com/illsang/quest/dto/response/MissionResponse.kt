@@ -1,0 +1,33 @@
+package com.illsang.quest.dto.response
+
+import com.illsang.quest.domain.model.MissionModel
+import com.illsang.quest.enums.MissionType
+import java.time.LocalDateTime
+
+data class MissionResponse(
+    val id: Long?,
+    val type: MissionType,
+    val title: String,
+    val sortOrder: Int?,
+    val questId: Long,
+    val createdBy: String?,
+    val createdAt: LocalDateTime?,
+    val updatedBy: String?,
+    val updatedAt: LocalDateTime?,
+) {
+    companion object {
+        fun from(missionModel: MissionModel): MissionResponse {
+            return MissionResponse(
+                id = missionModel.id,
+                type = missionModel.type,
+                title = missionModel.title,
+                sortOrder = missionModel.sortOrder,
+                questId = missionModel.questId,
+                createdBy = missionModel.createdBy,
+                createdAt = missionModel.createdAt,
+                updatedBy = missionModel.updatedBy,
+                updatedAt = missionModel.updatedAt,
+            )
+        }
+    }
+}

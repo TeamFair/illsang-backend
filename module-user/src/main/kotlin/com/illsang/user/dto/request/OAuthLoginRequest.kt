@@ -1,10 +1,12 @@
 package com.illsang.user.dto.request
 
-import com.illsang.auth.model.OAuthLogin
+import com.illsang.auth.domain.model.OAuthLogin
+import com.illsang.auth.enums.OAuthProvider
+import com.illsang.auth.enums.OSType
 
 data class OAuthLoginRequest(
-    val provider: String,
-    val osType: String,
+    val provider: OAuthProvider,
+    val osType: OSType,
     val idToken: String
 ) {
     companion object {

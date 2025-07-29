@@ -1,11 +1,11 @@
 package com.illsang.auth.service
 
+import com.illsang.auth.domain.model.AuthenticationModel
+import com.illsang.auth.domain.model.OAuthLogin
+import com.illsang.auth.domain.model.RefreshTokenData
+import com.illsang.auth.domain.model.TokenModel
 import com.illsang.auth.enums.OAuthProvider
 import com.illsang.auth.enums.OSType
-import com.illsang.auth.model.AuthenticationModel
-import com.illsang.auth.model.OAuthLogin
-import com.illsang.auth.model.RefreshTokenData
-import com.illsang.auth.model.TokenModel
 import org.springframework.stereotype.Service
 
 @Service
@@ -29,7 +29,7 @@ class AuthenticationService(
         return isTokenValid(authentication.userId, token)
     }
 
-    fun createByRefreshToken(userId: String, request: RefreshTokenData): TokenModel {
+    fun createByRefreshToken(userId: String, request: RefreshTokenData, roles: List<String> = emptyList()): TokenModel {
         val storedRefreshTokenData = redisTokenService.getRefreshTokenData(userId)
             ?: throw IllegalArgumentException("No refresh token found for user")
 
@@ -41,12 +41,12 @@ class AuthenticationService(
         }
 
         // Generate new tokens
-        return generateAndStoreTokens(userId)
+        return generateAndStoreTokens(userId, roles)
     }
 
-    fun generateAndStoreTokens(userId: String): TokenModel {
+    fun generateAndStoreTokens(userId: String, roles: List<String> = emptyList()): TokenModel {
         // Generate tokens
-        val accessToken = jwtTokenService.generateAccessToken(userId)
+        val accessToken = jwtTokenService.generateAccessToken(userId, roles)
         val refreshToken = jwtTokenService.generateRefreshToken(userId)
 
         // Store tokens in Redis
@@ -76,13 +76,9 @@ class AuthenticationService(
 
 
     fun validateOAuthToken(request: OAuthLogin): Map<String, String> {
-        val osType = OSType.fromString(request.osType)
-
-        val provider = OAuthProvider.fromString(request.provider)
-
-        return when (provider) {
+        return when (request.provider) {
             OAuthProvider.GOOGLE -> {
-                val payload = this.googleTokenValidationService.validateIdToken(request.idToken, osType)
+                val payload = this.googleTokenValidationService.validateIdToken(request.idToken, request.osType)
 
                 mapOf(
                     "email" to payload.email,
@@ -90,7 +86,7 @@ class AuthenticationService(
             }
 
             OAuthProvider.APPLE -> {
-                val claims = this.appleTokenValidationService.validateIdToken(request.idToken, osType)
+                val claims = this.appleTokenValidationService.validateIdToken(request.idToken, request.osType)
 
                 mapOf(
                     "email" to (claims["email"] as? String ?: ""),
@@ -98,4 +94,9 @@ class AuthenticationService(
             }
         }
     }
+
+    fun getGoogleImplicitTokenInfo(accessToken: String): Map<String, String> {
+        return googleTokenValidationService.getGoogleImplicitTokenInfo(accessToken)
+    }
+
 }

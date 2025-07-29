@@ -3,7 +3,7 @@ package com.illsang.auth.enums
 enum class UserType(
 ) {
     BOSS,
-    CUSTOMER,
+    USER,
     ADMIN,
     UNKNOWN,
     ;
