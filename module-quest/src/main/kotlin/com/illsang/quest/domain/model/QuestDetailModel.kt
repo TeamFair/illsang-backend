@@ -6,7 +6,7 @@ import com.illsang.quest.enums.QuestRepeatFrequency
 import com.illsang.quest.enums.QuestType
 import java.time.LocalDateTime
 
-data class QuestModel(
+data class QuestDetailModel(
     val id: Long? = null,
     var title: String,
     var imageId: String? = null,
@@ -21,6 +21,7 @@ data class QuestModel(
     var commercialAreaCode: String,
     var useYn: Boolean,
     var rewards: List<QuestRewardModel>,
+    var missions: List<MissionDetailModel>,
     override val createdBy: String? = null,
     override val createdAt: LocalDateTime? = null,
     override val updatedBy: String? = null,
@@ -28,8 +29,8 @@ data class QuestModel(
 ) : BaseModel(createdBy, createdAt, updatedBy, updatedAt) {
 
     companion object {
-        fun from(quest: QuestEntity): QuestModel {
-            return QuestModel(
+        fun from(quest: QuestEntity): QuestDetailModel {
+            return QuestDetailModel(
                 id = quest.id,
                 title = quest.title,
                 imageId = quest.imageId,
@@ -44,6 +45,7 @@ data class QuestModel(
                 commercialAreaCode = quest.commercialAreaCode,
                 useYn = quest.useYn,
                 rewards = quest.rewards.map { QuestRewardModel.from(it) },
+                missions = quest.missions.map { MissionDetailModel.from(it) },
                 createdBy = quest.createdBy,
                 createdAt = quest.createdAt,
                 updatedBy = quest.updatedBy,

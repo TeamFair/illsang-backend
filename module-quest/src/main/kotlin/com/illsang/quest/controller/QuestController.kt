@@ -1,9 +1,9 @@
 package com.illsang.quest.controller
 
 import com.illsang.common.enums.ResponseMsg
-import com.illsang.quest.domain.model.QuestModel
 import com.illsang.quest.dto.request.QuestCreateRequest
 import com.illsang.quest.dto.request.QuestUpdateRequest
+import com.illsang.quest.dto.response.QuestDetailResponse
 import com.illsang.quest.dto.response.QuestResponse
 import com.illsang.quest.service.QuestService
 import io.swagger.v3.oas.annotations.Operation
@@ -20,22 +20,33 @@ class QuestController(
     private val questService: QuestService
 ) {
 
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(operationId = "QUE001", summary= "퀘스트 전체 조회")
+    fun selectAllQuest(): ResponseEntity<List<QuestResponse>> {
+        val quests = this.questService.getAllQuest()
+
+        return ResponseEntity.ok(
+            quests.map { QuestResponse.from(it) }
+        )
+    }
+
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(operationId = "QUE001", summary= "퀘스트 단일 조회")
+    @Operation(operationId = "QUE002", summary= "퀘스트 단일 조회(하위 정보 전체)")
     fun selectQuest(
         @PathVariable id: Long,
-    ): ResponseEntity<QuestResponse> {
+    ): ResponseEntity<QuestDetailResponse> {
         val quest = this.questService.getQuest(id)
 
         return ResponseEntity.ok(
-            QuestResponse.from(quest)
+            QuestDetailResponse.from(quest)
         )
     }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(operationId = "QUE002", summary= "퀘스트 생성")
+    @Operation(operationId = "QUE003", summary= "퀘스트 생성")
     fun createQuest(
         @RequestBody request: QuestCreateRequest,
     ): ResponseEntity<QuestResponse> {
@@ -48,7 +59,7 @@ class QuestController(
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(operationId = "QUE003", summary= "퀘스트 수정")
+    @Operation(operationId = "QUE004", summary= "퀘스트 수정")
     fun updateQuest(
         @PathVariable id: Long,
         @RequestBody request: QuestUpdateRequest,
@@ -62,11 +73,11 @@ class QuestController(
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(operationId = "QUE004", summary= "퀘스트 삭제")
+    @Operation(operationId = "QUE005", summary= "퀘스트 삭제")
     fun deleteQuest(
         @PathVariable id: Long,
     ): ResponseEntity<ResponseMsg> {
-        questService.deleteQuest(id)
+        this.questService.deleteQuest(id)
 
         return ResponseEntity.ok().build()
     }

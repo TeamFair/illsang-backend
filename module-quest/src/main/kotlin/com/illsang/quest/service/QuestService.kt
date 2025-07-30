@@ -4,9 +4,11 @@ import com.illsang.common.event.management.area.CommercialAreaExistOrThrowEvent
 import com.illsang.common.event.management.banner.BannerExistOrThrowEvent
 import com.illsang.common.event.management.image.ImageExistOrThrowEvent
 import com.illsang.quest.domain.entity.QuestEntity
+import com.illsang.quest.domain.model.QuestDetailModel
 import com.illsang.quest.domain.model.QuestModel
 import com.illsang.quest.dto.request.QuestCreateRequest
 import com.illsang.quest.dto.request.QuestUpdateRequest
+import com.illsang.quest.dto.response.QuestResponse
 import com.illsang.quest.repository.QuestRepository
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.repository.findByIdOrNull
@@ -66,10 +68,16 @@ class QuestService(
         this.questRepository.delete(quest)
     }
 
-    fun getQuest(id: Long): QuestModel {
+    fun getQuest(id: Long): QuestDetailModel {
         val quest = this.findById(id)
 
-        return QuestModel.from(quest)
+        return QuestDetailModel.from(quest)
+    }
+
+    fun getAllQuest(): List<QuestModel> {
+        val quests = this.questRepository.findAll()
+
+        return quests.map { QuestModel.from(it) }
     }
 
     fun findById(id: Long): QuestEntity = this.questRepository.findByIdOrNull(id)

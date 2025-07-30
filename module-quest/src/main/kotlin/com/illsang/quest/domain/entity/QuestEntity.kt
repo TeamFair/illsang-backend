@@ -49,6 +49,9 @@ class QuestEntity(
     @Column(name = "commercial_area_code")
     var commercialAreaCode: String,
 
+    @Column(name = "use_yn", nullable = false)
+    var useYn: Boolean = false,
+
     @OneToMany(mappedBy = "quest", cascade = [CascadeType.ALL], orphanRemoval = true)
     val missions: MutableList<MissionEntity> = mutableListOf(),
 
@@ -76,6 +79,7 @@ class QuestEntity(
         this.expireDate = request.expireDate
         this.bannerId = request.bannerId
         this.commercialAreaCode = request.commercialAreaCode
+        this.useYn = request.useYn
 
         this.validateQuestType()
     }

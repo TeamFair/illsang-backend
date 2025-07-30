@@ -1,12 +1,11 @@
 package com.illsang.quest.dto.response
 
-import com.illsang.quest.domain.model.QuestModel
-import com.illsang.quest.domain.model.QuestRewardModel
+import com.illsang.quest.domain.model.QuestDetailModel
 import com.illsang.quest.enums.QuestRepeatFrequency
 import com.illsang.quest.enums.QuestType
 import java.time.LocalDateTime
 
-data class QuestResponse(
+data class QuestDetailResponse(
     val id: Long?,
     val title: String,
     val imageId: String?,
@@ -20,14 +19,15 @@ data class QuestResponse(
     val bannerId: Long?,
     val useYn: Boolean,
     val rewards: List<QuestRewardResponse>,
+    val missions: List<MissionDetailResponse>,
     val createdBy: String?,
     val createdAt: LocalDateTime?,
     val updatedBy: String?,
     val updatedAt: LocalDateTime?,
 ) {
     companion object {
-        fun from(questModel: QuestModel): QuestResponse {
-            return QuestResponse(
+        fun from(questModel: QuestDetailModel): QuestDetailResponse {
+            return QuestDetailResponse(
                 id = questModel.id,
                 title = questModel.title,
                 imageId = questModel.imageId,
@@ -41,6 +41,7 @@ data class QuestResponse(
                 bannerId = questModel.bannerId,
                 useYn = questModel.useYn,
                 rewards = questModel.rewards.map { QuestRewardResponse.from(it) },
+                missions = questModel.missions.map { MissionDetailResponse.from(it) },
                 createdBy = questModel.createdBy,
                 createdAt = questModel.createdAt,
                 updatedBy = questModel.updatedBy,

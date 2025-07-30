@@ -2,12 +2,14 @@ package com.illsang.quest.domain.model
 
 import com.illsang.common.domain.model.BaseModel
 import com.illsang.quest.domain.entity.QuestRewardEntity
+import com.illsang.quest.enums.PointType
 import com.illsang.quest.enums.RewardType
 import java.time.LocalDateTime
 
 data class QuestRewardModel(
     val id: Long? = null,
-    var type: RewardType,
+    var rewardType: RewardType,
+    var pointType: PointType?,
     var amount: Int,
     val questId: Long,
     override val createdBy: String? = null,
@@ -20,7 +22,8 @@ data class QuestRewardModel(
         fun from(questReward: QuestRewardEntity): QuestRewardModel {
             return QuestRewardModel(
                 id = questReward.id,
-                type = questReward.type,
+                rewardType = questReward.rewardType,
+                pointType = questReward.pointType,
                 amount = questReward.amount,
                 questId = questReward.quest.id!!,
                 createdBy = questReward.createdBy,
