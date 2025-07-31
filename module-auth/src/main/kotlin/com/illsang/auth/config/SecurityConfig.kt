@@ -23,8 +23,6 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter
 import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter
 import org.springframework.security.web.SecurityFilterChain
-import org.springframework.security.web.access.intercept.AuthorizationFilter
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import java.time.Instant
 
 @Configuration

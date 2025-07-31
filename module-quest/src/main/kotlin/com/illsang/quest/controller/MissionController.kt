@@ -1,10 +1,11 @@
 package com.illsang.quest.controller
 
 import com.illsang.common.enums.ResponseMsg
-import com.illsang.quest.dto.request.MissionCreateRequest
-import com.illsang.quest.dto.request.MissionUpdateRequest
-import com.illsang.quest.dto.response.MissionResponse
-import com.illsang.quest.service.MissionService
+import com.illsang.quest.dto.request.quest.MissionCreateRequest
+import com.illsang.quest.dto.request.quest.MissionUpdateRequest
+import com.illsang.quest.dto.response.quest.MissionResponse
+import com.illsang.quest.service.history.MissionHistoryService
+import com.illsang.quest.service.quest.MissionService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*
 @Tag(name = "Mission", description = "미션")
 class MissionController(
     private val missionService: MissionService,
+    private val missionHistoryService: MissionHistoryService,
 ) {
 
     @PostMapping

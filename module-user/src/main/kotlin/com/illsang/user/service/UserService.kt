@@ -122,7 +122,7 @@ class UserService(
         this.userRepository.delete(user)
     }
 
-    private fun findById(id: String): UserEntity {
+    fun findById(id: String): UserEntity {
         return userRepository.findByIdOrNull(id)
             ?: throw IllegalArgumentException("User not found with id: $id")
     }

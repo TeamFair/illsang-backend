@@ -1,8 +1,8 @@
 package com.illsang.auth.filter
 
 import com.illsang.auth.domain.model.AuthenticationModel
-import com.illsang.auth.service.AuthenticationService
 import com.illsang.auth.service.AuthUserService
+import com.illsang.auth.service.AuthenticationService
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
@@ -10,7 +10,6 @@ import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken
-import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 
 class AuthenticationFilter(

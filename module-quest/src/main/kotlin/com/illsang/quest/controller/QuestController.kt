@@ -1,11 +1,11 @@
 package com.illsang.quest.controller
 
 import com.illsang.common.enums.ResponseMsg
-import com.illsang.quest.dto.request.QuestCreateRequest
-import com.illsang.quest.dto.request.QuestUpdateRequest
-import com.illsang.quest.dto.response.QuestDetailResponse
-import com.illsang.quest.dto.response.QuestResponse
-import com.illsang.quest.service.QuestService
+import com.illsang.quest.dto.request.quest.QuestCreateRequest
+import com.illsang.quest.dto.request.quest.QuestUpdateRequest
+import com.illsang.quest.dto.response.quest.QuestDetailResponse
+import com.illsang.quest.dto.response.quest.QuestResponse
+import com.illsang.quest.service.quest.QuestService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus

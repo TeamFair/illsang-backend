@@ -1,8 +1,8 @@
 package com.illsang.management.service
 
+import com.illsang.management.domain.entity.ImageEntity
 import com.illsang.management.domain.model.ImageModel
 import com.illsang.management.dto.request.ImageCreateRequest
-import com.illsang.management.domain.entity.ImageEntity
 import com.illsang.management.enums.ImageType
 import com.illsang.management.repository.ImageRepository
 import org.springframework.data.repository.findByIdOrNull

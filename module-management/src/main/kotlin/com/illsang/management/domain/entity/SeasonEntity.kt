@@ -1,7 +1,6 @@
 package com.illsang.management.domain.entity
 
 import com.illsang.common.entity.BaseEntity
-import com.illsang.management.dto.request.BannerUpdateRequest
 import com.illsang.management.dto.request.SeasonUpdateRequest
 import jakarta.persistence.*
 import java.time.LocalDateTime

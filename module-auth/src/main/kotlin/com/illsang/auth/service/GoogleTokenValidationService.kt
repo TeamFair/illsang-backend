@@ -8,8 +8,8 @@ import com.illsang.auth.enums.OSType
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.stereotype.Service
-import org.springframework.web.client.RestTemplate
 import org.springframework.web.client.HttpClientErrorException
+import org.springframework.web.client.RestTemplate
 import java.util.*
 
 @Service

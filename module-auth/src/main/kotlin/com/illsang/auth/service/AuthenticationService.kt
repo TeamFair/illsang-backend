@@ -5,7 +5,6 @@ import com.illsang.auth.domain.model.OAuthLogin
 import com.illsang.auth.domain.model.RefreshTokenData
 import com.illsang.auth.domain.model.TokenModel
 import com.illsang.auth.enums.OAuthProvider
-import com.illsang.auth.enums.OSType
 import org.springframework.stereotype.Service
 
 @Service

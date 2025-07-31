@@ -10,7 +10,6 @@ import com.illsang.management.dto.request.BannerUpdateRequest
 import com.illsang.management.repository.BannerRepository
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.domain.Page
-import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service

@@ -1,0 +1,18 @@
+package com.illsang.user.listener
+
+import com.illsang.common.event.management.point.UserPointCreateEvent
+import com.illsang.user.service.UserPointService
+import org.springframework.context.event.EventListener
+import org.springframework.stereotype.Component
+
+@Component
+class UserPointEventListener(
+    private val userPointService: UserPointService,
+) {
+
+    @EventListener
+    fun createPoint(event: UserPointCreateEvent) {
+        this.userPointService.createPoints(event.userId, event.request)
+    }
+
+}

@@ -7,7 +7,6 @@ import com.illsang.user.dto.response.LoginResponse
 import com.illsang.user.service.AuthService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
-import jakarta.annotation.security.PermitAll
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal

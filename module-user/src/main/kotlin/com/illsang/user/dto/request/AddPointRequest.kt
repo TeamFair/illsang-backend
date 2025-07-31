@@ -1,8 +1,8 @@
 package com.illsang.user.dto.request
 
-import com.illsang.user.enums.XpType
+import com.illsang.user.enums.PointType
 
 data class AddPointRequest(
-    val xpType: XpType,
+    val pointType: PointType,
     val additionalPoint: Int
 )

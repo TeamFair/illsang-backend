@@ -1,11 +1,10 @@
 package com.illsang.user.domain.model
 
+import com.illsang.auth.enums.OAuthProvider
 import com.illsang.common.domain.model.BaseModel
 import com.illsang.user.domain.entity.UserEntity
-import com.illsang.auth.enums.OAuthProvider
 import com.illsang.user.enums.UserStatus
 import java.time.LocalDateTime
-import java.util.*
 
 data class UserModel(
     val id: String? = null,

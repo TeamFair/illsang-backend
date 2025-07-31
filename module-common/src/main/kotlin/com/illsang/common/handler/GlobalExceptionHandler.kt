@@ -1,6 +1,5 @@
 package com.illsang.common.handler
 
-import com.fasterxml.jackson.databind.exc.InvalidFormatException
 import jakarta.validation.ValidationException
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus

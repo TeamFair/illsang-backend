@@ -1,8 +1,8 @@
 package com.illsang.user.service
 
-import com.illsang.auth.enums.OAuthProvider
 import com.illsang.auth.domain.model.AuthenticationModel
 import com.illsang.auth.domain.model.RefreshTokenData
+import com.illsang.auth.enums.OAuthProvider
 import com.illsang.auth.service.AuthenticationService
 import com.illsang.auth.service.JwtTokenService
 import com.illsang.user.domain.model.UserModel

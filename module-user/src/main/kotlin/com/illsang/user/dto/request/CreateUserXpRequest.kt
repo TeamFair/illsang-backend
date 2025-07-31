@@ -1,9 +1,9 @@
 package com.illsang.user.dto.request
 
-import com.illsang.user.enums.XpType
+import com.illsang.user.enums.PointType
 
 data class CreateUserXpRequest(
     val userId: Long,
-    val xpType: XpType,
+    val pointType: PointType,
     val point: Int
 )

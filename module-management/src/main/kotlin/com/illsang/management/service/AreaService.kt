@@ -1,20 +1,12 @@
 package com.illsang.management.service
 
 import com.illsang.management.domain.entity.CommercialAreaEntity
-import com.illsang.management.domain.model.ImageModel
-import com.illsang.management.dto.request.ImageCreateRequest
-import com.illsang.management.domain.entity.ImageEntity
 import com.illsang.management.domain.model.MetroAreaModel
-import com.illsang.management.enums.ImageType
 import com.illsang.management.repository.CommercialAreaRepository
-import com.illsang.management.repository.ImageRepository
 import com.illsang.management.repository.MetroAreaRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
-import kotlin.random.Random
 
 @Service
 @Transactional(readOnly = true)

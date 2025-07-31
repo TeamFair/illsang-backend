@@ -48,6 +48,9 @@ class UserEntity(
     @Column(name = "roles", length = 500)
     @Convert(converter = StringListConverter::class)
     var roles: List<String> = emptyList(),
+
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
+    val userPoints: MutableSet<UserPointEntity> = mutableSetOf(),
 ) : BaseEntity() {
 
     init {
@@ -87,6 +90,10 @@ class UserEntity(
 
         this.commercialAreaCode = commercialAreaCode
         this.commercialAreaUpdatedAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"))
+    }
+
+    fun addPoints(userPoints: List<UserPointEntity>) {
+        this.userPoints.addAll(userPoints)
     }
 
 }

@@ -1,7 +1,7 @@
 package com.illsang.quest.enums
 
 enum class PointType {
-    AREA,
-    ZONE,
+    METRO,
+    COMMERCIAL,
     CONTRIBUTION,
 }

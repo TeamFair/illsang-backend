@@ -1,9 +1,9 @@
 package com.illsang.quest.controller
 
-import com.illsang.quest.dto.request.QuestRewardCreateRequest
-import com.illsang.quest.dto.request.QuestRewardUpdateRequest
-import com.illsang.quest.dto.response.QuestRewardResponse
-import com.illsang.quest.service.QuestRewardService
+import com.illsang.quest.dto.request.quest.QuestRewardCreateRequest
+import com.illsang.quest.dto.request.quest.QuestRewardUpdateRequest
+import com.illsang.quest.dto.response.quest.QuestRewardResponse
+import com.illsang.quest.service.quest.QuestRewardService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus

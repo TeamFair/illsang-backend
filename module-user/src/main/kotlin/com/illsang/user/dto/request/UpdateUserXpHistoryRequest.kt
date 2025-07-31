@@ -1,8 +1,8 @@
 package com.illsang.user.dto.request
 
-import com.illsang.user.enums.XpType
+import com.illsang.user.enums.PointType
 
 data class UpdateUserXpHistoryRequest(
-    val xpType: XpType? = null,
+    val pointType: PointType? = null,
     val point: Int? = null
 )
