@@ -79,6 +79,12 @@ class QuestService(
         return quests.map { QuestModel.from(it) }
     }
 
+    @Transactional
+    fun refreshTotalPoint(questId: Long) {
+        val quest = this.findById(questId)
+        quest.refreshTotalPoint()
+    }
+
     fun findById(id: Long): QuestEntity = this.questRepository.findByIdOrNull(id)
         ?: throw IllegalArgumentException("Quest not found with id: $id")
 

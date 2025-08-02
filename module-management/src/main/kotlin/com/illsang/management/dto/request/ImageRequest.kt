@@ -13,8 +13,8 @@ data class ImageCreateRequest(
         return ImageEntity(
             id = fileName,
             type = type,
-            size = file.size,
-            name = file.name
+            fileSize = file.size,
+            fileName = file.name
         )
     }
 

@@ -6,8 +6,8 @@ import com.illsang.management.enums.ImageType
 data class ImageResponse(
     val id: String? = null,
     val type: ImageType,
-    val name: String,
-    val size: Long,
+    val fileName: String,
+    val fileSize: Long,
 ) {
 
     companion object {
@@ -15,8 +15,8 @@ data class ImageResponse(
             return ImageResponse(
                 id = image.id,
                 type = image.type,
-                name = image.name,
-                size = image.size,
+                fileName = image.fileName,
+                fileSize = image.fileSize,
             )
         }
     }

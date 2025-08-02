@@ -1,7 +1,7 @@
 package com.illsang.quest.dto.response.quest
 
+import com.illsang.common.enums.PointType
 import com.illsang.quest.domain.model.quset.QuestRewardModel
-import com.illsang.quest.enums.PointType
 import com.illsang.quest.enums.RewardType
 import java.time.LocalDateTime
 

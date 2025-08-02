@@ -1,8 +1,8 @@
 package com.illsang.quest.domain.entity.quest
 
 import com.illsang.common.entity.BaseEntity
+import com.illsang.common.enums.PointType
 import com.illsang.quest.dto.request.quest.QuestRewardUpdateRequest
-import com.illsang.quest.enums.PointType
 import com.illsang.quest.enums.RewardType
 import jakarta.persistence.*
 

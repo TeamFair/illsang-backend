@@ -21,6 +21,7 @@ class QuestRewardService(
         val quest = this.questService.findById(request.questId)
 
         val questReward = request.toEntity(quest)
+        this.questService.refreshTotalPoint(quest.id!!)
         this.questRewardRepository.save(questReward)
 
         return QuestRewardModel.from(questReward)
@@ -37,6 +38,7 @@ class QuestRewardService(
         val questReward = this.findById(id)
 
         questReward.update(request)
+        this.questService.refreshTotalPoint(questReward.quest.id!!)
 
         return QuestRewardModel.from(questReward)
     }
@@ -46,6 +48,7 @@ class QuestRewardService(
         val questReward = this.findById(id)
 
         this.questRewardRepository.delete(questReward)
+        this.questService.refreshTotalPoint(questReward.quest.id!!)
     }
 
     private fun findById(id: Long): QuestRewardEntity = this.questRewardRepository.findByIdOrNull(id)

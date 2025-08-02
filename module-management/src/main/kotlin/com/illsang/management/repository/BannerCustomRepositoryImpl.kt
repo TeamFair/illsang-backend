@@ -27,8 +27,8 @@ class BannerCustomRepositoryImpl(
         request.description?.let {
             whereClause.and(bannerEntity.description.containsIgnoreCase(it))
         }
-        request.activeYn?.let {
-            whereClause.and(bannerEntity.activeYn.eq(it))
+        request.useYn?.let {
+            whereClause.and(bannerEntity.useYn.eq(it))
         }
 
         val results = queryFactory

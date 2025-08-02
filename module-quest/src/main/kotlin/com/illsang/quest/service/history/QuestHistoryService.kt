@@ -1,5 +1,7 @@
 package com.illsang.quest.service.history
 
+import com.illsang.common.enums.PointType
+import com.illsang.common.event.management.area.MetroAreaGetByCommercialAreaEvent
 import com.illsang.common.event.management.point.UserPointCreateEvent
 import com.illsang.common.event.management.point.UserPointCreateRequest
 import com.illsang.quest.domain.entity.history.UserQuestHistoryEntity
@@ -32,11 +34,23 @@ class QuestHistoryService(
         questHistory.complete()
 
         if (questHistory.status == QuestStatus.COMPLETE) {
+            val event = MetroAreaGetByCommercialAreaEvent(commercialAreaCode = questHistory.quest.commercialAreaCode)
+            this.eventPublisher.publishEvent(event)
+            val metroAreaCode = event.response.metroAreaCode
+
             val userPointCreateRequests = questHistory.quest.rewards
                 .filter { it.rewardType == RewardType.POINT }
-                .map { UserPointCreateRequest(pointType = it.pointType!!.name, point = it.point) }
+                .map {
+                    val areaCode = when (it.pointType) {
+                        PointType.METRO -> metroAreaCode
+                        PointType.COMMERCIAL -> questHistory.quest.commercialAreaCode
+                        else -> null
+                    }
+                    UserPointCreateRequest(areaCode = areaCode, pointType = it.pointType!!, point = it.point)
+                }
             this.eventPublisher.publishEvent(UserPointCreateEvent(
                 userId = questHistory.userId,
+                questId = questHistory.quest.id!!,
                 request = userPointCreateRequests
             ))
         }

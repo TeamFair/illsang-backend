@@ -3,7 +3,7 @@ package com.illsang.user.domain.entity
 import com.illsang.auth.enums.OAuthProvider
 import com.illsang.common.converter.StringListConverter
 import com.illsang.common.entity.BaseEntity
-import com.illsang.common.event.management.season.CurrentSeason
+import com.illsang.common.event.management.season.SeasonGetCurrentEvent
 import com.illsang.user.enums.UserStatus
 import jakarta.persistence.*
 import java.time.LocalDateTime
@@ -49,7 +49,7 @@ class UserEntity(
     @Convert(converter = StringListConverter::class)
     var roles: List<String> = emptyList(),
 
-    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToMany(mappedBy = "id.user", cascade = [CascadeType.ALL], orphanRemoval = true)
     val userPoints: MutableSet<UserPointEntity> = mutableSetOf(),
 ) : BaseEntity() {
 
@@ -65,10 +65,6 @@ class UserEntity(
         this.nickname = nickName
     }
 
-    private fun validateNickName(nickname: String) {
-        require(nickname.isNotBlank()) { "Nickname is required" }
-    }
-
     fun updateProfileImage(imageId: String?) {
         this.profileImageId = imageId
     }
@@ -81,7 +77,7 @@ class UserEntity(
         }
     }
 
-    fun updateAreaZone(commercialAreaCode: String, currentSeason: CurrentSeason) {
+    fun updateAreaZone(commercialAreaCode: String, currentSeason: SeasonGetCurrentEvent.CurrentSeason) {
         this.commercialAreaUpdatedAt?.let {
           if (!it.isBefore(currentSeason.startDate) && !it.isAfter(currentSeason.endDate)) {
               throw IllegalArgumentException("일상존은 시즌 동안 한번만 업데이트 할 수 있습니다.")
@@ -92,8 +88,17 @@ class UserEntity(
         this.commercialAreaUpdatedAt = LocalDateTime.now(ZoneId.of("Asia/Seoul"))
     }
 
-    fun addPoints(userPoints: List<UserPointEntity>) {
-        this.userPoints.addAll(userPoints)
+    fun addPoints(userPoints: List<Pair<UserPointKey, Int>>) {
+        userPoints.forEach { (key, point) ->
+            this.userPoints.find {
+                it.id.user.id == key.user.id && it.id.pointType == key.pointType && it.id.areaCode == key.areaCode && it.id.seasonId == key.seasonId
+            }?.addPoint(point)
+                ?: this.userPoints.add(UserPointEntity(key, point))
+        }
+    }
+
+    private fun validateNickName(nickname: String) {
+        require(nickname.isNotBlank()) { "Nickname is required" }
     }
 
 }

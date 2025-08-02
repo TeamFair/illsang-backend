@@ -1,8 +1,7 @@
 package com.illsang.quest.enums
 
 enum class MissionType {
-    FREE,
-    NORMAL,
+    PHOTO,
     OX,
     WORDS,
     ;

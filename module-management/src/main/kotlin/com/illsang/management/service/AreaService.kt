@@ -21,9 +21,8 @@ class AreaService(
         return metroAreas.map(MetroAreaModel::from)
     }
 
-    fun existOrThrowCommercialArea(commercialAreaCode: String) {
+    fun existOrThrowCommercialArea(commercialAreaCode: String) =
         this.findCommercialAreaById(commercialAreaCode)
-    }
 
     private fun findCommercialAreaById(id: String): CommercialAreaEntity =
         this.commercialAreaRepository.findByIdOrNull(id)

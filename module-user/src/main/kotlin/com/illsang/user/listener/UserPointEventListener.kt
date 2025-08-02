@@ -12,7 +12,7 @@ class UserPointEventListener(
 
     @EventListener
     fun createPoint(event: UserPointCreateEvent) {
-        this.userPointService.createPoints(event.userId, event.request)
+        this.userPointService.createPoints(event.userId, event.questId, event.request)
     }
 
 }

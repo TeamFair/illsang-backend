@@ -8,8 +8,8 @@ import java.time.LocalDateTime
 data class ImageModel(
     val id: String? = null,
     val type: ImageType,
-    val name: String,
-    val size: Long,
+    val fileName: String,
+    val fileSize: Long,
     override val createdBy: String? = null,
     override val createdAt: LocalDateTime? = null,
     override val updatedBy: String? = null,
@@ -21,8 +21,8 @@ data class ImageModel(
             return ImageModel(
                 id = image.id,
                 type = image.type,
-                name = image.name,
-                size = image.size,
+                fileName = image.fileName,
+                fileSize = image.fileSize,
                 createdAt = image.createdAt,
                 createdBy = image.createdBy,
                 updatedAt = image.updatedAt,

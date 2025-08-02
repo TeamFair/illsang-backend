@@ -14,14 +14,14 @@ class ImageEntity(
     var type: ImageType,
 
     @Column(nullable = false, length = 255)
-    var name: String,
+    var fileName: String,
 
     @Column(nullable = false)
-    var size: Long,
+    var fileSize: Long,
 ) : BaseEntity() {
     init {
-        require(name.isNotBlank()) { "Name is required" }
-        require(size > 0) { "Size must be greater than 0" }
-        require(name.length <= 255) { "Name must be less than 255 characters" }
+        require(fileName.isNotBlank()) { "Name is required" }
+        require(fileSize > 0) { "Size must be greater than 0" }
+        require(fileName.length <= 255) { "Name must be less than 255 characters" }
     }
 }

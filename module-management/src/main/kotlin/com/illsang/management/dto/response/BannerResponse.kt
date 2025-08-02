@@ -7,7 +7,7 @@ data class BannerResponse(
     val title: String?,
     val bannerImageId: String?,
     val description: String?,
-    val activeYn: Boolean?,
+    val useYn: Boolean?,
 ) {
     companion object {
         fun from(banner: BannerModel): BannerResponse {
@@ -16,7 +16,7 @@ data class BannerResponse(
                 title = banner.title,
                 bannerImageId = banner.bannerImageId,
                 description = banner.description,
-                activeYn = banner.activeYn,
+                useYn = banner.useYn,
             )
         }
     }

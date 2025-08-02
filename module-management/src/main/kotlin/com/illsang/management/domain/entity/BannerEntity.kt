@@ -20,8 +20,8 @@ class BannerEntity(
     @Column(columnDefinition = "TEXT")
     var description: String? = null,
 
-    @Column(name = "active_yn", nullable = false)
-    var activeYn: Boolean = true,
+    @Column(name = "use_yn", nullable = false)
+    var useYn: Boolean = false,
 ) : BaseEntity() {
 
     init {
@@ -33,7 +33,8 @@ class BannerEntity(
 
         this.title = request.title
         this.description = request.description
-        this.activeYn = request.activeYn
+        this.useYn = request.useYn
+        this.bannerImageId = request.imageId
     }
 
     private fun validateTitle(title: String) {

@@ -6,10 +6,13 @@ data class SeasonGetCurrentEvent (
     val currentDate: LocalDateTime,
 ) {
     lateinit var response: CurrentSeason
+
+    class CurrentSeason(
+        val seasonId: Long,
+        val seasonNumber: Int,
+        val startDate: LocalDateTime,
+        val endDate: LocalDateTime,
+    )
 }
 
-class CurrentSeason(
-    val seasonNumber: Int,
-    val startDate: LocalDateTime,
-    val endDate: LocalDateTime,
-)
+

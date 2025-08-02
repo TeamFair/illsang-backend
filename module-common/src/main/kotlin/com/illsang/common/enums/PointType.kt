@@ -1,4 +1,4 @@
-package com.illsang.quest.enums
+package com.illsang.common.enums
 
 enum class PointType {
     METRO,

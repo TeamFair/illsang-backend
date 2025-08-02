@@ -7,6 +7,7 @@ import com.illsang.management.dto.response.BannerResponse
 import com.illsang.management.service.BannerService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springdoc.core.annotations.ParameterObject
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
@@ -64,8 +65,8 @@ class BannerController(
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(operationId = "BAN004", summary= "배너 검색")
     fun findBySearch(
-        request: BannerSearchRequest,
-        @PageableDefault(size = 10) pageable: Pageable,
+        @ParameterObject request: BannerSearchRequest,
+        @ParameterObject @PageableDefault(size = 10) pageable: Pageable,
     ): ResponseEntity<Page<BannerResponse>> {
         val banners = this.bannerService.search(request, pageable)
 

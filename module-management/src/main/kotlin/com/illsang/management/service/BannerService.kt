@@ -34,6 +34,7 @@ class BannerService(
 
     @Transactional
     fun updateBanner(id: Long, request: BannerUpdateRequest): BannerModel {
+        this.eventPublisher.publishEvent(ImageExistOrThrowEvent(request.imageId))
         val banner = this.findById(id)
 
         banner.update(request)

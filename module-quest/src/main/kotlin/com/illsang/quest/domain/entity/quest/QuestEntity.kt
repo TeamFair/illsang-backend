@@ -52,6 +52,9 @@ class QuestEntity(
     @Column(name = "use_yn", nullable = false)
     var useYn: Boolean = false,
 
+    @Column(name = "total_point")
+    var totalPoint: Int = 0,
+
     @OneToMany(mappedBy = "quest", cascade = [CascadeType.ALL], orphanRemoval = true)
     val missions: MutableList<MissionEntity> = mutableListOf(),
 
@@ -82,6 +85,10 @@ class QuestEntity(
         this.useYn = request.useYn
 
         this.validateQuestType()
+    }
+
+    fun refreshTotalPoint() {
+        this.totalPoint = this.rewards.sumOf { it.point }
     }
 
     private fun validateQuestType() {

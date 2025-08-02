@@ -17,7 +17,6 @@ data class QuestCreateRequest(
     val expireDate: LocalDateTime? = null,
     val bannerId: Long? = null,
     val commercialAreaCode: String,
-    val rewards: List<QuestRewardCreateRequest>,
 ) {
 
     fun toEntity(): QuestEntity {

@@ -1,24 +1,23 @@
 package com.illsang.user.domain.entity
 
 import com.illsang.common.entity.BaseEntity
-import com.illsang.user.enums.PointType
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.EmbeddedId
+import jakarta.persistence.Entity
+import jakarta.persistence.Table
 
 @Entity
 @Table(name = "user_point")
 class UserPointEntity(
-    @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    val id: String? = null,
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    var user: UserEntity,
-
-    @Column(name = "point_type", nullable = false)
-    @Enumerated(EnumType.STRING)
-    var pointType: PointType,
+    @EmbeddedId
+    val id: UserPointKey,
 
     @Column(name = "point")
-    var point: Int,
-) : BaseEntity()
+    var point: Int = 0,
+) : BaseEntity() {
+
+    fun addPoint(point: Int) {
+        this.point += point
+    }
+
+}

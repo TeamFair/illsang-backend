@@ -1,8 +1,8 @@
 package com.illsang.quest.dto.request.quest
 
+import com.illsang.common.enums.PointType
 import com.illsang.quest.domain.entity.quest.QuestEntity
 import com.illsang.quest.domain.entity.quest.QuestRewardEntity
-import com.illsang.quest.enums.PointType
 import com.illsang.quest.enums.RewardType
 
 data class QuestRewardCreateRequest(
