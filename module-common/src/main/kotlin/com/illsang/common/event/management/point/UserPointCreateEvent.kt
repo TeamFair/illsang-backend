@@ -9,7 +9,8 @@ data class UserPointCreateEvent (
 )
 
 data class UserPointCreateRequest (
-    val areaCode: String? = null,
+    val metroAreaCode: String,
+    val commercialAreaCode: String,
     val pointType: PointType,
     val point: Int,
 )

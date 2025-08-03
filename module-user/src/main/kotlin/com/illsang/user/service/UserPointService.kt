@@ -4,8 +4,12 @@ import com.illsang.common.event.management.point.UserPointCreateRequest
 import com.illsang.common.event.management.season.SeasonGetCurrentEvent
 import com.illsang.user.domain.entity.UserPointHistoryEntity
 import com.illsang.user.domain.entity.UserPointKey
+import com.illsang.user.dto.response.UserRankTotalResponse
 import com.illsang.user.repository.UserPointHistoryRepository
+import com.illsang.user.repository.UserPointRepository
 import org.springframework.context.ApplicationEventPublisher
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.time.LocalDateTime
@@ -16,6 +20,7 @@ import java.time.ZoneId
 @Transactional(readOnly = true)
 class UserPointService(
     private val userService: UserService,
+    private val userPointRepository: UserPointRepository,
     private val userPointHistoryRepository: UserPointHistoryRepository,
     private val eventPublisher: ApplicationEventPublisher,
 ) {
@@ -32,7 +37,8 @@ class UserPointService(
                 UserPointKey(
                     user = user,
                     seasonId = currentSeason.seasonId,
-                    areaCode = pointRequest.areaCode,
+                    metroAreaCode = pointRequest.metroAreaCode,
+                    commercialAreaCode = pointRequest.commercialAreaCode,
                     pointType = pointRequest.pointType,
                 ),
                 pointRequest.point,
@@ -45,13 +51,20 @@ class UserPointService(
                 UserPointHistoryEntity(
                     userId = it.first.user.id!!,
                     seasonId = it.first.seasonId,
-                    areaCode = it.first.areaCode,
+                    metroAreaCode = it.first.metroAreaCode,
+                    commercialAreaCode = it.first.commercialAreaCode,
                     pointType = it.first.pointType,
                     point = it.second,
                     questId = questId,
                 )
             }
         )
+    }
+
+    fun findAllTotalRank(seasonId: Long, commercialAreaCode: String, pageable: Pageable): Page<UserRankTotalResponse> {
+        val userTotalRank = this.userPointRepository.findAllTotalRank(seasonId, commercialAreaCode, pageable)
+
+        return userTotalRank.map { UserRankTotalResponse.from(it) }
     }
 
 }

@@ -17,8 +17,11 @@ class UserPointHistoryEntity(
     @Column(name = "season_id")
     val seasonId: Long,
 
-    @Column(name = "area_code")
-    val areaCode: String? = null,
+    @Column(name = "metro_area_code", nullable = false)
+    val metroAreaCode: String,
+
+    @Column(name = "commercial_area_code", nullable = false)
+    val commercialAreaCode: String,
 
     @Column(name = "point_type", nullable = false)
     @Enumerated(EnumType.STRING)
