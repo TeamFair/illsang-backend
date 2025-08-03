@@ -1,6 +1,6 @@
-//springBoot {
-//    mainClass.set("com.illsang.modulebootstrap.ModuleBootstrapApplication")
-//}
+springBoot {
+    mainClass.set("com.illsang.modulebootstrap.ModuleBootstrapApplicationKt")
+}
 
 dependencies {
     implementation(project(":module-common"))
