@@ -14,4 +14,4 @@ WORKDIR /app
 
 COPY --from=builder /workspace/module-bootstrap/build/libs/*.jar app.jar
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java", "-XX:+UseSerialGC", "-Xms128m", "-Xmx512m", "-XX:MaxRAMPercentage=70.0", "-jar", "app.jar"]
