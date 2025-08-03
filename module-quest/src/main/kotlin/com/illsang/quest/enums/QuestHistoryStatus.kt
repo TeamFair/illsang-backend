@@ -1,5 +1,5 @@
 package com.illsang.quest.enums
 
-enum class QuestStatus {
+enum class QuestHistoryStatus {
     PROGRESSING, COMPLETE
 }

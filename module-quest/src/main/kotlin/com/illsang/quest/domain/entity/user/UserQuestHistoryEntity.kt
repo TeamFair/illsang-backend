@@ -1,8 +1,8 @@
-package com.illsang.quest.domain.entity.history
+package com.illsang.quest.domain.entity.user
 
 import com.illsang.common.entity.BaseEntity
 import com.illsang.quest.domain.entity.quest.QuestEntity
-import com.illsang.quest.enums.QuestStatus
+import com.illsang.quest.enums.QuestHistoryStatus
 import jakarta.persistence.*
 import java.time.LocalDateTime
 
@@ -24,19 +24,10 @@ class UserQuestHistoryEntity(
     val missionHistory: MutableList<UserMissionHistoryEntity> = mutableListOf(),
 
     @Enumerated(EnumType.STRING)
-    var status: QuestStatus = QuestStatus.PROGRESSING,
+    var status: QuestHistoryStatus = QuestHistoryStatus.PROGRESSING,
 
     @Column(name = "completed_at")
     val completedAt: LocalDateTime? = null,
-
-    @Column(name = "like_count")
-    val likeCount: Int = 0,
-
-    @Column(name = "hate_count")
-    val hateCount: Int = 0,
-
-    @Column(name = "view_count")
-    val viewCount: Int = 0,
 ) : BaseEntity() {
 
     fun addMissionHistory(missionHistory: UserMissionHistoryEntity) {
@@ -51,7 +42,7 @@ class UserQuestHistoryEntity(
         }
 
         if (result) {
-            status = QuestStatus.COMPLETE
+            status = QuestHistoryStatus.COMPLETE
         }
     }
 

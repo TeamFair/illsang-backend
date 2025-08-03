@@ -41,7 +41,7 @@ class UserPointService(
                     commercialAreaCode = pointRequest.commercialAreaCode,
                     pointType = pointRequest.pointType,
                 ),
-                pointRequest.point,
+                if (user.commercialAreaCode == pointRequest.commercialAreaCode) pointRequest.point * 2 else pointRequest.point,
             )
         }
 

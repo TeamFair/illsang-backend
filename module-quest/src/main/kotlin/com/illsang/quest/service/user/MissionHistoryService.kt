@@ -1,11 +1,12 @@
-package com.illsang.quest.service.history
+package com.illsang.quest.service.user
 
 import com.illsang.auth.domain.model.AuthenticationModel
 import com.illsang.common.event.management.image.ImageExistOrThrowEvent
-import com.illsang.quest.domain.entity.history.UserMissionHistoryEntity
-import com.illsang.quest.domain.entity.history.UserQuizHistoryEntity
+import com.illsang.quest.domain.entity.user.UserMissionHistoryEntity
+import com.illsang.quest.domain.entity.user.UserQuizHistoryEntity
 import com.illsang.quest.domain.model.history.ChallengeModel
-import com.illsang.quest.dto.request.history.ChallengeCreateRequest
+import com.illsang.quest.dto.request.user.ChallengeCreateRequest
+import com.illsang.quest.repository.user.MissionHistoryRepository
 import com.illsang.quest.service.quest.MissionService
 import com.illsang.quest.service.quest.QuizService
 import org.springframework.context.ApplicationEventPublisher
@@ -18,12 +19,13 @@ class MissionHistoryService(
     private val quizService: QuizService,
     private val missionService: MissionService,
     private val questHistoryService: QuestHistoryService,
+    private val missionHistoryRepository: MissionHistoryRepository,
     private val eventPublisher: ApplicationEventPublisher,
 ) {
 
     @Transactional
-    fun submitMission(id: Long, request: ChallengeCreateRequest, authenticationModel: AuthenticationModel): ChallengeModel {
-        val mission = this.missionService.findById(id)
+    fun submitMission(request: ChallengeCreateRequest, authenticationModel: AuthenticationModel): ChallengeModel {
+        val mission = this.missionService.findById(request.missionId)
         val questHistory = this.questHistoryService.findOrCreate(authenticationModel.userId, mission.quest)
         val missionHistory = UserMissionHistoryEntity(
             userId = authenticationModel.userId,
@@ -59,5 +61,8 @@ class MissionHistoryService(
 
         return ChallengeModel.from(questHistory)
     }
+
+    fun findLikeCountByMissionId(questId: Long) =
+        this.missionHistoryRepository.findTop3ByMissionIdOrderByLikeCountDesc(questId)
 
 }
