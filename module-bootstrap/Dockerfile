@@ -12,6 +12,6 @@ FROM eclipse-temurin:21-jre-alpine
 
 WORKDIR /app
 
-COPY --from=builder /workspace/module-bootstrap/build/libs/*.jar app.jar
+COPY --from=builder /workspace/module-bootstrap/build/libs//module-bootstrap.jar app.jar
 
 ENTRYPOINT ["java", "-XX:+UseSerialGC", "-Xms128m", "-Xmx512m", "-XX:MaxRAMPercentage=70.0", "-jar", "app.jar"]
