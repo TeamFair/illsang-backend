@@ -61,8 +61,8 @@ class UserPointService(
         )
     }
 
-    fun findAllTotalRank(seasonId: Long, commercialAreaCode: String, pageable: Pageable): Page<UserRankTotalResponse> {
-        val userTotalRank = this.userPointRepository.findAllTotalRank(seasonId, commercialAreaCode, pageable)
+    fun findAllTotalRank(commercialAreaCode: String, pageable: Pageable): Page<UserRankTotalResponse> {
+        val userTotalRank = this.userPointRepository.findAllTotalRank(commercialAreaCode, pageable)
 
         return userTotalRank.map { UserRankTotalResponse.from(it) }
     }

@@ -5,5 +5,5 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 
 interface UserPointCustomRepository {
-    fun findAllTotalRank(seasonId: Long, commercialAreaCode: String, pageable: Pageable): Page<Pair<UserEntity, Long>>
+    fun findAllTotalRank(commercialAreaCode: String, pageable: Pageable): Page<Pair<UserEntity, Long>>
 }

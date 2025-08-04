@@ -14,7 +14,7 @@ class UserPointCustomRepositoryImpl(
     val queryFactory: JPAQueryFactory,
 ) : UserPointCustomRepository {
 
-    override fun findAllTotalRank(seasonId: Long, commercialAreaCode: String, pageable: Pageable): Page<Pair<UserEntity, Long>> {
+    override fun findAllTotalRank(commercialAreaCode: String, pageable: Pageable): Page<Pair<UserEntity, Long>> {
         val result = this.queryFactory
             .select(
                 userEntity,
@@ -23,7 +23,6 @@ class UserPointCustomRepositoryImpl(
             .from(userPointEntity)
             .innerJoin(userEntity, userPointEntity.id.user).fetchJoin()
             .where(
-                userPointEntity.id.seasonId.eq(seasonId),
                 userPointEntity.id.commercialAreaCode.eq(commercialAreaCode),
             )
             .groupBy(
@@ -46,7 +45,6 @@ class UserPointCustomRepositoryImpl(
             .select(userPointEntity.id.user.countDistinct())
             .from(userPointEntity)
             .where(
-                userPointEntity.id.seasonId.eq(seasonId),
                 userPointEntity.id.commercialAreaCode.eq(commercialAreaCode)
             )
 

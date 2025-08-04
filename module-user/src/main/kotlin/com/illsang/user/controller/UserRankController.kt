@@ -26,12 +26,11 @@ class UserRankController(
     @PreAuthorize("hasRole('USER')")
     @Operation(operationId = "USR001", summary = "사용자 랭킹 전체 조회 (포인트 합산)")
     fun getTotalRank(
-        @RequestParam seasonId: Long,
         @RequestParam commercialAreaCode: String,
         @ParameterObject @PageableDefault pageable: Pageable,
     ): ResponseEntity<Page<UserRankTotalResponse>> {
         return ResponseEntity.ok(
-            this.userPointService.findAllTotalRank(seasonId, commercialAreaCode, pageable)
+            this.userPointService.findAllTotalRank(commercialAreaCode, pageable)
         )
     }
 
