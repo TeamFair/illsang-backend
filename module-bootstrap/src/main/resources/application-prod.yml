@@ -1,0 +1,63 @@
+spring:
+  config:
+    import:
+      - aws-parameterstore:/ilsang/backend_dev
+  application:
+    name: module-bootstrap
+  datasource:
+    url: ${.rds_url}
+    username: ${.rds_username}
+    password: ${.rds_password}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_batch_fetch_size: 100
+    show-sql: false
+  data:
+    redis:
+      host: ${.elastic_cache_endpoint}
+      port: ${.elastic_cache_port}
+      useSsl: true
+
+oauth:
+  token:
+    timeout:
+      access-token: 1440
+      refresh-token: 14400
+
+  client:
+    google:
+      ios: "654001951429-ne4ev00taadiag4tr4euigqlv3jgkvr8.apps.googleusercontent.com"
+      aos: "702150906844-sspv7ls7t1pfonhde25gcuno5uattped.apps.googleusercontent.com"
+    apple:
+      ios: "com.ilsang240615.dev"
+      aos: "test-apple-aos-client-id"
+
+jwt:
+  token: ${.jwt_token_secret_key}
+
+server:
+  port: 8080
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"  # "health", "info", "metrics"
+
+cloud:
+  bucket:
+    name: illsang-image-bucket
+
+springdoc:
+  swagger-ui:
+    operationsSorter: method
+    tagsSorter: alpha
+    display-operation-id: true
+    oauth:
+      client-id: "438475351211-jigqc53mc74ca2gaqnm70ql0il7ak142.apps.googleusercontent.com"
+      scopes: "openid,email,profile"
