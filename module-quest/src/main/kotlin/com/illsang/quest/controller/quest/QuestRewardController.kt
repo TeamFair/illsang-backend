@@ -1,4 +1,4 @@
-package com.illsang.quest.controller
+package com.illsang.quest.controller.quest
 
 import com.illsang.quest.dto.request.quest.QuestRewardCreateRequest
 import com.illsang.quest.dto.request.quest.QuestRewardUpdateRequest
@@ -12,7 +12,7 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/quest/reward")
+@RequestMapping("/api/v1/quest/reward")
 @Tag(name = "Quest Reward", description = "퀘스트 보상")
 class QuestRewardController(
     private val questRewardService: QuestRewardService,

@@ -12,6 +12,9 @@ class MissionEntity(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
+    @Column(nullable = false)
+    var title: String,
+
     @Column(nullable = false, length = 50)
     @Enumerated(EnumType.STRING)
     var type: MissionType,
@@ -38,6 +41,7 @@ class MissionEntity(
 
 
     fun update(request: MissionUpdateRequest) {
+        this.title = request.title
         this.type = request.type
         this.sortOrder = request.sortOrder
     }

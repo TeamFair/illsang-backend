@@ -10,11 +10,14 @@ data class UserPointKey(
     @JoinColumn(name = "user_id", nullable = false)
     var user: UserEntity,
 
-    @Column(name = "season_id")
+    @Column(name = "season_id", nullable = false)
     val seasonId: Long,
 
-    @Column(name = "area_code")
-    val areaCode: String? = null,
+    @Column(name = "metro_area_code", nullable = false)
+    val metroAreaCode: String,
+
+    @Column(name = "commercial_area_code", nullable = false)
+    val commercialAreaCode: String,
 
     @Column(name = "point_type", nullable = false)
     @Enumerated(EnumType.STRING)

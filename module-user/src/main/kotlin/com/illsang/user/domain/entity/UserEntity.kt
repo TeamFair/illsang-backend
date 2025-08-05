@@ -91,7 +91,7 @@ class UserEntity(
     fun addPoints(userPoints: List<Pair<UserPointKey, Int>>) {
         userPoints.forEach { (key, point) ->
             this.userPoints.find {
-                it.id.user.id == key.user.id && it.id.pointType == key.pointType && it.id.areaCode == key.areaCode && it.id.seasonId == key.seasonId
+                it.id.user.id == key.user.id && it.id.pointType == key.pointType && it.id.metroAreaCode == key.metroAreaCode && it.id.commercialAreaCode == key.commercialAreaCode && it.id.seasonId == key.seasonId
             }?.addPoint(point)
                 ?: this.userPoints.add(UserPointEntity(key, point))
         }

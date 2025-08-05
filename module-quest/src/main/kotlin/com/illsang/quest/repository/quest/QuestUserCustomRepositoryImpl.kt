@@ -1,9 +1,10 @@
 package com.illsang.quest.repository.quest
 
-import com.illsang.quest.domain.entity.history.QUserQuestHistoryEntity.Companion.userQuestHistoryEntity
 import com.illsang.quest.domain.entity.quest.QQuestEntity.Companion.questEntity
 import com.illsang.quest.domain.entity.quest.QQuestRewardEntity.Companion.questRewardEntity
 import com.illsang.quest.domain.entity.quest.QuestEntity
+import com.illsang.quest.domain.entity.user.QUserQuestFavoriteEntity.Companion.userQuestFavoriteEntity
+import com.illsang.quest.domain.entity.user.QUserQuestHistoryEntity.Companion.userQuestHistoryEntity
 import com.illsang.quest.dto.request.quest.QuestUserRequest
 import com.illsang.quest.enums.QuestRepeatFrequency
 import com.illsang.quest.enums.QuestType
@@ -15,16 +16,16 @@ import com.querydsl.jpa.impl.JPAQueryFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.support.PageableExecutionUtils
-import org.springframework.stereotype.Component
+import org.springframework.stereotype.Repository
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
-@Component
+@Repository
 class QuestUserCustomRepositoryImpl(
     private val queryFactory: JPAQueryFactory,
 ) : QuestUserCustomRepository {
 
-    override fun findAllUncompletedQuest(
+    override fun findAllUserQuest(
         request: QuestUserRequest,
         pageable: Pageable,
     ): Page<QuestEntity> {
@@ -32,6 +33,10 @@ class QuestUserCustomRepositoryImpl(
             .selectFrom(questEntity)
             .leftJoin(questEntity.rewards, questRewardEntity).fetchJoin()
             .leftJoin(questEntity, userQuestHistoryEntity.quest).fetchJoin()
+            .leftJoin(userQuestFavoriteEntity).on(
+                questEntity.id.eq(userQuestFavoriteEntity.questId),
+                userQuestFavoriteEntity.userId.eq(request.userId),
+            )
             .on(
                 userQuestHistoryEntity.userId.eq(request.userId),
                 ExpressionUtils.or(
@@ -41,9 +46,13 @@ class QuestUserCustomRepositoryImpl(
             )
             .where(
                 questEntity.useYn.isTrue,
-                userQuestHistoryEntity.isNull,
-                popularYnEq(request.popularYn),
                 questEntity.expireDate.gt(LocalDateTime.now()),
+                questTypeEq(request.questType, request.repeatFrequency),
+                completedYnEq(request.completedYn),
+                popularYnEq(request.popularYn),
+                favoriteYnEq(request.favoriteYn),
+                commercialAreaCodeEq(request.commercialAreaCode),
+                bannerEq(request.bannerId),
             )
             .orderBy(
                 *orderCondition(request)
@@ -57,6 +66,10 @@ class QuestUserCustomRepositoryImpl(
             .from(questEntity)
             .leftJoin(questEntity.rewards, questRewardEntity).fetchJoin()
             .leftJoin(questEntity, userQuestHistoryEntity.quest).fetchJoin()
+            .leftJoin(userQuestFavoriteEntity).on(
+                questEntity.id.eq(userQuestFavoriteEntity.questId),
+                userQuestFavoriteEntity.userId.eq(request.userId),
+            )
             .on(
                 userQuestHistoryEntity.userId.eq(request.userId),
                 ExpressionUtils.or(
@@ -66,9 +79,11 @@ class QuestUserCustomRepositoryImpl(
             )
             .where(
                 questEntity.useYn.isTrue,
-                userQuestHistoryEntity.isNull,
                 questEntity.expireDate.gt(LocalDateTime.now()),
+                questTypeEq(request.questType, request.repeatFrequency),
+                completedYnEq(request.completedYn),
                 popularYnEq(request.popularYn),
+                favoriteYnEq(request.favoriteYn),
                 commercialAreaCodeEq(request.commercialAreaCode),
             )
 
@@ -77,17 +92,59 @@ class QuestUserCustomRepositoryImpl(
         }
     }
 
-    private fun orderCondition(request: QuestUserRequest): Array<OrderSpecifier<*>> {
-        return if (request.orderReward) {
-            arrayOf(
-                questEntity.totalPoint.desc()
-            )
-        } else {
-            arrayOf(
-                questEntity.sortOrder.desc(),
-                questEntity.createdAt.asc()
-            )
+    private fun bannerEq(bannerId: Long?): BooleanExpression? {
+        if (bannerId == null) { return null }
+
+        return questEntity.bannerId.eq(bannerId)
+    }
+
+    private fun favoriteYnEq(favoriteYn: Boolean?): BooleanExpression? {
+        if (favoriteYn == null) {
+            return null
         }
+
+        if (favoriteYn) {
+            return userQuestFavoriteEntity.id.isNotNull
+        }
+
+        return userQuestFavoriteEntity.id.isNull
+    }
+
+    private fun questTypeEq(questType: QuestType?, repeatFrequency: QuestRepeatFrequency?): BooleanExpression? {
+        if (questType == null) {
+            return null
+        }
+
+        return questEntity.type.eq(questType).and(questEntity.repeatFrequency.eq(repeatFrequency))
+    }
+
+    private fun completedYnEq(completedYn: Boolean): BooleanExpression {
+        if (completedYn) {
+            return userQuestHistoryEntity.isNull
+        }
+
+        return userQuestHistoryEntity.isNotNull
+    }
+
+    private fun orderCondition(request: QuestUserRequest): Array<OrderSpecifier<*>> {
+        val orderSpecifier = arrayOf<OrderSpecifier<*>>()
+
+        request.orderRewardDesc?.let {
+            orderSpecifier.plus(if (it) questEntity.totalPoint.desc() else questEntity.totalPoint.asc())
+        }
+
+        request.orderExpiredDesc?.let {
+            orderSpecifier.plus(if (it) questEntity.expireDate.desc() else questEntity.expireDate.asc())
+        }
+
+        orderSpecifier.plus(
+            listOf(
+                questEntity.sortOrder.desc(),
+                questEntity.createdAt.asc(),
+            )
+        )
+
+        return orderSpecifier
     }
 
     private fun repeatQuestCondition(today: LocalDateTime): Predicate? {

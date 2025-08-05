@@ -1,4 +1,4 @@
-package com.illsang.quest.controller
+package com.illsang.quest.controller.quest
 
 import com.illsang.quest.dto.request.quest.QuizCreateRequest
 import com.illsang.quest.dto.request.quest.QuizUpdateRequest

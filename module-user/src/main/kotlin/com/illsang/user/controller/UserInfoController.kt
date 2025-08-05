@@ -23,7 +23,7 @@ class UserInfoController(
 ) {
     @GetMapping
     @PreAuthorize("hasRole('USER')")
-    @Operation(operationId = "USR001", summary = "사용자 정보 단일 조회")
+    @Operation(operationId = "USI001", summary = "사용자 정보 단일 조회")
     fun getUser(
         @RequestParam id: String?,
         @AuthenticationPrincipal auth: AuthenticationModel,
@@ -39,7 +39,7 @@ class UserInfoController(
 
     @PutMapping("/profile/nickname")
     @PreAuthorize("hasRole('USER')")
-    @Operation(operationId = "USR002", summary = "닉네임 변경")
+    @Operation(operationId = "USI002", summary = "닉네임 변경")
     fun updateNickname(
         @AuthenticationPrincipal auth: AuthenticationModel,
         @RequestBody request: UpdateUserNickNameRequest,
@@ -51,7 +51,7 @@ class UserInfoController(
 
     @PutMapping("/profile/image")
     @PreAuthorize("hasRole('USER')")
-    @Operation(operationId = "USR003", summary = "프로필 이미지 변경")
+    @Operation(operationId = "USI003", summary = "프로필 이미지 변경")
     fun updateProfileImage(
         @AuthenticationPrincipal auth: AuthenticationModel,
         @Valid @RequestBody request: UpdateUserProfileImageRequest,
@@ -63,7 +63,7 @@ class UserInfoController(
 
     @PutMapping("/profile/title")
     @PreAuthorize("hasRole('USER')")
-    @Operation(operationId = "USR004", summary = "칭호 변경")
+    @Operation(operationId = "USI004", summary = "칭호 변경")
     fun updateTitle(
         @AuthenticationPrincipal auth: AuthenticationModel,
         @RequestBody request: UpdateUserTitleRequest,
@@ -75,7 +75,7 @@ class UserInfoController(
 
     @PutMapping("/profile/area-zone")
     @PreAuthorize("hasRole('USER')")
-    @Operation(operationId = "USR005", summary = "일상존 변경")
+    @Operation(operationId = "USI005", summary = "일상존 변경")
     fun updateAreaZone(
         @AuthenticationPrincipal auth: AuthenticationModel,
         @RequestBody request: UpdateUserAreaZoneRequest,

@@ -1,4 +1,4 @@
-package com.illsang.quest.domain.entity.history
+package com.illsang.quest.domain.entity.user
 
 import com.illsang.common.entity.BaseEntity
 import com.illsang.quest.domain.entity.quest.MissionEntity
@@ -24,6 +24,15 @@ class UserMissionHistoryEntity(
 
     @Column(name = "submit_image_id")
     val submitImageId: String? = null,
+
+    @Column(name = "like_count")
+    val likeCount: Int = 0,
+
+    @Column(name = "hate_count")
+    val hateCount: Int = 0,
+
+    @Column(name = "view_count")
+    val viewCount: Int = 0,
 
     @OneToOne(mappedBy = "missionHistory", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     var quizHistory: UserQuizHistoryEntity? = null,

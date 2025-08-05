@@ -1,4 +1,4 @@
-package com.illsang.quest.domain.entity.history
+package com.illsang.quest.domain.entity.user
 
 import com.illsang.common.entity.BaseEntity
 import com.illsang.quest.domain.entity.quest.QuizAnswerEntity

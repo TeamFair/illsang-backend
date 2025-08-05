@@ -1,14 +1,13 @@
-package com.illsang.quest.service.history
+package com.illsang.quest.service.user
 
-import com.illsang.common.enums.PointType
 import com.illsang.common.event.management.area.MetroAreaGetByCommercialAreaEvent
 import com.illsang.common.event.management.point.UserPointCreateEvent
 import com.illsang.common.event.management.point.UserPointCreateRequest
-import com.illsang.quest.domain.entity.history.UserQuestHistoryEntity
 import com.illsang.quest.domain.entity.quest.QuestEntity
-import com.illsang.quest.enums.QuestStatus
+import com.illsang.quest.domain.entity.user.UserQuestHistoryEntity
+import com.illsang.quest.enums.QuestHistoryStatus
 import com.illsang.quest.enums.RewardType
-import com.illsang.quest.repository.history.QuestHistoryRepository
+import com.illsang.quest.repository.user.QuestHistoryRepository
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -33,7 +32,7 @@ class QuestHistoryService(
     fun complete(questHistory: UserQuestHistoryEntity) {
         questHistory.complete()
 
-        if (questHistory.status == QuestStatus.COMPLETE) {
+        if (questHistory.status == QuestHistoryStatus.COMPLETE) {
             val event = MetroAreaGetByCommercialAreaEvent(commercialAreaCode = questHistory.quest.commercialAreaCode)
             this.eventPublisher.publishEvent(event)
             val metroAreaCode = event.response.metroAreaCode
@@ -41,19 +40,24 @@ class QuestHistoryService(
             val userPointCreateRequests = questHistory.quest.rewards
                 .filter { it.rewardType == RewardType.POINT }
                 .map {
-                    val areaCode = when (it.pointType) {
-                        PointType.METRO -> metroAreaCode
-                        PointType.COMMERCIAL -> questHistory.quest.commercialAreaCode
-                        else -> null
-                    }
-                    UserPointCreateRequest(areaCode = areaCode, pointType = it.pointType!!, point = it.point)
+                    UserPointCreateRequest(
+                        metroAreaCode = metroAreaCode,
+                        commercialAreaCode = questHistory.quest.commercialAreaCode,
+                        pointType = it.pointType,
+                        point = it.point
+                    )
                 }
-            this.eventPublisher.publishEvent(UserPointCreateEvent(
-                userId = questHistory.userId,
-                questId = questHistory.quest.id!!,
-                request = userPointCreateRequests
-            ))
+            this.eventPublisher.publishEvent(
+                UserPointCreateEvent(
+                    userId = questHistory.userId,
+                    questId = questHistory.quest.id!!,
+                    request = userPointCreateRequests
+                )
+            )
         }
     }
+
+    fun findCustomerRank(userId: String, questId: Long): Int? =
+        this.userQuestHistoryRepository.findCustomerRank(userId, questId)
 
 }

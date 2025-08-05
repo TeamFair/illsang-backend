@@ -1,4 +1,4 @@
-package com.illsang.quest.controller
+package com.illsang.quest.controller.quest
 
 import com.illsang.common.enums.ResponseMsg
 import com.illsang.quest.dto.request.quest.QuestCreateRequest
