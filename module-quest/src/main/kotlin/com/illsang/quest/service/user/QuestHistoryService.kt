@@ -1,8 +1,8 @@
 package com.illsang.quest.service.user
 
 import com.illsang.common.event.management.area.MetroAreaGetByCommercialAreaEvent
-import com.illsang.common.event.management.point.UserPointCreateEvent
-import com.illsang.common.event.management.point.UserPointCreateRequest
+import com.illsang.common.event.user.point.UserPointCreateEvent
+import com.illsang.common.event.user.point.UserPointCreateRequest
 import com.illsang.quest.domain.entity.quest.QuestEntity
 import com.illsang.quest.domain.entity.user.UserQuestHistoryEntity
 import com.illsang.quest.enums.QuestHistoryStatus

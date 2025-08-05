@@ -1,6 +1,6 @@
 package com.illsang.user.listener
 
-import com.illsang.common.event.management.point.UserPointCreateEvent
+import com.illsang.common.event.user.point.UserPointCreateEvent
 import com.illsang.user.service.UserPointService
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component

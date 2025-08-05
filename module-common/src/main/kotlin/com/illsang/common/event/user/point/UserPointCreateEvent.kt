@@ -1,4 +1,4 @@
-package com.illsang.common.event.management.point
+package com.illsang.common.event.user.point
 
 import com.illsang.common.enums.PointType
 

@@ -2,6 +2,7 @@ package com.illsang.quest.domain.entity.user
 
 import com.illsang.common.entity.BaseEntity
 import com.illsang.quest.domain.entity.quest.MissionEntity
+import com.illsang.quest.enums.EmojiType
 import jakarta.persistence.*
 
 @Entity
@@ -26,20 +27,39 @@ class UserMissionHistoryEntity(
     val submitImageId: String? = null,
 
     @Column(name = "like_count")
-    val likeCount: Int = 0,
+    var likeCount: Int = 0,
 
     @Column(name = "hate_count")
-    val hateCount: Int = 0,
+    var hateCount: Int = 0,
 
     @Column(name = "view_count")
-    val viewCount: Int = 0,
+    var viewCount: Int = 0,
 
     @OneToOne(mappedBy = "missionHistory", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     var quizHistory: UserQuizHistoryEntity? = null,
+
+    @OneToMany(mappedBy = "missionHistory", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
+    val missionHistoryEmojis: MutableList<UserMissionHistoryEmojiEntity> = mutableListOf(),
 ) : BaseEntity() {
 
     fun addQuizHistory(quizHistory: UserQuizHistoryEntity) {
         this.quizHistory = quizHistory
+    }
+
+    fun increaseViewCount() {
+        this.viewCount++
+    }
+
+    fun addEmoji(emojiEntity: UserMissionHistoryEmojiEntity) {
+        this.missionHistoryEmojis.add(emojiEntity)
+
+        if (emojiEntity.type == EmojiType.LIKE) this.likeCount++
+        else this.hateCount++
+    }
+
+    fun removeEmoji(emojiEntity: UserMissionHistoryEmojiEntity) {
+        if (emojiEntity.type == EmojiType.LIKE) this.likeCount--
+        else this.hateCount--
     }
 
 }

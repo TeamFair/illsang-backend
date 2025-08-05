@@ -1,7 +1,7 @@
 package com.illsang.user.service
 
-import com.illsang.common.event.management.point.UserPointCreateRequest
 import com.illsang.common.event.management.season.SeasonGetCurrentEvent
+import com.illsang.common.event.user.point.UserPointCreateRequest
 import com.illsang.user.domain.entity.UserPointHistoryEntity
 import com.illsang.user.domain.entity.UserPointKey
 import com.illsang.user.dto.response.UserRankTotalResponse
