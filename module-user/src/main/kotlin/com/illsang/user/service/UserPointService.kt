@@ -1,10 +1,15 @@
 package com.illsang.user.service
 
+import com.illsang.common.enums.PointType
+import com.illsang.common.event.management.area.CommercialAreaGetEvent
+import com.illsang.common.event.management.area.MetroAreaGetEvent
 import com.illsang.common.event.management.season.SeasonGetCurrentEvent
 import com.illsang.common.event.user.point.UserPointCreateRequest
 import com.illsang.user.domain.entity.UserPointHistoryEntity
 import com.illsang.user.domain.entity.UserPointKey
-import com.illsang.user.dto.response.UserRankTotalResponse
+import com.illsang.user.dto.response.CommercialRankResponse
+import com.illsang.user.dto.response.MetroRankResponse
+import com.illsang.user.dto.response.UserRankResponse
 import com.illsang.user.repository.UserPointHistoryRepository
 import com.illsang.user.repository.UserPointRepository
 import org.springframework.context.ApplicationEventPublisher
@@ -61,10 +66,53 @@ class UserPointService(
         )
     }
 
-    fun findAllTotalRank(commercialAreaCode: String, pageable: Pageable): Page<UserRankTotalResponse> {
-        val userTotalRank = this.userPointRepository.findAllTotalRank(commercialAreaCode, pageable)
+    fun findAllTotalRank(commercialAreaCode: String, pageable: Pageable): Page<UserRankResponse> {
+        val userTotalRank = this.userPointRepository.findAllUserRank(
+            commercialAreaCode = commercialAreaCode,
+            pageable = pageable,
+        )
 
-        return userTotalRank.map { UserRankTotalResponse.from(it) }
+        return userTotalRank.map { UserRankResponse.from(it) }
+    }
+
+    fun findAllRankByContribution(seasonId: Long?, pageable: Pageable): Page<UserRankResponse>? {
+        val userTotalRank = this.userPointRepository.findAllUserRank(
+            seasonId = seasonId,
+            pointType = PointType.CONTRIBUTION,
+            pageable = pageable,
+        )
+
+        return userTotalRank.map { UserRankResponse.from(it) }
+    }
+
+    fun findAllRankByMetroArea(seasonId: Long?, pageable: Pageable): Page<MetroRankResponse> {
+        val metroRank = this.userPointRepository.findAllAreaRank(seasonId, PointType.METRO, pageable)
+
+        val metroEvent = MetroAreaGetEvent(metroRank.content.mapNotNull { it?.first })
+        this.eventPublisher.publishEvent(metroEvent)
+
+        return metroRank.map {
+            MetroRankResponse(
+                metroCode = it?.first!!,
+                point = it.second,
+                areaName = metroEvent.response.find { metro -> metro.code == it.first }!!.areaName
+            )
+        }
+    }
+
+    fun findAllRankByCommercialArea(seasonId: Long?, pageable: Pageable): Page<CommercialRankResponse>? {
+        val commercialRank = this.userPointRepository.findAllAreaRank(seasonId, PointType.COMMERCIAL, pageable)
+
+        val commercialEvent = CommercialAreaGetEvent(commercialRank.content.mapNotNull { it?.first })
+        this.eventPublisher.publishEvent(commercialEvent)
+
+        return commercialRank.map {
+            CommercialRankResponse(
+                commercialCode = it?.first!!,
+                point = it.second,
+                areaName = commercialEvent.response.find { metro -> metro.code == it.first }!!.areaName
+            )
+        }
     }
 
 }
