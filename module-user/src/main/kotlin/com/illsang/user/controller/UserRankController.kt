@@ -1,5 +1,7 @@
 package com.illsang.user.controller
 
+import com.illsang.auth.domain.model.AuthenticationModel
+import com.illsang.common.enums.PointType
 import com.illsang.user.dto.response.CommercialRankResponse
 import com.illsang.user.dto.response.MetroRankResponse
 import com.illsang.user.dto.response.UserRankResponse
@@ -12,6 +14,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
@@ -24,21 +27,23 @@ class UserRankController(
     private val userPointService: UserPointService,
 ) {
 
-    @GetMapping("/total")
+    @GetMapping("/user/total")
     @PreAuthorize("hasRole('USER')")
     @Operation(operationId = "RAN001", summary = "포인트 합산 랭킹 (일상지역 + 일상존 + 기여도)")
-    fun getTotalRank(
+    fun getUserTotalRank(
         @RequestParam commercialAreaCode: String,
         @ParameterObject @PageableDefault pageable: Pageable,
     ): ResponseEntity<Page<UserRankResponse>> {
+        val userTotalRank = this.userPointService.findAllUserTotalRank(commercialAreaCode, pageable)
+
         return ResponseEntity.ok(
-            this.userPointService.findAllTotalRank(commercialAreaCode, pageable)
+            userTotalRank.map { UserRankResponse.from(it) }
         )
     }
 
     @GetMapping("/metro")
     @PreAuthorize("hasRole('USER')")
-    @Operation(operationId = "RAN002", summary = "일상지역 랭킹")
+    @Operation(operationId = "RAN002", summary = "일상지역 종합 랭킹")
     fun getMetroAreaRank(
         @RequestParam seasonId: Long? = null,
         @ParameterObject @PageableDefault pageable: Pageable,
@@ -50,7 +55,7 @@ class UserRankController(
 
     @GetMapping("/commercial")
     @PreAuthorize("hasRole('USER')")
-    @Operation(operationId = "RAN003", summary = "일상존 랭킹")
+    @Operation(operationId = "RAN003", summary = "일상존 종합 랭킹")
     fun getCommercialAreaRank(
         @RequestParam seasonId: Long? = null,
         @ParameterObject @PageableDefault pageable: Pageable,
@@ -60,15 +65,63 @@ class UserRankController(
         )
     }
 
-    @GetMapping("/contribution")
+    @GetMapping("/user/contribution")
     @PreAuthorize("hasRole('USER')")
-    @Operation(operationId = "RAN004", summary = "기여도 랭킹")
-    fun getContributionRank(
+    @Operation(operationId = "RAN004", summary = "기여도 종합 랭킹")
+    fun getUserContributionRank(
         @RequestParam seasonId: Long? = null,
         @ParameterObject @PageableDefault pageable: Pageable,
     ): ResponseEntity<Page<UserRankResponse>> {
+        val userTotalRank = this.userPointService.findAllRankByUserContribution(seasonId, pageable)
+
         return ResponseEntity.ok(
-            this.userPointService.findAllRankByContribution(seasonId, pageable)
+            userTotalRank.map { UserRankResponse.from(it) }
+        )
+    }
+
+    @GetMapping("/user/metro")
+    @PreAuthorize("hasRole('USER')")
+    @Operation(operationId = "RAN005", summary = "일상지역 사용자 전체 랭킹")
+    fun getUserMetroRank(
+        @RequestParam seasonId: Long? = null,
+        @RequestParam metroAreaCode: String,
+        @ParameterObject @PageableDefault pageable: Pageable,
+    ): ResponseEntity<Page<UserRankResponse>> {
+        val userTotalRank = this.userPointService.findAllRankByUserMetro(seasonId, metroAreaCode, pageable)
+
+        return ResponseEntity.ok(
+            userTotalRank.map { UserRankResponse.from(it) }
+        )
+    }
+
+    @GetMapping("/user/commercial")
+    @PreAuthorize("hasRole('USER')")
+    @Operation(operationId = "RAN006", summary = "일상존 사용자 전체 랭킹")
+    fun getUserCommercialRank(
+        @RequestParam seasonId: Long? = null,
+        @RequestParam commercialAreaCode: String,
+        @ParameterObject @PageableDefault pageable: Pageable,
+    ): ResponseEntity<Page<UserRankResponse>> {
+        val userTotalRank = this.userPointService.findAllRankByUserCommercial(seasonId, commercialAreaCode, pageable)
+
+        return ResponseEntity.ok(
+            userTotalRank.map { UserRankResponse.from(it) }
+        )
+    }
+
+    @GetMapping("/user")
+    @PreAuthorize("hasRole('USER')")
+    @Operation(operationId = "RAN007", summary = "사용자 개인 랭킹")
+    fun getUserRank(
+        @RequestParam seasonId: Long?,
+        @RequestParam areaCode: String?,
+        @RequestParam pointType: PointType,
+        @AuthenticationPrincipal auth: AuthenticationModel,
+    ): ResponseEntity<UserRankResponse> {
+        val userRank = this.userPointService.findRankByUser(seasonId, areaCode, pointType, auth.userId)
+
+        return ResponseEntity.ok(
+            UserRankResponse.from(userRank)
         )
     }
 

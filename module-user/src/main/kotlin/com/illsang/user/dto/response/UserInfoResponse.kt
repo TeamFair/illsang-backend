@@ -3,8 +3,8 @@ package com.illsang.user.dto.response
 import com.illsang.auth.enums.OAuthProvider
 import com.illsang.common.enums.TitleGrade
 import com.illsang.common.enums.TitleType
-import com.illsang.user.domain.entity.UserTitleEntity
 import com.illsang.user.domain.model.UserModel
+import com.illsang.user.domain.model.UserTitleModel
 import com.illsang.user.enums.UserStatus
 import java.time.LocalDateTime
 
@@ -40,7 +40,7 @@ data class UserTitleResponse (
     val type: TitleType,
 ) {
     companion object {
-        fun from(title: UserTitleEntity): UserTitleResponse {
+        fun from(title: UserTitleModel): UserTitleResponse {
             return UserTitleResponse(
                 name = title.titleName,
                 grade = title.titleGrade,
