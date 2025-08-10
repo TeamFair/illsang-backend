@@ -1,0 +1,51 @@
+name: Build and Push to ECR (DEV)
+
+on:
+  push:
+    branches: [ develop ]
+
+permissions:
+  id-token: write
+  contents: read
+
+concurrency:
+  group: dev-build-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout (develop push SHA)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create timestamp tag (KST)
+        id: meta
+        run: |
+          TAG="d$(TZ=Asia/Seoul date +'%Y%m%d-%H%M%S')"
+          echo "IMAGE_TAG=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: Configure AWS Credentials (OIDC)
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/GitHubDeployRole
+          aws-region: ap-northeast-2
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, Tag, and Push Docker image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
+          IMAGE_TAG: ${{ steps.meta.outputs.IMAGE_TAG }}
+        run: |
+          FULL_REPO="$ECR_REGISTRY/${ECR_REPOSITORY}-dev"
+          docker build -f module-bootstrap/Dockerfile \
+            -t "$FULL_REPO:develop" \
+            -t "$FULL_REPO:$IMAGE_TAG" .
+          docker push "$FULL_REPO:develop"
+          docker push "$FULL_REPO:$IMAGE_TAG"
