@@ -1,3 +1,5 @@
+# application-prd.yaml
+
 spring:
   config:
     import:
@@ -5,9 +7,9 @@ spring:
   application:
     name: module-bootstrap
   datasource:
-    url: ${.rds_url}
-    username: ${.rds_username}
-    password: ${.rds_password}
+    url: ${rds_url}
+    username: ${rds_username}
+    password: ${rds_password}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -19,8 +21,8 @@ spring:
     show-sql: false
   data:
     redis:
-      host: ${.elastic_cache_endpoint}
-      port: ${.elastic_cache_port}
+      host: ${elastic_cache_endpoint}
+      port: ${elastic_cache_port}
       useSsl: true
 
 oauth:
@@ -38,7 +40,7 @@ oauth:
       aos: "test-apple-aos-client-id"
 
 jwt:
-  token: ${.jwt_token_secret_key}
+  token: ${jwt_token_secret_key}
 
 server:
   port: 8080
