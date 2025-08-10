@@ -18,7 +18,7 @@ jobs:
 
       - name: Create and push timestamp tag
         run: |
-          TAG="v$(TZ=Asia/Seoul date +'%Y%m%d-%H%M%S')"
+          TAG="p$(TZ=Asia/Seoul date +'%Y%m%d-%H%M%S')"
           git config user.name "${GITHUB_ACTOR}"
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
           git tag "${TAG}"
