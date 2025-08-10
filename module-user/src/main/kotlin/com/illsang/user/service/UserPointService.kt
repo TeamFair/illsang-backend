@@ -1,24 +1,21 @@
 package com.illsang.user.service
 
 import com.illsang.common.enums.PointType
-import com.illsang.common.event.management.area.CommercialAreaGetEvent
-import com.illsang.common.event.management.area.MetroAreaGetEvent
-import com.illsang.common.event.management.season.SeasonGetCurrentEvent
+import com.illsang.common.event.management.quest.CompletedQuestHistoryCountGetEvent
 import com.illsang.common.event.user.point.UserPointCreateRequest
 import com.illsang.user.domain.entity.UserPointHistoryEntity
 import com.illsang.user.domain.entity.UserPointKey
 import com.illsang.user.domain.model.UserRankModel
-import com.illsang.user.dto.response.CommercialRankResponse
-import com.illsang.user.dto.response.MetroRankResponse
+import com.illsang.user.dto.response.UserCommercialContributionResponse
+import com.illsang.user.dto.response.UserCommercialPointResponse
+import com.illsang.user.dto.response.UserPointStatisticResponse
+import com.illsang.user.dto.response.UserTopCommercialPointResponse
 import com.illsang.user.repository.UserPointHistoryRepository
 import com.illsang.user.repository.UserPointRepository
 import org.springframework.context.ApplicationEventPublisher
-import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.time.LocalDateTime
-import java.time.ZoneId
 
 
 @Service
@@ -31,17 +28,14 @@ class UserPointService(
 ) {
 
     @Transactional
-    fun createPoints(userId: String, questId: Long, request: List<UserPointCreateRequest>) {
+    fun createPoints(seasonId: Long, userId: String, questId: Long, request: List<UserPointCreateRequest>) {
         val user = this.userService.findById(userId)
-        val currentSeasonEvent = SeasonGetCurrentEvent(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
-        this.eventPublisher.publishEvent(currentSeasonEvent)
-        val currentSeason = currentSeasonEvent.response
 
         val userPoints = request.map { pointRequest ->
             Pair(
                 UserPointKey(
                     user = user,
-                    seasonId = currentSeason.seasonId,
+                    seasonId = seasonId,
                     metroAreaCode = pointRequest.metroAreaCode,
                     commercialAreaCode = pointRequest.commercialAreaCode,
                     pointType = pointRequest.pointType,
@@ -66,67 +60,37 @@ class UserPointService(
         )
     }
 
-    fun findAllUserTotalRank(commercialAreaCode: String, pageable: Pageable): Page<UserRankModel> {
+    fun findAllUserTotalRank(commercialAreaCode: String): List<UserRankModel> {
         return this.userPointRepository.findAllUserRank(
             commercialAreaCode = commercialAreaCode,
-            pageable = pageable,
-        )
+            pageable = Pageable.ofSize(30),
+        ).content
     }
 
-    fun findAllRankByUserContribution(seasonId: Long?, pageable: Pageable): Page<UserRankModel> {
+    fun findAllRankByUserContribution(seasonId: Long?): List<UserRankModel> {
         return this.userPointRepository.findAllUserRank(
             seasonId = seasonId,
             pointType = PointType.CONTRIBUTION,
-            pageable = pageable,
-        )
+            pageable = Pageable.ofSize(30),
+        ).content
     }
 
-    fun findAllRankByUserMetro(seasonId: Long?, metroAreaCode: String, pageable: Pageable): Page<UserRankModel> {
+    fun findAllRankByUserMetro(seasonId: Long?, metroAreaCode: String): List<UserRankModel> {
         return this.userPointRepository.findAllUserRank(
             seasonId = seasonId,
             pointType = PointType.METRO,
             metroCode = metroAreaCode,
-            pageable = pageable,
-        )
+            pageable = Pageable.ofSize(30),
+        ).content
     }
 
-    fun findAllRankByUserCommercial(seasonId: Long?, commercialAreaCode: String, pageable: Pageable): Page<UserRankModel> {
+    fun findAllRankByUserCommercial(seasonId: Long?, commercialAreaCode: String): List<UserRankModel> {
         return this.userPointRepository.findAllUserRank(
             seasonId = seasonId,
             pointType = PointType.COMMERCIAL,
             metroCode = commercialAreaCode,
-            pageable = pageable,
-        )
-    }
-
-    fun findAllRankByMetroArea(seasonId: Long?, pageable: Pageable): Page<MetroRankResponse> {
-        val metroRank = this.userPointRepository.findAllAreaRank(seasonId, PointType.METRO, pageable)
-
-        val metroEvent = MetroAreaGetEvent(metroRank.content.mapNotNull { it?.first })
-        this.eventPublisher.publishEvent(metroEvent)
-
-        return metroRank.map {
-            MetroRankResponse(
-                metroCode = it?.first!!,
-                point = it.second,
-                areaName = metroEvent.response.find { metro -> metro.code == it.first }!!.areaName
-            )
-        }
-    }
-
-    fun findAllRankByCommercialArea(seasonId: Long?, pageable: Pageable): Page<CommercialRankResponse>? {
-        val commercialRank = this.userPointRepository.findAllAreaRank(seasonId, PointType.COMMERCIAL, pageable)
-
-        val commercialEvent = CommercialAreaGetEvent(commercialRank.content.mapNotNull { it?.first })
-        this.eventPublisher.publishEvent(commercialEvent)
-
-        return commercialRank.map {
-            CommercialRankResponse(
-                commercialCode = it?.first!!,
-                point = it.second,
-                areaName = commercialEvent.response.find { metro -> metro.code == it.first }!!.areaName
-            )
-        }
+            pageable = Pageable.ofSize(30),
+        ).content
     }
 
     fun findRankByUser(seasonId: Long?, areaCode: String?, pointType: PointType, userId: String): UserRankModel {
@@ -135,6 +99,45 @@ class UserPointService(
             seasonId = seasonId,
             pointType = pointType,
             areaCode = areaCode,
+        )
+    }
+
+    fun findPointByCommercial(userId: String): UserCommercialPointResponse {
+        val ownerPoints = this.userPointRepository.findOwnerPoint(PointType.COMMERCIAL, userId)
+        var topCommercialContributionResponse: UserTopCommercialPointResponse? = null
+        if (ownerPoints.isNotEmpty()) {
+            val commercialTotalPoint =
+                this.userPointRepository.sumPointByCommercialArea(PointType.COMMERCIAL, ownerPoints[0].first)
+            topCommercialContributionResponse = UserTopCommercialPointResponse.from(
+                code = ownerPoints[0].first,
+                point = ownerPoints[0].second,
+                contributionPercent = ownerPoints[0].second * commercialTotalPoint * 100,
+            )
+        }
+
+        return UserCommercialPointResponse.from(
+            topCommercialArea = topCommercialContributionResponse,
+            totalOwnerContributionList = ownerPoints.map {
+                UserCommercialContributionResponse.from(
+                    code = it.first,
+                    point = it.second,
+                )
+            },
+        )
+    }
+
+    fun findPointStatistic(userId: String, seasonId: Long?): UserPointStatisticResponse {
+        val completedQuestEvent = CompletedQuestHistoryCountGetEvent(seasonId = seasonId, userId = userId)
+        this.eventPublisher.publishEvent(completedQuestEvent)
+        val completedQuestCount = completedQuestEvent.response
+
+        val ownerPointStatistic = this.userPointRepository.findOwnerPointStatistic(userId, seasonId)
+
+        return UserPointStatisticResponse(
+            completedQuestCount = completedQuestCount,
+            metroAreaPoint = ownerPointStatistic.findLast { it.first == PointType.METRO }?.second ?: 0,
+            commercialAreaPoint = ownerPointStatistic.findLast { it.first == PointType.COMMERCIAL }?.second ?: 0,
+            contributionPoint = ownerPointStatistic.findLast { it.first == PointType.CONTRIBUTION }?.second ?: 0,
         )
     }
 

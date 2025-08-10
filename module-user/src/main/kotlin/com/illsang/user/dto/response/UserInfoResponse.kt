@@ -8,7 +8,7 @@ import com.illsang.user.domain.model.UserTitleModel
 import com.illsang.user.enums.UserStatus
 import java.time.LocalDateTime
 
-data class UserInfoResponse (
+data class UserInfoResponse(
     val id: String?,
     val email: String?,
     val channel: OAuthProvider?,
@@ -34,7 +34,7 @@ data class UserInfoResponse (
     }
 }
 
-data class UserTitleResponse (
+data class UserTitleResponse(
     val name: String,
     val grade: TitleGrade,
     val type: TitleType,
@@ -45,6 +45,76 @@ data class UserTitleResponse (
                 name = title.titleName,
                 grade = title.titleGrade,
                 type = title.titleType,
+            )
+        }
+    }
+}
+
+data class UserCommercialPointResponse(
+    val topCommercialArea: UserTopCommercialPointResponse?,
+    val totalOwnerContributions: List<UserCommercialContributionResponse>,
+) {
+    companion object {
+        fun from(
+            topCommercialArea: UserTopCommercialPointResponse?,
+            totalOwnerContributionList: List<UserCommercialContributionResponse>
+        ): UserCommercialPointResponse {
+            return UserCommercialPointResponse(
+                topCommercialArea = topCommercialArea,
+                totalOwnerContributions = totalOwnerContributionList,
+            )
+        }
+    }
+}
+
+data class UserCommercialContributionResponse(
+    val commercialAreaCode: String,
+    val point: Long,
+) {
+    companion object {
+        fun from(code: String, point: Long): UserCommercialContributionResponse {
+            return UserCommercialContributionResponse(
+                commercialAreaCode = code,
+                point = point,
+            )
+        }
+    }
+}
+
+data class UserTopCommercialPointResponse(
+    val commercialAreaCode: String,
+    val point: Long,
+    val ownerContributionPercent: Long,
+) {
+    companion object {
+        fun from(code: String, point: Long, contributionPercent: Long): UserTopCommercialPointResponse {
+            return UserTopCommercialPointResponse(
+                commercialAreaCode = code,
+                point = point,
+                ownerContributionPercent = contributionPercent,
+            )
+        }
+    }
+}
+
+data class UserPointStatisticResponse(
+    val completedQuestCount: Long,
+    val metroAreaPoint: Long,
+    val commercialAreaPoint: Long,
+    val contributionPoint: Long,
+) {
+    companion object {
+        fun from(
+            completedQuestCount: Long,
+            metroAreaPoint: Long,
+            commercialAreaPoint: Long,
+            contributionPoint: Long,
+        ): UserPointStatisticResponse {
+            return UserPointStatisticResponse(
+                completedQuestCount = completedQuestCount,
+                metroAreaPoint = metroAreaPoint,
+                commercialAreaPoint = commercialAreaPoint,
+                contributionPoint = contributionPoint,
             )
         }
     }

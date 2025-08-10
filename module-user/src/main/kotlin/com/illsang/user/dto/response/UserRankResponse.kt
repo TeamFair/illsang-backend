@@ -28,10 +28,17 @@ data class MetroRankResponse(
     val metroCode: String,
     val areaName: String,
     val point: Long,
+    val images: List<String>,
 )
 
 data class CommercialRankResponse(
     val commercialCode: String,
     val areaName: String,
     val point: Long,
+    val images: List<String>,
+)
+
+data class UserRankListResponse(
+    val ranks: List<UserRankResponse>,
+    val user: UserRankResponse,
 )

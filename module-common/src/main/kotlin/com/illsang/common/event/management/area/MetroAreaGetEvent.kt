@@ -1,6 +1,6 @@
 package com.illsang.common.event.management.area
 
-data class MetroAreaGetEvent (
+data class MetroAreaGetEvent(
     val metroAreaCodes: List<String>,
 ) {
     lateinit var response: List<MetroArea>
@@ -8,6 +8,7 @@ data class MetroAreaGetEvent (
     class MetroArea(
         val code: String,
         val areaName: String,
+        val images: List<String>,
     )
 }
 

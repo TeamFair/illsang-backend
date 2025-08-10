@@ -130,8 +130,8 @@ class UserPointCustomRepositoryImpl(
     override fun findAllAreaRank(
         seasonId: Long?,
         pointType: PointType,
-        pageable: Pageable
-    ): Page<Pair<String, Long>?> {
+        pageable: Pageable,
+    ): Page<Pair<String, Long>> {
         val result = this.queryFactory
             .select(
                 groupByPointType(pointType),
@@ -166,14 +166,68 @@ class UserPointCustomRepositoryImpl(
         }
     }
 
+    override fun findOwnerPoint(
+        pointType: PointType,
+        userId: String,
+    ): List<Pair<String, Long>> {
+        return this.queryFactory
+            .select(
+                groupByPointType(pointType),
+                userPointEntity.point.sumLong().coalesce(0L),
+            )
+            .from(userPointEntity)
+            .where(
+                userPointEntity.id.user.id.eq(userId),
+                pointTypeEq(pointType),
+            )
+            .groupBy(
+                groupByPointType(pointType),
+            )
+            .orderBy(
+                userPointEntity.point.sumLong().desc(),
+            )
+            .fetch()
+            .map { tuple ->
+                Pair(
+                    tuple.get(groupByPointType(pointType))!!,
+                    tuple.get(userPointEntity.point.sumLong())!!,
+                )
+            }
+    }
+
+    override fun findOwnerPointStatistic(userId: String, seasonId: Long?): List<Pair<PointType, Long>> {
+        return this.queryFactory
+            .select(
+                userPointEntity.id.pointType,
+                userPointEntity.point.sumLong().coalesce(0L),
+            )
+            .from(userPointEntity)
+            .where(
+                seasonEq(seasonId),
+            )
+            .groupBy(
+                userPointEntity.id.pointType,
+            )
+            .fetch()
+            .map { tuple ->
+                Pair(
+                    tuple.get(userPointEntity.id.pointType)!!,
+                    tuple.get(userPointEntity.point.sumLong())!!,
+                )
+            }
+    }
+
     private fun areaCodeEq(areaCode: String?, pointType: PointType): BooleanExpression? {
         return when (pointType) {
             PointType.METRO ->
                 userPointEntity.id.metroAreaCode.eq(areaCode).and(userPointEntity.id.pointType.eq(pointType))
+
             PointType.COMMERCIAL ->
                 userPointEntity.id.commercialAreaCode.eq(areaCode).and(userPointEntity.id.pointType.eq(pointType))
+
             PointType.CONTRIBUTION ->
                 userPointEntity.id.pointType.eq(pointType)
+
             else -> throw IllegalAccessException("Invalid point type")
         }
     }

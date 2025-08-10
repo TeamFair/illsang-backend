@@ -2,6 +2,7 @@ package com.illsang.quest.controller.user
 
 import com.illsang.auth.domain.model.AuthenticationModel
 import com.illsang.quest.dto.request.user.MissionHistoryEmojiCreateRequest
+import com.illsang.quest.dto.response.user.MissionHistoryOwnerResponse
 import com.illsang.quest.dto.response.user.MissionHistoryRandomResponse
 import com.illsang.quest.enums.EmojiType
 import com.illsang.quest.service.user.MissionHistoryService
@@ -48,7 +49,7 @@ class MissionUserHistoryController(
 
     @PostMapping("/{missionHistoryId}/emoji")
     @PreAuthorize("hasRole('USER')")
-    @Operation(operationId = "MIU002", summary = "이모지 등록")
+    @Operation(operationId = "MIU003", summary = "이모지 등록")
     fun createEmoji(
         @PathVariable missionHistoryId: Long,
         @RequestBody request: MissionHistoryEmojiCreateRequest,
@@ -61,7 +62,7 @@ class MissionUserHistoryController(
 
     @DeleteMapping("/{missionHistoryId}/emoji")
     @PreAuthorize("hasRole('USER')")
-    @Operation(operationId = "MIU002", summary = "이모지 해제")
+    @Operation(operationId = "MIU004", summary = "이모지 해제")
     fun deleteEmoji(
         @PathVariable missionHistoryId: Long,
         @RequestParam emojiType: EmojiType,
@@ -70,6 +71,18 @@ class MissionUserHistoryController(
         this.missionHistoryService.deleteEmoji(missionHistoryId, authenticationModel.userId, emojiType)
 
         return ResponseEntity.ok().build()
+    }
+
+    @DeleteMapping("/owner")
+    @PreAuthorize("hasRole('USER')")
+    @Operation(operationId = "MIU005", summary = "수행한 퀘스트 이력")
+    fun selectAllOwner(
+        @ParameterObject @PageableDefault(size = 10) pageable: Pageable,
+        @AuthenticationPrincipal authenticationModel: AuthenticationModel,
+    ): ResponseEntity<Page<MissionHistoryOwnerResponse>> {
+        val missionHistories = this.missionHistoryService.findByUserId(authenticationModel.userId, pageable)
+
+        return ResponseEntity.ok(missionHistories)
     }
 
 }

@@ -8,6 +8,7 @@ import com.illsang.quest.domain.entity.user.UserMissionHistoryEntity
 import com.illsang.quest.domain.entity.user.UserQuizHistoryEntity
 import com.illsang.quest.domain.model.user.ChallengeModel
 import com.illsang.quest.dto.request.user.ChallengeCreateRequest
+import com.illsang.quest.dto.response.user.MissionHistoryOwnerResponse
 import com.illsang.quest.dto.response.user.MissionHistoryRandomResponse
 import com.illsang.quest.enums.EmojiType
 import com.illsang.quest.enums.MissionType
@@ -118,6 +119,12 @@ class MissionHistoryService(
 
         missionHistory.removeEmoji(emoji)
         this.missionHistoryEmojiRepository.delete(emoji)
+    }
+
+    fun findByUserId(userId: String, pageable: Pageable): Page<MissionHistoryOwnerResponse> {
+        val missionHistories = this.missionHistoryRepository.findAllByUserId(userId, pageable)
+
+        return missionHistories.map { MissionHistoryOwnerResponse.from(it) }
     }
 
     private fun findById(missionHistoryId: Long): UserMissionHistoryEntity =

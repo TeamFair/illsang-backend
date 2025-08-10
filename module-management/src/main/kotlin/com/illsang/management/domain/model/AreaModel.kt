@@ -6,6 +6,7 @@ import com.illsang.management.domain.entity.MetroAreaEntity
 data class MetroAreaModel(
     val code: String,
     val areaName: String,
+    val images: List<String>,
     val commercialAreaModel: List<CommercialAreaModel>,
 ) {
 
@@ -15,6 +16,7 @@ data class MetroAreaModel(
                 code = metroArea.code,
                 areaName = metroArea.areaName,
                 commercialAreaModel = metroArea.commercialAreas.map { CommercialAreaModel.from(it) },
+                images = metroArea.images
             )
         }
     }
@@ -26,6 +28,7 @@ data class CommercialAreaModel(
     val areaName: String,
     val description: String,
     val metroAreaCode: String,
+    val images: List<String>,
 ) {
 
     companion object {
@@ -35,6 +38,7 @@ data class CommercialAreaModel(
                 areaName = commercialArea.areaName,
                 description = commercialArea.description,
                 metroAreaCode = commercialArea.metroArea.code,
+                images = commercialArea.images,
             )
         }
     }

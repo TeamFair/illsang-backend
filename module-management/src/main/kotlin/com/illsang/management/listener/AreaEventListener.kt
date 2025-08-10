@@ -32,6 +32,7 @@ class AreaEventListener(
             MetroAreaGetEvent.MetroArea(
                 code = it.code,
                 areaName = it.areaName,
+                images = it.images,
             )
         }
     }
@@ -44,6 +45,7 @@ class AreaEventListener(
             CommercialAreaGetEvent.CommercialArea(
                 code = it.code,
                 areaName = it.areaName,
+                images = it.images,
             )
         }
     }

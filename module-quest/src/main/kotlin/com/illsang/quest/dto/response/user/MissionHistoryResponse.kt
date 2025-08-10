@@ -4,7 +4,7 @@ import com.illsang.common.event.user.info.UserInfoGetEvent
 import com.illsang.quest.domain.entity.user.UserMissionHistoryEntity
 import java.time.LocalDateTime
 
-data class MissionHistoryRandomResponse (
+data class MissionHistoryRandomResponse(
     val missionHistoryId: Long?,
     val user: UserResponse,
     val title: String,
@@ -14,7 +14,10 @@ data class MissionHistoryRandomResponse (
     val viewCount: Int,
 ) {
     companion object {
-        fun from(missionHistory: UserMissionHistoryEntity, userInfo: UserInfoGetEvent.UserInfo): MissionHistoryRandomResponse {
+        fun from(
+            missionHistory: UserMissionHistoryEntity,
+            userInfo: UserInfoGetEvent.UserInfo
+        ): MissionHistoryRandomResponse {
             return MissionHistoryRandomResponse(
                 missionHistoryId = missionHistory.id,
                 user = UserResponse.from(userInfo),
@@ -23,6 +26,22 @@ data class MissionHistoryRandomResponse (
                 likeCount = missionHistory.likeCount,
                 hateCount = missionHistory.hateCount,
                 viewCount = missionHistory.viewCount,
+            )
+        }
+    }
+}
+
+data class MissionHistoryOwnerResponse(
+    val missionHistoryId: Long?,
+    val title: String,
+    val createdAt: LocalDateTime,
+) {
+    companion object {
+        fun from(missionHistory: UserMissionHistoryEntity): MissionHistoryOwnerResponse {
+            return MissionHistoryOwnerResponse(
+                missionHistoryId = missionHistory.id,
+                title = missionHistory.mission.quest.title,
+                createdAt = missionHistory.createdAt!!,
             )
         }
     }

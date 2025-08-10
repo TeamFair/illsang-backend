@@ -1,6 +1,6 @@
 package com.illsang.common.event.management.area
 
-data class CommercialAreaGetEvent (
+data class CommercialAreaGetEvent(
     val commercialAreaCodes: List<String>,
 ) {
     lateinit var response: List<CommercialArea>
@@ -8,6 +8,7 @@ data class CommercialAreaGetEvent (
     class CommercialArea(
         val code: String,
         val areaName: String,
+        val images: List<String>,
     )
 }
 
