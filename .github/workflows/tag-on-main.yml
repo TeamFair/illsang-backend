@@ -1,0 +1,26 @@
+name: Tag on main (KST)
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: write   # 태그 푸시에 필요
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout full history
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create and push timestamp tag
+        run: |
+          TAG="v$(TZ=Asia/Seoul date +'%Y%m%d-%H%M%S')"
+          git config user.name "${GITHUB_ACTOR}"
+          git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
+          git tag "${TAG}"
+          git push origin "${TAG}"
+          echo "Created tag ${TAG}"

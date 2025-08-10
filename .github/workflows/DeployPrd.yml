@@ -2,29 +2,45 @@ name: Build and Push to ECR (PRD)
 
 on:
   workflow_dispatch:
+    inputs:
+      git_tag:
+        description: '빌드 소스로 사용할 git tag (예: v20250810-130501)'
+        required: true
+        type: string
 
 permissions:
   id-token: write
   contents: read
 
 concurrency:
-  group: prd-build-${{ github.ref }}
+  group: prd-build-${{ inputs.git_tag }}
   cancel-in-progress: false
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    env:
+      AWS_REGION: ap-northeast-2
     steps:
-      - name: Checkout main
+      - name: Checkout by tag
         uses: actions/checkout@v4
         with:
-          ref: main
+          fetch-depth: 0
+          ref: refs/tags/${{ inputs.git_tag }}
 
-      - name: Configure AWS Credentials
+      - name: Validate docker tag format
+        run: |
+          TAG="${{ inputs.git_tag }}"
+          if ! echo "$TAG" | grep -Eq '^[a-z0-9._-]+$'; then
+            echo "Invalid docker tag: $TAG (허용: 소문자/숫자/._-)" >&2
+            exit 1
+          fi
+
+      - name: Configure AWS Credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v2
         with:
           role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/GitHubDeployRole
-          aws-region: ap-northeast-2
+          aws-region: ${{ env.AWS_REGION }}
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -34,10 +50,10 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: ${{ secrets.ECR_REPOSITORY }}
-          IMAGE_TAG: ${{ github.sha }}
+          IMAGE_TAG: ${{ inputs.git_tag }}
         run: |
           FULL_REPO="$ECR_REGISTRY/${ECR_REPOSITORY}-prd"
-          docker build -f module-bootstrap/Dockerfile -t $FULL_REPO:$IMAGE_TAG .
-          docker tag $FULL_REPO:$IMAGE_TAG $FULL_REPO:latest
-          docker push $FULL_REPO:$IMAGE_TAG
-          docker push $FULL_REPO:latest
+          docker build -f module-bootstrap/Dockerfile -t "$FULL_REPO:$IMAGE_TAG" .
+          docker tag "$FULL_REPO:$IMAGE_TAG" "$FULL_REPO:latest"
+          docker push "$FULL_REPO:$IMAGE_TAG"
+          docker push "$FULL_REPO:latest"
