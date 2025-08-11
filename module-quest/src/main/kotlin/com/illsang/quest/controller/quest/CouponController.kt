@@ -1,7 +1,8 @@
 package com.illsang.quest.controller.quest
 
-import com.illsang.quest.dto.request.quest.CouponResponse
+
 import com.illsang.quest.dto.request.quest.CreateCouponRequest
+import com.illsang.quest.dto.response.quest.CouponResponse
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.ResponseEntity
