@@ -1,4 +1,4 @@
-package com.illsang.quest.dto.response.user
+package com.illsang.user.dto.response
 
 import java.time.LocalDateTime
 
