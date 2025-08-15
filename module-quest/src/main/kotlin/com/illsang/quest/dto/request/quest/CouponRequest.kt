@@ -3,32 +3,43 @@ package com.illsang.quest.dto.request.quest
 import com.illsang.common.util.PasswordUtil
 import com.illsang.quest.domain.entity.quest.CouponEntity
 import com.illsang.quest.enums.CouponType
+import jakarta.validation.constraints.NotBlank
+import software.amazon.awssdk.annotations.NotNull
 import java.time.LocalDateTime
 
-data class CreateCouponRequest(
-    val couponType: CouponType,
+data class CouponCreateRequest(
+    @field:NotNull
+    val type: CouponType,
+    @field:NotBlank
     val name: String,
     val imageId: Long? = null,
-    val expiresAt: LocalDateTime? = null,
-    val description: String? = null,
+    val password: String? = null,
     val validFrom: LocalDateTime? = null,
     val validTo: LocalDateTime? = null,
     val storeId: Long? = null,
-    val passWord: String? = null
-
-){
-    fun toEntity() : CouponEntity {
-        return CouponEntity(
-            type = this.couponType,
-            name = this.name,
-            imageId = this.imageId,
-            passWord = this.passWord?.let { PasswordUtil.encode(it) },
-            validFrom = this.validFrom,
-            validTo = this.validTo,
-            storeId = this.storeId,
-            description = this.description
-        );
-    }
+    val description: String? = null
+) {
+    fun toEntity(): CouponEntity = CouponEntity(
+        type = type,
+        name = name,
+        imageId = imageId,
+        password = password?.let { PasswordUtil.encode(it) },
+        validFrom = validFrom,
+        validTo = validTo,
+        storeId = storeId,
+        description = description
+    )
 }
+
+data class CouponUpdateRequest(
+    val type: CouponType? = null,
+    val name: String? = null,
+    val imageId: Long? = null,
+    val password: String? = null,
+    val validFrom: LocalDateTime? = null,
+    val validTo: LocalDateTime? = null,
+    val storeId: Long? = null,
+    val description: String? = null
+)
 
 
