@@ -1,7 +1,10 @@
 package com.illsang.quest.domain.entity.quest
 
 import com.illsang.common.entity.BaseEntity
+import com.illsang.common.util.PasswordUtil
+import com.illsang.quest.dto.request.quest.CouponUpdateRequest
 import com.illsang.quest.enums.CouponType
+import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
@@ -9,6 +12,8 @@ import jakarta.persistence.Enumerated
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.OneToMany
 import jakarta.persistence.Table
 import java.time.LocalDateTime
 
@@ -46,5 +51,20 @@ class CouponEntity(
     @Column(name = "description", length = 100)
     var description: String? = null,
 
-    ) : BaseEntity() {
+    @OneToMany(mappedBy = "coupon", cascade = [CascadeType.ALL], orphanRemoval = false)
+    val questRewards: MutableList<QuestRewardEntity> = mutableListOf()
+
+) : BaseEntity() {
+    fun update(request: CouponUpdateRequest) {
+        request.type?.let { this.type = it }
+        request.name?.let { this.name = it }
+        this.imageId = request.imageId
+        this.passWord = request.password?.let { PasswordUtil.encode(it) } ?: this.passWord
+        this.validFrom = request.validFrom
+        this.validTo = request.validTo
+        this.storeId = request.storeId
+        this.description = request.description
+        this.updatedAt = LocalDateTime.now()
+    }
+
 }

@@ -28,10 +28,12 @@ class QuestRewardEntity(
     @Column(name = "reward_value", nullable = false)
     var point: Int,
 
-    @OneToMany(mappedBy = "coupon", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var coupon: MutableList<CouponEntity> = mutableListOf()
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "coupon_id")
+    var coupon: CouponEntity? = null,
 
-) : BaseEntity() {
+
+    ) : BaseEntity() {
 
     fun update(request: QuestRewardUpdateRequest) {
         this.rewardType = request.rewardType
