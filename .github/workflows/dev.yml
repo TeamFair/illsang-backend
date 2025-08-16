@@ -1,0 +1,95 @@
+name: Dev CI
+on:
+  push:
+    branches:
+      - develop
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  ECR_REPOSITORY: infra-app-backend-dev
+  IMAGE_TAG: ${{ github.sha }}
+  AWS_S3_BUCKET_NAME: illsang-code-deploy
+  AWS_CODE_DEPLOY_APP_NAME: illsang-api
+  AWS_CODE_DEPLOY_DG_NAME: illsang-api-dev
+  AWS_CODE_DEPLOY_CONFIG_NAME: CodeDeployDefault.OneAtATime
+  DOCKER_CONTAINER_NAME: illsang-api-dev
+  SPRING_ACTIVE_PROFILE: dev
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4.3.1
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.AWS_ACCOUNT_ID }}:role/GitHubDeployRole
+          aws-region: ap-northeast-2
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: 'temurin'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Setup Gradle Caching
+        uses: actions/cache@v4
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Build with Gradle
+        run: ./gradlew :module-bootstrap:bootJar -x test
+
+      - name: Login in to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        with:
+          context: .
+          file: ./Dockerfile
+          platforms: linux/arm64
+          push: true
+          tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
+
+      - name: Create Zip file for AWS CodeDeploy
+        run: |
+          mkdir -p deploy
+          echo "export DOCKER_CONTAINER_NAME=${{ env.DOCKER_CONTAINER_NAME }}" > deploy/deploy.env
+          echo "export SPRING_PROFILES_ACTIVE=${{ env.SPRING_ACTIVE_PROFILE }}" >> deploy/deploy.env
+          echo "export ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}" >> deploy/deploy.env
+          echo "export ECR_REPOSITORY=${{ env.ECR_REPOSITORY }}" >> deploy/deploy.env
+          echo "export IMAGE_TAG=${{ env.IMAGE_TAG }}" >> deploy/deploy.env
+          cp appspec.yml deploy/
+          cp -r scripts deploy/
+
+      - name: Upload to AWS S3
+        run: |
+          aws deploy push \
+            --application-name ${{ env.AWS_CODE_DEPLOY_APP_NAME }} \
+            --s3-location s3://${{ env.AWS_S3_BUCKET_NAME }}/codedeploy/${{ env.IMAGE_TAG }}.zip \
+            --ignore-hidden-files \
+            --source deploy
+
+      - name: Deploy to AWS EC2
+        run: |
+          aws deploy create-deployment \
+            --application-name ${{ env.AWS_CODE_DEPLOY_APP_NAME }} \
+            --deployment-config-name ${{ env.AWS_CODE_DEPLOY_CONFIG_NAME }} \
+            --deployment-group-name ${{ env.AWS_CODE_DEPLOY_DG_NAME }} \
+            --s3-location bucket=${{ env.AWS_S3_BUCKET_NAME }},bundleType=zip,key=codedeploy/${{ env.IMAGE_TAG }}.zip

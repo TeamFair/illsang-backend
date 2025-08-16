@@ -1,0 +1,25 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /home/ssm-user/app
+
+permissions:
+  - object: /home/ssm-user/app/scripts
+    pattern: "**"
+    owner: ssm-user
+    mode: 755
+
+hooks:
+  BeforeInstall:
+    - location: scripts/before_install.sh
+      timeout: 120
+      runas: root
+  ApplicationStart:
+    - location: scripts/start_application.sh
+      timeout: 300
+      runas: ssm-user
+  ValidateService:
+    - location: scripts/validate_and_switch.sh
+      timeout: 300
+      runas: ssm-user
