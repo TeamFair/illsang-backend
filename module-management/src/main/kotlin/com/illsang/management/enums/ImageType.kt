@@ -31,5 +31,9 @@ enum class ImageType(
     USER_PROFILE_IMAGE(
         prefix = "UP",
         description = "유저프로필-이미지",
+    ),
+    COUPON_IMAGE(
+        prefix = "CP",
+        description = "쿠폰 이미지"
     )
 }

@@ -34,10 +34,10 @@ class CouponEntity(
     var name: String = "",
 
     @Column(name = "image_id")
-    var imageId: Long? = null,
+    var imageId: String? = null,
 
     @Column(name = "password", length = 255)
-    var passWord: String? = null,
+    var password: String? = null,
 
     @Column(name = "valid_from")
     var validFrom: LocalDateTime? = null,
@@ -59,7 +59,7 @@ class CouponEntity(
         request.type?.let { this.type = it }
         request.name?.let { this.name = it }
         this.imageId = request.imageId
-        this.passWord = request.password?.let { PasswordUtil.encode(it) } ?: this.passWord
+        this.password = request.password?.let { PasswordUtil.encode(it) } ?: this.password
         this.validFrom = request.validFrom
         this.validTo = request.validTo
         this.storeId = request.storeId

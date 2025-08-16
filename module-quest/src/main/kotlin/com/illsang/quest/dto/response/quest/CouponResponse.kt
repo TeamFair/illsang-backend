@@ -1,30 +1,34 @@
 package com.illsang.quest.dto.response.quest
 
 import com.illsang.quest.domain.model.quset.CouponModel
+import com.illsang.quest.enums.CouponType
 import java.time.LocalDateTime
 
 data class CouponResponse(
-    val id: Long?,
+    val id: Long,
+    val type: CouponType,
     val name: String,
-    val expiresAt: LocalDateTime?,
-    val description: String?,
-    val createdBy: String?,
-    val createdAt: LocalDateTime?,
-    val updatedBy: String?,
-    val updatedAt: LocalDateTime?,
-){
+    val imageId: String?,
+    val validFrom: LocalDateTime?,
+    val validTo: LocalDateTime?,
+    val storeId: Long?,
+    val description: String?
+) {
     companion object {
-        fun from(couponModel: CouponModel) : CouponResponse{
-            return CouponResponse(
-                createdBy = couponModel.createdBy,
-                createdAt = couponModel.createdAt,
-                updatedBy = couponModel.updatedBy,
-                updatedAt = couponModel.updatedAt,
-                id = couponModel.id,
-                name = "",
-                expiresAt = LocalDateTime.now(),
-                description = "",
-            )
-        }
+        fun from(model: CouponModel) = CouponResponse(
+            id = model.id!!,
+            type = model.type,
+            name = model.name,
+            imageId = model.imageId,
+            validFrom = model.validFrom,
+            validTo = model.validTo,
+            storeId = model.storeId,
+            description = model.description
+        )
     }
 }
+
+
+data class CouponPasswordVerifyResponse(
+    val success: Boolean
+)
