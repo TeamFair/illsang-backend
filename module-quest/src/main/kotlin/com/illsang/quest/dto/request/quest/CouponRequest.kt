@@ -12,7 +12,7 @@ data class CouponCreateRequest(
     val type: CouponType,
     @field:NotBlank
     val name: String,
-    val imageId: Long? = null,
+    val imageId: String? = null,
     val password: String? = null,
     val validFrom: LocalDateTime? = null,
     val validTo: LocalDateTime? = null,
@@ -34,12 +34,16 @@ data class CouponCreateRequest(
 data class CouponUpdateRequest(
     val type: CouponType? = null,
     val name: String? = null,
-    val imageId: Long? = null,
+    val imageId: String? = null,
     val password: String? = null,
     val validFrom: LocalDateTime? = null,
     val validTo: LocalDateTime? = null,
     val storeId: Long? = null,
     val description: String? = null
+)
+
+data class CouponPasswordVerifyRequest(
+    val password: String
 )
 
 

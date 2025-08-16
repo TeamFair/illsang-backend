@@ -1,3 +1,5 @@
+package com.illsang.user.repository
+
 import com.illsang.user.domain.entity.UserCouponEntity
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
