@@ -10,8 +10,10 @@ env:
   ECR_REPOSITORY: infra-app-backend-prod
   IMAGE_TAG: ${{ startsWith(github.ref, 'refs/tags/') && github.ref_name || github.sha }}
   AWS_S3_BUCKET_NAME: illsang-code-deploy
+  S3_BUNDLE_NAME: illsang-api-prod-bundle.zip
   AWS_CODE_DEPLOY_APP_NAME: illsang-api
   AWS_CODE_DEPLOY_DG_NAME: illsang-api-prod
+  AWS_CODE_DEPLOY_CONFIG_NAME: CodeDeployDefault.OneAtATime
   DOCKER_CONTAINER_NAME: illsang-api-prod
   SPRING_ACTIVE_PROFILE: prod
 
@@ -59,7 +61,7 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
-          platforms: linux/amd64
+          platforms: linux/arm64
           push: true
           tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPOSITORY }}:${{ env.IMAGE_TAG }}
 
@@ -71,6 +73,8 @@ jobs:
           echo "export ECR_REGISTRY=${{ steps.login-ecr.outputs.registry }}" >> deploy/deploy.env
           echo "export ECR_REPOSITORY=${{ env.ECR_REPOSITORY }}" >> deploy/deploy.env
           echo "export IMAGE_TAG=${{ env.IMAGE_TAG }}" >> deploy/deploy.env
+          echo "export JAVA_HEAP_SIZE=1024m" >> deploy/deploy.env
+          echo "export DOCKER_MEMORY_LIMIT=1536m" >> deploy/deploy.env
           cp appspec.yml deploy/
           cp -r scripts deploy/
 
@@ -78,7 +82,7 @@ jobs:
         run: |
           aws deploy push \
             --application-name ${{ env.AWS_CODE_DEPLOY_APP_NAME }} \
-            --s3-location s3://${{ env.AWS_S3_BUCKET_NAME }}/codedeploy/${{ env.IMAGE_TAG }}.zip \
+            --s3-location s3://${{ env.AWS_S3_BUCKET_NAME }}/${{ env.S3_BUNDLE_NAME }} \
             --ignore-hidden-files \
             --source deploy
 
@@ -86,6 +90,6 @@ jobs:
         run: |
           aws deploy create-deployment \
             --application-name ${{ env.AWS_CODE_DEPLOY_APP_NAME }} \
-            --deployment-config-name CodeDeployDefault.OneAtATime \
+            --deployment-config-name ${{ env.AWS_CODE_DEPLOY_CONFIG_NAME }} \
             --deployment-group-name ${{ env.AWS_CODE_DEPLOY_DG_NAME }} \
-            --s3-location bucket=${{ env.AWS_S3_BUCKET_NAME }},bundleType=zip,key=codedeploy/${{ env.IMAGE_TAG }}.zip
+            --s3-location bucket=${{ env.AWS_S3_BUCKET_NAME }},bundleType=zip,key=${{ env.S3_BUNDLE_NAME }}

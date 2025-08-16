@@ -50,4 +50,11 @@ if [ "$(sudo docker ps -aq -f name="^/${TARGET_CONTAINER_NAME}$")" ]; then
 fi
 
 echo "> 새 버전의 컨테이너를 실행합니다. (Port: ${TARGET_PORT})"
-sudo docker run -d --name "$TARGET_CONTAINER_NAME" -p "${TARGET_PORT}:8080" -e "SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}" "$IMAGE_NAME"
+sudo docker run -d \
+  --name "$TARGET_CONTAINER_NAME" \
+  -p "${TARGET_PORT}:8080" \
+  -e "SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}" \
+  -e "JAVA_OPTS=-Xms${JAVA_HEAP_SIZE} -Xmx${JAVA_HEAP_SIZE}" \
+  --memory="${DOCKER_MEMORY_LIMIT}" \
+  --memory-swap="${DOCKER_MEMORY_LIMIT}" \
+  "$IMAGE_NAME"
