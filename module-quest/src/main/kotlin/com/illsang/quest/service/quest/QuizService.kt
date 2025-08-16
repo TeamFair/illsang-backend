@@ -58,4 +58,11 @@ class QuizService(
         quiz.deleteQuizAnswer(quizAnswerId)
     }
 
+    fun findForRandom(missionId: Long): QuizModel {
+        val quiz = this.quizRepository.findRandomByMissionId(missionId)
+            ?: throw java.lang.IllegalArgumentException("quiz is not found by missionId : $missionId")
+
+        return QuizModel.from(quiz)
+    }
+
 }

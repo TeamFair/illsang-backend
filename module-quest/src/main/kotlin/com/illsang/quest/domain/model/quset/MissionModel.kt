@@ -7,6 +7,7 @@ import java.time.LocalDateTime
 
 data class MissionModel(
     val id: Long? = null,
+    val title: String? = null,
     var type: MissionType,
     var sortOrder: Int?,
     val questId: Long,
@@ -20,6 +21,7 @@ data class MissionModel(
         fun from(mission: MissionEntity): MissionModel {
             return MissionModel(
                 id = mission.id,
+                title = mission.title,
                 type = mission.type,
                 sortOrder = mission.sortOrder,
                 questId = mission.quest.id!!,

@@ -66,12 +66,9 @@ subprojects {
 	}
 
 	dependencies {
-		// Spring Data (RDB, MongoDB, Redis)
+		// Spring Data (RDB, Redis)
 		implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-		implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
-		implementation("org.springframework.boot:spring-boot-starter-data-mongodb-reactive")
 		implementation("org.springframework.boot:spring-boot-starter-data-redis")
-		implementation("org.springframework.boot:spring-boot-starter-data-redis-reactive")
 
 		// Spring Security + OAuth2
 		implementation("org.springframework.boot:spring-boot-starter-security")
@@ -103,6 +100,7 @@ subprojects {
 
 		// AWS
 		implementation("software.amazon.awssdk:s3:2.32.2")
+		implementation("io.awspring.cloud:spring-cloud-aws-starter-parameter-store:3.4.0")
 
 		// QueryDSL
 		val querydslVersion = "7.0"

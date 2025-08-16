@@ -8,7 +8,7 @@ import com.illsang.quest.enums.RewardType
 data class QuestRewardCreateRequest(
     val questId: Long,
     val rewardType: RewardType,
-    val pointType: PointType?,
+    val pointType: PointType,
     val point: Int,
 ) {
     fun toEntity(quest: QuestEntity): QuestRewardEntity {
@@ -23,6 +23,6 @@ data class QuestRewardCreateRequest(
 
 data class QuestRewardUpdateRequest(
     val rewardType: RewardType,
-    val pointType: PointType?,
+    val pointType: PointType,
     val point: Int,
 )

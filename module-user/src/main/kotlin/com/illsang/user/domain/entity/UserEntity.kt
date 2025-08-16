@@ -36,8 +36,9 @@ class UserEntity(
     @Column(name = "profile_image_id")
     var profileImageId: String? = null,
 
-    @Column(name = "title_id")
-    var titleHistoryId: String? = null,
+    @OneToOne(fetch = FetchType.EAGER, cascade = [CascadeType.ALL], orphanRemoval = true)
+    @JoinColumn(name = "current_title_id")
+    var currentTitle: UserTitleEntity? = null,
 
     @Column(name = "commercial_area_code")
     var commercialAreaCode: String? = null,
@@ -51,6 +52,9 @@ class UserEntity(
 
     @OneToMany(mappedBy = "id.user", cascade = [CascadeType.ALL], orphanRemoval = true)
     val userPoints: MutableSet<UserPointEntity> = mutableSetOf(),
+
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
+    val userTitles: MutableSet<UserTitleEntity> = mutableSetOf(),
 ) : BaseEntity() {
 
     init {
@@ -69,12 +73,8 @@ class UserEntity(
         this.profileImageId = imageId
     }
 
-    fun updateTitle(titleHistoryId: String?) {
-        if (titleHistoryId.isNullOrBlank()) {
-            this.titleHistoryId = null
-        } else {
-            this.titleHistoryId = titleHistoryId
-        }
+    fun updateTitle(userTitle: UserTitleEntity?) {
+        this.currentTitle = userTitle
     }
 
     fun updateAreaZone(commercialAreaCode: String, currentSeason: SeasonGetCurrentEvent.CurrentSeason) {
@@ -91,7 +91,7 @@ class UserEntity(
     fun addPoints(userPoints: List<Pair<UserPointKey, Int>>) {
         userPoints.forEach { (key, point) ->
             this.userPoints.find {
-                it.id.user.id == key.user.id && it.id.pointType == key.pointType && it.id.areaCode == key.areaCode && it.id.seasonId == key.seasonId
+                it.id.user.id == key.user.id && it.id.pointType == key.pointType && it.id.metroAreaCode == key.metroAreaCode && it.id.commercialAreaCode == key.commercialAreaCode && it.id.seasonId == key.seasonId
             }?.addPoint(point)
                 ?: this.userPoints.add(UserPointEntity(key, point))
         }

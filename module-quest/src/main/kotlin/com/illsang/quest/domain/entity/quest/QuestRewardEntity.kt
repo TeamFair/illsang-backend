@@ -23,7 +23,7 @@ class QuestRewardEntity(
 
     @Column(name = "point_type", nullable = false, length = 50)
     @Enumerated(EnumType.STRING)
-    var pointType: PointType? = null,
+    var pointType: PointType = PointType.NONE,
 
     @Column(name = "reward_value", nullable = false)
     var point: Int

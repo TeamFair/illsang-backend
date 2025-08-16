@@ -1,5 +1,5 @@
 springBoot {
-    mainClass.set("com.illsang.modulebootstrap")
+    mainClass.set("com.illsang.modulebootstrap.ModuleBootstrapApplicationKt")
 }
 
 dependencies {
