@@ -5,6 +5,7 @@ import com.illsang.management.domain.model.BannerModel
 data class BannerResponse(
     val id: Long?,
     val title: String?,
+    val navigationTitle: String?,
     val bannerImageId: String?,
     val description: String?,
     val useYn: Boolean?,
@@ -16,6 +17,7 @@ data class BannerResponse(
                 title = banner.title,
                 bannerImageId = banner.bannerImageId,
                 description = banner.description,
+                navigationTitle = banner.navigationTitle,
                 useYn = banner.useYn,
             )
         }

@@ -6,12 +6,14 @@ data class BannerCreateRequest (
     val title: String,
     val imageId: String,
     val description: String,
-    val useYn: Boolean = false
+    val navigationTitle: String,
+    val useYn: Boolean = false,
 ) {
     fun toEntity(): BannerEntity {
         return BannerEntity(
             title = title,
             description = description,
+            navigationTitle = navigationTitle,
             bannerImageId = imageId,
             useYn = useYn,
         )
@@ -21,6 +23,7 @@ data class BannerCreateRequest (
 data class BannerUpdateRequest (
     val title: String,
     val imageId: String,
+    val navigationTitle: String,
     val description: String,
     val useYn: Boolean,
 )

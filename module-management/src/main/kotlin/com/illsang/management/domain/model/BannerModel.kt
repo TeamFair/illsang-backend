@@ -7,6 +7,7 @@ import java.time.LocalDateTime
 data class BannerModel(
     val id: Long? = null,
     val title: String,
+    val navigationTitle: String,
     val bannerImageId: String? = null,
     val description: String? = null,
     val useYn: Boolean = false,
@@ -22,6 +23,7 @@ data class BannerModel(
                 id = banner.id,
                 title = banner.title,
                 bannerImageId = banner.bannerImageId,
+                navigationTitle = banner.navigationTitle,
                 description = banner.description,
                 useYn = banner.useYn,
                 createdAt = banner.createdAt,

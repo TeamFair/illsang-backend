@@ -14,32 +14,37 @@ class BannerEntity(
     @Column(name = "title")
     var title: String,
 
+    @Column(name = "navigation_title")
+    var navigationTitle: String,
+
     @Column(name = "banner_image_id")
     var bannerImageId: String? = null,
 
     @Column(name = "description")
     var description: String? = null,
 
+
     @Column(name = "use_yn")
     var useYn: Boolean = false,
 ) : BaseEntity() {
 
     init {
-        validateTitle(this.title)
+        validate()
     }
 
     fun update(request: BannerUpdateRequest) {
-        validateTitle(request.title)
-
         this.title = request.title
         this.description = request.description
         this.useYn = request.useYn
         this.bannerImageId = request.imageId
+        this.navigationTitle = request.navigationTitle
+
+        validate()
     }
 
-    private fun validateTitle(title: String) {
+    private fun validate() {
         require(title.isNotBlank()) { "Title is required" }
-        require(title.length <= 255) { "Title must be less than 255 characters" }
+        require(navigationTitle.isNotBlank()) { "NavigationTitle is required" }
     }
 
 }

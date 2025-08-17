@@ -37,7 +37,7 @@ oauth:
       aos: "test-apple-aos-client-id"
 
 jwt:
-  token: eW91ci1zZWNyZXQta2V5LWhlcmUtbXVzdC1iZS1hdC1sZWFzdC0zMi1jaGFyYWN0ZXJzLWxvbmc=
+  token: ${.jwt_token_secret_key}
 
 server:
   port: 8080
