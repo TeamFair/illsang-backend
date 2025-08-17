@@ -21,6 +21,7 @@ import java.time.ZoneId
 class UserService(
     private val eventPublisher: ApplicationEventPublisher,
     private val userRepository: UserRepository,
+    private val userTitleService: UserTitleService,
 ) {
 
     fun getUser(userId: String): UserModel {
@@ -93,7 +94,11 @@ class UserService(
     fun updateTitle(userId: String, titleHistoryId: String?): UserModel {
         val user = this.findById(userId)
 
-        user.updateTitle(titleHistoryId)
+        val userTitle = titleHistoryId?.let {
+            this.userTitleService.findById(titleHistoryId)
+        }
+
+        user.updateTitle(userTitle)
 
         return UserModel.from(user)
     }
@@ -125,6 +130,12 @@ class UserService(
     fun findById(id: String): UserEntity {
         return userRepository.findByIdOrNull(id)
             ?: throw IllegalArgumentException("User not found with id: $id")
+    }
+
+    fun findAll(userIds: List<String>): List<UserModel> {
+        val users = this.userRepository.findAllById(userIds)
+
+        return users.map { UserModel.from(it) }
     }
 
 }

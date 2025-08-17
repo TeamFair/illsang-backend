@@ -1,12 +1,14 @@
 package com.illsang.common.event.management.area
 
-data class MetroAreaGetByCommercialAreaEvent (
-    val commercialAreaCode: String,
+data class MetroAreaGetEvent(
+    val metroAreaCodes: List<String>,
 ) {
-    lateinit var response: MetroArea
+    lateinit var response: List<MetroArea>
 
     class MetroArea(
-        val metroAreaCode: String,
+        val code: String,
+        val areaName: String,
+        val images: List<String>,
     )
 }
 

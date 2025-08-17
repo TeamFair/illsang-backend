@@ -1,7 +1,7 @@
 package com.illsang.quest.dto.response.user
 
-import com.illsang.quest.domain.model.history.ChallengeModel
 import com.illsang.quest.domain.model.quset.QuizModel
+import com.illsang.quest.domain.model.user.ChallengeModel
 
 data class ChallengeResponse(
     val challengeId: Long,

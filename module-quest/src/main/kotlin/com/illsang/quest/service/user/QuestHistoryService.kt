@@ -1,8 +1,9 @@
 package com.illsang.quest.service.user
 
 import com.illsang.common.event.management.area.MetroAreaGetByCommercialAreaEvent
-import com.illsang.common.event.management.point.UserPointCreateEvent
-import com.illsang.common.event.management.point.UserPointCreateRequest
+import com.illsang.common.event.management.season.SeasonGetCurrentEvent
+import com.illsang.common.event.user.point.UserPointCreateEvent
+import com.illsang.common.event.user.point.UserPointCreateRequest
 import com.illsang.quest.domain.entity.quest.QuestEntity
 import com.illsang.quest.domain.entity.user.UserQuestHistoryEntity
 import com.illsang.quest.enums.QuestHistoryStatus
@@ -11,6 +12,8 @@ import com.illsang.quest.repository.user.QuestHistoryRepository
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
+import java.time.ZoneId
 
 @Service
 @Transactional(readOnly = true)
@@ -21,10 +24,15 @@ class QuestHistoryService(
 
     @Transactional
     fun findOrCreate(userId: String, quest: QuestEntity): UserQuestHistoryEntity {
+        val currentSeasonEvent = SeasonGetCurrentEvent(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+        this.eventPublisher.publishEvent(currentSeasonEvent)
+        val currentSeason = currentSeasonEvent.response
+
         return this.userQuestHistoryRepository.findByUserIdAndQuest(userId, quest)
             ?: UserQuestHistoryEntity(
                 userId = userId,
                 quest = quest,
+                seasonId = currentSeason.seasonId,
             )
     }
 
@@ -51,7 +59,8 @@ class QuestHistoryService(
                 UserPointCreateEvent(
                     userId = questHistory.userId,
                     questId = questHistory.quest.id!!,
-                    request = userPointCreateRequests
+                    request = userPointCreateRequests,
+                    seasonId = questHistory.seasonId,
                 )
             )
         }
@@ -59,5 +68,11 @@ class QuestHistoryService(
 
     fun findCustomerRank(userId: String, questId: Long): Int? =
         this.userQuestHistoryRepository.findCustomerRank(userId, questId)
+
+    fun getCompletedQuestHistoryCount(seasonId: Long?, userId: String): Long {
+        return seasonId?.let {
+            this.userQuestHistoryRepository.countBySeasonIdAndUserId(it, userId)
+        } ?: this.userQuestHistoryRepository.countByUserId(userId)
+    }
 
 }

@@ -8,7 +8,9 @@ import org.springframework.data.jpa.repository.Query
 
 interface QuestHistoryRepository : JpaRepository<UserQuestHistoryEntity, Long> {
     fun findByUserIdAndQuest(userId: String, quest: QuestEntity): UserQuestHistoryEntity?
-    @Query("""
+
+    @Query(
+        """
     SELECT r.rank FROM (
         SELECT uh.userId as userId, 
                DENSE_RANK() OVER (ORDER BY COUNT(uh) DESC) as rank
@@ -17,6 +19,14 @@ interface QuestHistoryRepository : JpaRepository<UserQuestHistoryEntity, Long> {
         GROUP BY uh.userId
     ) r 
     WHERE r.userId = :userId
-""")
-    fun findCustomerRank(userId: String, questId: Long, questHistoryStatus: QuestHistoryStatus = QuestHistoryStatus.COMPLETE): Int?
+"""
+    )
+    fun findCustomerRank(
+        userId: String,
+        questId: Long,
+        questHistoryStatus: QuestHistoryStatus = QuestHistoryStatus.COMPLETE
+    ): Int?
+
+    fun countBySeasonIdAndUserId(seasonId: Long, userId: String): Long
+    fun countByUserId(userId: String): Long
 }

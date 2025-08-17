@@ -52,3 +52,4 @@ docker-compose down
 ```
 
 데이터는 Docker 볼륨에 저장되므로 컨테이너를 재시작해도 데이터가 유지됩니다.
+

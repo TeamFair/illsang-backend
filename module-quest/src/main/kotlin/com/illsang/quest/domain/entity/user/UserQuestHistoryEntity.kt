@@ -16,6 +16,9 @@ class UserQuestHistoryEntity(
     @Column(name = "user_id", nullable = false)
     val userId: String,
 
+    @Column(name = "season_id", nullable = false)
+    val seasonId: Long,
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "quest_id")
     val quest: QuestEntity,

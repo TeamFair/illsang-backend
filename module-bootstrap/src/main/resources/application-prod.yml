@@ -1,7 +1,7 @@
 spring:
   config:
     import:
-      - aws-parameterstore:/ilsang/backend_dev
+      - aws-parameterstore:/ilsang/backend_prod
   application:
     name: module-bootstrap
   datasource:

@@ -5,7 +5,10 @@ import com.illsang.user.dto.request.UpdateUserAreaZoneRequest
 import com.illsang.user.dto.request.UpdateUserNickNameRequest
 import com.illsang.user.dto.request.UpdateUserProfileImageRequest
 import com.illsang.user.dto.request.UpdateUserTitleRequest
+import com.illsang.user.dto.response.UserCommercialPointResponse
 import com.illsang.user.dto.response.UserInfoResponse
+import com.illsang.user.dto.response.UserPointStatisticResponse
+import com.illsang.user.service.UserPointService
 import com.illsang.user.service.UserService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -20,6 +23,7 @@ import org.springframework.web.bind.annotation.*
 @Tag(name = "User Account", description = "사용자 계정 정보")
 class UserInfoController(
     private val userService: UserService,
+    private val userPointService: UserPointService,
 ) {
     @GetMapping
     @PreAuthorize("hasRole('USER')")
@@ -83,6 +87,29 @@ class UserInfoController(
         val user = userService.updateAreaZone(auth.userId, request.commercialAreaCode)
 
         return ResponseEntity.ok(UserInfoResponse.from(user))
+    }
+
+    @GetMapping("/point/commercial")
+    @PreAuthorize("hasRole('USER')")
+    @Operation(operationId = "USI006", summary = "많이 기여한 일상존 포인트 조회")
+    fun getPointByCommercial(
+        @AuthenticationPrincipal auth: AuthenticationModel,
+    ): ResponseEntity<UserCommercialPointResponse> {
+        val points = userPointService.findPointByCommercial(auth.userId)
+
+        return ResponseEntity.ok(points)
+    }
+
+    @GetMapping("/point")
+    @PreAuthorize("hasRole('USER')")
+    @Operation(operationId = "USI007", summary = "내 포인트 조회")
+    fun getMyPoint(
+        @RequestParam seasonId: Long?,
+        @AuthenticationPrincipal auth: AuthenticationModel,
+    ): ResponseEntity<UserPointStatisticResponse> {
+        val result = userPointService.findPointStatistic(auth.userId, seasonId)
+
+        return ResponseEntity.ok(result)
     }
 
 }

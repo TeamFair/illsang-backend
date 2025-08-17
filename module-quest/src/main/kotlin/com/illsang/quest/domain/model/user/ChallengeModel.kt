@@ -1,4 +1,4 @@
-package com.illsang.quest.domain.model.history
+package com.illsang.quest.domain.model.user
 
 import com.illsang.common.domain.model.BaseModel
 import com.illsang.quest.domain.entity.user.UserQuestHistoryEntity

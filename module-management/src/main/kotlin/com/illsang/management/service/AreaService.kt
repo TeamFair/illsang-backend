@@ -1,6 +1,7 @@
 package com.illsang.management.service
 
 import com.illsang.management.domain.entity.CommercialAreaEntity
+import com.illsang.management.domain.model.CommercialAreaModel
 import com.illsang.management.domain.model.MetroAreaModel
 import com.illsang.management.repository.CommercialAreaRepository
 import com.illsang.management.repository.MetroAreaRepository
@@ -23,6 +24,18 @@ class AreaService(
 
     fun existOrThrowCommercialArea(commercialAreaCode: String) =
         this.findCommercialAreaById(commercialAreaCode)
+
+    fun findByMetroCodes(metroAreaCodes: List<String>): List<MetroAreaModel> {
+        val metros = this.metroAreaRepository.findAllById(metroAreaCodes)
+
+        return metros.map(MetroAreaModel::from)
+    }
+
+    fun findByCommercialCodes(commercialAreaCodes: List<String>): List<CommercialAreaModel> {
+        val commercials = this.commercialAreaRepository.findAllById(commercialAreaCodes)
+
+        return commercials.map(CommercialAreaModel::from)
+    }
 
     private fun findCommercialAreaById(id: String): CommercialAreaEntity =
         this.commercialAreaRepository.findByIdOrNull(id)
