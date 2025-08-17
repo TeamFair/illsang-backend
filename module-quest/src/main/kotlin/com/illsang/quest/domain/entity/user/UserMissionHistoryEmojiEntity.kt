@@ -5,13 +5,13 @@ import com.illsang.quest.enums.EmojiType
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "user_mission_history")
+@Table(name = "user_mission_emoji_history")
 class UserMissionHistoryEmojiEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_mission_history_id")
     val missionHistory: UserMissionHistoryEntity,
 

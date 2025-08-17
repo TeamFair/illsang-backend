@@ -12,7 +12,7 @@ class MetroAreaEntity(
     @Column(name = "area_name")
     var areaName: String,
 
-    @Column(name = "image")
+    @Column(name = "images")
     @Convert(converter = StringListConverter::class)
     var images: MutableList<String> = mutableListOf(),
 

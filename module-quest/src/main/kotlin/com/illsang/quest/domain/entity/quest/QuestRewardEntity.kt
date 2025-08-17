@@ -14,26 +14,24 @@ class QuestRewardEntity(
     val id: Long? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "quest_id", nullable = false)
+    @JoinColumn(name = "quest_id")
     var quest: QuestEntity,
 
-    @Column(name = "reward_type", nullable = false, length = 50)
+    @Column(name = "reward_type")
     @Enumerated(EnumType.STRING)
     var rewardType: RewardType,
 
-    @Column(name = "point_type", nullable = false, length = 50)
+    @Column(name = "point_type")
     @Enumerated(EnumType.STRING)
     var pointType: PointType = PointType.NONE,
 
-    @Column(name = "reward_value", nullable = false)
+    @Column(name = "reward_value")
     var point: Int,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "coupon_id")
     var coupon: CouponEntity? = null,
-
-
-    ) : BaseEntity() {
+) : BaseEntity() {
 
     fun update(request: QuestRewardUpdateRequest) {
         this.rewardType = request.rewardType

@@ -11,16 +11,16 @@ class BannerEntity(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    @Column(nullable = false, length = 255)
+    @Column(name = "title")
     var title: String,
 
     @Column(name = "banner_image_id")
     var bannerImageId: String? = null,
 
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "description")
     var description: String? = null,
 
-    @Column(name = "use_yn", nullable = false)
+    @Column(name = "use_yn")
     var useYn: Boolean = false,
 ) : BaseEntity() {
 

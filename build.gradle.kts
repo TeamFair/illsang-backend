@@ -114,10 +114,11 @@ subprojects {
 		developmentOnly("org.springframework.boot:spring-boot-devtools")
 		testImplementation("com.github.codemonstur:embedded-redis:1.4.3")
 		implementation("org.springframework.boot:spring-boot-starter-actuator")
+        implementation("com.github.gavlyukovskiy:p6spy-spring-boot-starter:1.12.0")
 
-		// DB Driver
+        // DB Driver
 		runtimeOnly("com.h2database:h2")
-		runtimeOnly("org.postgresql:postgresql")
+        runtimeOnly("org.postgresql:postgresql")
 
 		// 테스트
 		testImplementation("org.springframework.boot:spring-boot-starter-test")

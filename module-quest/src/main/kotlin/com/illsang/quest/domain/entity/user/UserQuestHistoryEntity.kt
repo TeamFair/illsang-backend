@@ -13,10 +13,10 @@ class UserQuestHistoryEntity(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    @Column(name = "user_id", nullable = false)
+    @Column(name = "user_id")
     val userId: String,
 
-    @Column(name = "season_id", nullable = false)
+    @Column(name = "season_id")
     val seasonId: Long,
 
     @ManyToOne(fetch = FetchType.LAZY)

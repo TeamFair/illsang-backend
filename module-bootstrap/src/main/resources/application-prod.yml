@@ -61,3 +61,8 @@ springdoc:
     oauth:
       client-id: "438475351211-jigqc53mc74ca2gaqnm70ql0il7ak142.apps.googleusercontent.com"
       scopes: "openid,email,profile"
+
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: false

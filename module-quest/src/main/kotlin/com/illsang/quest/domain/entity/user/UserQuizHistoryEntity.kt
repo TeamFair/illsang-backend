@@ -16,11 +16,11 @@ class UserQuizHistoryEntity(
     @JoinColumn(name = "quiz_id")
     val quiz: QuizEntity,
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "quiz_answer_id")
     val quizAnswer: QuizAnswerEntity,
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_mission_history_id")
     val missionHistory: UserMissionHistoryEntity,
 

@@ -12,13 +12,13 @@ class SeasonEntity(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    @Column(name = "season_number", nullable = false, unique = true)
+    @Column(name = "season_number")
     var seasonNumber: Int,
 
-    @Column(name = "start_date", nullable = false)
+    @Column(name = "start_date")
     var startDate: LocalDateTime,
 
-    @Column(name = "end_date", nullable = false)
+    @Column(name = "end_date")
     var endDate: LocalDateTime,
 ) : BaseEntity() {
 

@@ -12,14 +12,14 @@ class UserMissionHistoryEntity(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    @Column(name = "user_id", nullable = false)
+    @Column(name = "user_id")
     val userId: String,
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "mission_id")
     val mission: MissionEntity,
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_quest_history_id")
     val questHistory: UserQuestHistoryEntity,
 

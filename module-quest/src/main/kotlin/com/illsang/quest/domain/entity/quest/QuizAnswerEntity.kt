@@ -12,10 +12,10 @@ class QuizAnswerEntity(
     val id: Long? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "quiz_id", nullable = false)
+    @JoinColumn(name = "quiz_id")
     var quiz: QuizEntity,
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(name = "answer")
     var answer: String,
 
     @Column(name = "sort_order")

@@ -16,17 +16,17 @@ class UserEntity(
     @GeneratedValue(strategy = GenerationType.UUID)
     val id: String? = null,
 
-    @Column(nullable = false, unique = true, length = 100)
+    @Column(name = "email")
     var email: String,
 
-    @Column(nullable = false, length = 50)
+    @Column(name = "channel")
     @Enumerated(EnumType.STRING)
     var channel: OAuthProvider,
 
-    @Column(nullable = false, length = 25)
+    @Column(name = "nickname")
     var nickname: String,
 
-    @Column(nullable = false, length = 20)
+    @Column(name = "status")
     @Enumerated(EnumType.STRING)
     var status: UserStatus,
 
@@ -36,7 +36,7 @@ class UserEntity(
     @Column(name = "profile_image_id")
     var profileImageId: String? = null,
 
-    @OneToOne(fetch = FetchType.EAGER, cascade = [CascadeType.ALL], orphanRemoval = true)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "current_title_id")
     var currentTitle: UserTitleEntity? = null,
 
@@ -46,7 +46,7 @@ class UserEntity(
     @Column(name = "commercial_area_updated_at")
     var commercialAreaUpdatedAt: LocalDateTime? = null,
 
-    @Column(name = "roles", length = 500)
+    @Column(name = "roles")
     @Convert(converter = StringListConverter::class)
     var roles: List<String> = emptyList(),
 

@@ -9,13 +9,13 @@ class CommercialAreaEntity(
     @Id
     val code: String,
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "area_name")
     var areaName: String,
 
-    @Column(nullable = false)
+    @Column(name = "description")
     var description: String,
 
-    @Column(name = "image")
+    @Column(name = "images")
     @Convert(converter = StringListConverter::class)
     var images: MutableList<String> = mutableListOf(),
 

@@ -14,13 +14,13 @@ class QuestEntity(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    @Column(nullable = false)
+    @Column(name = "title")
     var title: String,
 
     @Column(name = "image_id")
     var imageId: String? = null,
 
-    @Column(name = "writer_name", length = 100)
+    @Column(name = "writer_name")
     var writerName: String,
 
     @Column(name = "main_image_id")
@@ -29,11 +29,11 @@ class QuestEntity(
     @Column(name = "popular_yn")
     var popularYn: Boolean = false,
 
-    @Column(nullable = false, length = 50)
+    @Column(name = "type")
     @Enumerated(EnumType.STRING)
     var type: QuestType,
 
-    @Column(name = "repeat_frequency", length = 50)
+    @Column(name = "repeat_frequency")
     @Enumerated(EnumType.STRING)
     var repeatFrequency: QuestRepeatFrequency? = null,
 
@@ -49,7 +49,7 @@ class QuestEntity(
     @Column(name = "commercial_area_code")
     var commercialAreaCode: String,
 
-    @Column(name = "use_yn", nullable = false)
+    @Column(name = "use_yn")
     var useYn: Boolean = false,
 
     @Column(name = "total_point")

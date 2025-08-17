@@ -1,24 +1,26 @@
 spring:
+  config:
+    import:
+      - aws-parameterstore:/ilsang/backend_dev
   application:
     name: module-bootstrap
   datasource:
-    url: jdbc:postgresql://localhost:5432/illsang
-    username: illsang
-    password: illsang
+    url: ${.rds_url}
+    username: ${.rds_username}
+    password: ${.rds_password}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: none
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: true
-    show-sql: true
+        default_batch_fetch_size: 100
   data:
     redis:
-      host: localhost
-      port: 6379
-      useSsl: false
+      host: ${.elastic_cache_endpoint}
+      port: ${.elastic_cache_port}
+      useSsl: true
 
 oauth:
   token:
@@ -46,13 +48,6 @@ management:
       exposure:
         include: "*"  # "health", "info", "metrics"
 
-logging:
-  level:
-    root: INFO
-    com.illsang: INFO
-    org.hibernate.SQL: DEBUG
-    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
-
 cloud:
   bucket:
     name: illsang
@@ -65,3 +60,11 @@ springdoc:
     oauth:
       client-id: "438475351211-jigqc53mc74ca2gaqnm70ql0il7ak142.apps.googleusercontent.com"
       scopes: "openid,email,profile"
+
+decorator:
+  datasource:
+    p6spy:
+      enable-logging: true
+      logging: slf4j
+      log-format: "%(executionTime)ms|%(category)|connection %(connectionId)|\n%(sql)"
+      exclude categories: commit

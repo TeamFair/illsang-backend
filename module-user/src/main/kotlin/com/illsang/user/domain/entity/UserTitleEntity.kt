@@ -13,7 +13,7 @@ class UserTitleEntity(
     val id: Long? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     var user: UserEntity,
 
     @Column(name = "title_id")

@@ -7,19 +7,19 @@ import java.io.Serializable
 @Embeddable
 data class UserPointKey(
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     var user: UserEntity,
 
-    @Column(name = "season_id", nullable = false)
+    @Column(name = "season_id")
     val seasonId: Long,
 
-    @Column(name = "metro_area_code", nullable = false)
+    @Column(name = "metro_area_code")
     val metroAreaCode: String,
 
-    @Column(name = "commercial_area_code", nullable = false)
+    @Column(name = "commercial_area_code")
     val commercialAreaCode: String,
 
-    @Column(name = "point_type", nullable = false)
+    @Column(name = "point_type")
     @Enumerated(EnumType.STRING)
     var pointType: PointType,
 ): Serializable

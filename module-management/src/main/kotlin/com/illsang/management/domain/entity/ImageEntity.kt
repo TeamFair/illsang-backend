@@ -10,13 +10,14 @@ class ImageEntity(
     @Id
     val id: String,
 
+    @Column(name = "type")
     @Enumerated(EnumType.STRING)
     var type: ImageType,
 
-    @Column(nullable = false, length = 255)
+    @Column(name = "file_name")
     var fileName: String,
 
-    @Column(nullable = false)
+    @Column(name = "file_size")
     var fileSize: Long,
 ) : BaseEntity() {
     init {

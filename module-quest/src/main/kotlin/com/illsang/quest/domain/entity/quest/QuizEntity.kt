@@ -12,13 +12,13 @@ class QuizEntity(
     val id: Long? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "mission_id", nullable = false)
+    @JoinColumn(name = "mission_id")
     var mission: MissionEntity,
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(name = "question")
     var question: String,
 
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "hint")
     var hint: String? = null,
 
     @Column(name = "sort_order")
