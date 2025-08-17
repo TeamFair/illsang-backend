@@ -58,7 +58,7 @@ springdoc:
     tagsSorter: alpha
     display-operation-id: true
     oauth:
-      client-id: "438475351211-jigqc53mc74ca2gaqnm70ql0il7ak142.apps.googleusercontent.com"
+      client-id: "702150906844-vt983n76k0dkkvnlatr894lfi9po4aq1.apps.googleusercontent.com"
       scopes: "openid,email,profile"
 
 decorator:
