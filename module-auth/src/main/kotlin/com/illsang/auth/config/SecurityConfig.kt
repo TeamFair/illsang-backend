@@ -53,7 +53,8 @@ class SecurityConfig(
                 "/h2-console/**",
                 "/api/v1/open/**",
                 "/swagger-ui/**",
-                "/v3/api-docs/**"
+                "/v3/api-docs/**",
+                "/actuator/**"
             )
             .csrf { it.disable() }
             .cors { it.disable() }
