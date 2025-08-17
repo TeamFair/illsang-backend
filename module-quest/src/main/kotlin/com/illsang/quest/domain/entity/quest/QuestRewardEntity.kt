@@ -26,8 +26,14 @@ class QuestRewardEntity(
     var pointType: PointType = PointType.NONE,
 
     @Column(name = "reward_value", nullable = false)
-    var point: Int
-) : BaseEntity() {
+    var point: Int,
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "coupon_id")
+    var coupon: CouponEntity? = null,
+
+
+    ) : BaseEntity() {
 
     fun update(request: QuestRewardUpdateRequest) {
         this.rewardType = request.rewardType
