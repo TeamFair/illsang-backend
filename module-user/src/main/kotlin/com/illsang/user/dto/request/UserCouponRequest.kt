@@ -16,3 +16,7 @@ data class UserCouponUpdateRequest(
     val couponUseYn: Boolean? = null,
     val couponExpireYn: Boolean? = null
 )
+
+data class CouponPasswordVerifyRequest(
+    val password: String
+)

@@ -15,19 +15,19 @@ import java.time.LocalDateTime
 class UserCouponEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false, updatable = false)
+    @Column(name = "id",  updatable = false)
     var id: Long? = null,
 
-    @Column(name = "user_id", nullable = false)
+    @Column(name = "user_id")
     var userId: Long = 0,
 
-    @Column(name = "coupon_id", nullable = false)
+    @Column(name = "coupon_id")
     var couponId: Long = 0,
 
-    @Column(name = "use_yn", nullable = false)
+    @Column(name = "use_yn")
     var couponUseYn: Boolean = false,
 
-    @Column(name = "expire_yn", nullable = false)
+    @Column(name = "expire_yn")
     var couponExpireYn: Boolean = false,
 
     @Column(name = "used_at")
@@ -54,7 +54,6 @@ class UserCouponEntity(
         ensureNotUsed()
         this.couponUseYn = true
         this.usedAt = LocalDateTime.now()
-        this.updatedAt = LocalDateTime.now()
     }
 
 
@@ -85,9 +84,6 @@ class UserCouponEntity(
                 // 이미 미만료이면 변화 없음
             }
         }
-
-        // 도메인 명령에서 타임스탬프 처리하므로 여기서는 마지막 보정만
-        this.updatedAt = LocalDateTime.now()
     }
 
 

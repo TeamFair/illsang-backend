@@ -23,20 +23,20 @@ class CouponEntity(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", nullable = false, updatable = false)
+    @Column(name = "id", updatable = false)
     var id: Long? = null,
 
-    @Column(name = "coupon_type", nullable = false, length = 20)
+    @Column(name = "coupon_type")
     @Enumerated(EnumType.STRING)
     var type: CouponType,
 
-    @Column(name = "name", nullable = false, length = 100)
+    @Column(name = "name")
     var name: String = "",
 
     @Column(name = "image_id")
     var imageId: String? = null,
 
-    @Column(name = "password", length = 255)
+    @Column(name = "password")
     var password: String? = null,
 
     @Column(name = "valid_from")
@@ -48,7 +48,7 @@ class CouponEntity(
     @Column(name = "store_id")
     var storeId: Long? = null,
 
-    @Column(name = "description", length = 100)
+    @Column(name = "description")
     var description: String? = null,
 
     @OneToMany(mappedBy = "coupon", cascade = [CascadeType.ALL], orphanRemoval = false)

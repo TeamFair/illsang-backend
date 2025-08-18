@@ -2,9 +2,7 @@ package com.illsang.quest.controller.quest
 
 
 import com.illsang.quest.dto.request.quest.CouponCreateRequest
-import com.illsang.quest.dto.request.quest.CouponPasswordVerifyRequest
 import com.illsang.quest.dto.request.quest.CouponUpdateRequest
-import com.illsang.quest.dto.response.quest.CouponPasswordVerifyResponse
 import com.illsang.quest.dto.response.quest.CouponResponse
 import com.illsang.quest.service.quest.CouponService
 import io.swagger.v3.oas.annotations.Operation
@@ -31,7 +29,7 @@ class CouponController(
 
     @PostMapping()
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "쿠폰 생성")
+    @Operation(operationId = "COP001", summary = "쿠폰 생성")
     fun create(@RequestBody request: CouponCreateRequest): ResponseEntity<CouponResponse> {
         val model = couponService.create(request)
         return ResponseEntity.status(HttpStatus.CREATED).body(CouponResponse.from(model))
@@ -39,7 +37,7 @@ class CouponController(
 
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "쿠폰 상세 조회")
+    @Operation(operationId = "COP002", summary = "쿠폰 상세 조회")
     fun getById(@PathVariable id: Long): ResponseEntity<CouponResponse> {
         val model = couponService.getById(id)
         return ResponseEntity.ok(CouponResponse.from(model))
@@ -47,7 +45,7 @@ class CouponController(
 
     @GetMapping("/store/{storeId}")
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "소상공인 ID 별 리스트조회")
+    @Operation(operationId = "COP003", summary = "소상공인 ID 별 리스트조회")
     fun listByStore(@PathVariable storeId: Long): ResponseEntity<List<CouponResponse>> {
         val models = couponService.listByStore(storeId)
         return ResponseEntity.ok(models.map(CouponResponse::from))
@@ -55,7 +53,7 @@ class CouponController(
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "쿠폰 수정")
+    @Operation(operationId = "COP004", summary = "쿠폰 수정")
     fun update(
         @PathVariable id: Long,
         @RequestBody request: CouponUpdateRequest
@@ -66,23 +64,9 @@ class CouponController(
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(summary = "쿠폰 삭제")
+    @Operation(operationId = "COP005", summary = "쿠폰 삭제")
     fun delete(@PathVariable id: Long): ResponseEntity<Void> {
         couponService.delete(id)
         return ResponseEntity.noContent().build()
     }
-
-    @PostMapping("/{id}/verify-password")
-    @PreAuthorize("hasRole('USER')")
-    @Operation(summary = "쿠폰 비밀번호 검증")
-    fun verifyPassword(
-        @PathVariable id: Long,
-        @RequestBody request: CouponPasswordVerifyRequest
-    ): ResponseEntity<CouponPasswordVerifyResponse> {
-        val success = couponService.verifyPassword(id, request.password)
-        return ResponseEntity.ok(CouponPasswordVerifyResponse(success))
-    }
-
-
-
 }

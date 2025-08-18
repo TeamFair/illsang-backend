@@ -1,4 +1,4 @@
-package com.illsang.common.event.management.coupon
+package com.illsang.common.event.user.coupon
 
 data class CouponExistOrThrowEvent (
     val couponId: Long

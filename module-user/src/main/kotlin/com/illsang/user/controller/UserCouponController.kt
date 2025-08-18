@@ -1,7 +1,9 @@
 package com.illsang.user.controller
 
+import com.illsang.user.dto.request.CouponPasswordVerifyRequest
 import com.illsang.user.dto.request.UserCouponCreateRequest
 import com.illsang.user.dto.request.UserCouponUpdateRequest
+import com.illsang.user.dto.response.CouponPasswordVerifyResponse
 import com.illsang.user.dto.response.UserCouponResponse
 import com.illsang.user.service.UserCouponService
 import io.swagger.v3.oas.annotations.Operation
@@ -26,14 +28,16 @@ class UserCouponController(
 ) {
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @Operation(operationId = "USC001", summary = "사용자 쿠폰 상세 조회")
     fun getById(@PathVariable id: Long): ResponseEntity<UserCouponResponse> {
         val model = userCouponService.getById(id)
         return ResponseEntity.ok(UserCouponResponse.from(model))
     }
 
     @GetMapping("/by-user/{userId}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @Operation(operationId = "USC002", summary = "사용자 쿠폰 사용자ID 별 리스트 조회")
     fun listByUser(
         @PathVariable userId: Long,
         @RequestParam(defaultValue = "0") page: Int,
@@ -44,14 +48,16 @@ class UserCouponController(
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @Operation(operationId = "USC003", summary = "사용자 쿠폰 생성")
     fun create(@RequestBody request: UserCouponCreateRequest): ResponseEntity<UserCouponResponse> {
         val model = userCouponService.create(request)
         return ResponseEntity.status(HttpStatus.CREATED).body(UserCouponResponse.from(model))
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @Operation(operationId = "USC004", summary = "사용자 쿠폰 수정")
     fun update(
         @PathVariable id: Long,
         @RequestBody request: UserCouponUpdateRequest
@@ -60,5 +66,15 @@ class UserCouponController(
         return ResponseEntity.ok(UserCouponResponse.from(model))
     }
 
+    @PostMapping("/{id}/verify-password")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @Operation(operationId = "USC005", summary = "사용자 쿠폰 비밀번호 검증")
+    fun verifyPassword(
+        @PathVariable id: Long,
+        @RequestBody request: CouponPasswordVerifyRequest
+    ): ResponseEntity<CouponPasswordVerifyResponse> {
+        val success = userCouponService.verifyPassword(id, request.password)
+        return ResponseEntity.ok(CouponPasswordVerifyResponse(success))
+    }
 
 }

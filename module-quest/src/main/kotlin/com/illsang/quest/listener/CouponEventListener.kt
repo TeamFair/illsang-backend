@@ -1,6 +1,6 @@
 package com.illsang.quest.listener
 
-import com.illsang.common.event.management.coupon.CouponExistOrThrowEvent
+import com.illsang.common.event.user.coupon.CouponExistOrThrowEvent
 import com.illsang.quest.service.quest.CouponService
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component

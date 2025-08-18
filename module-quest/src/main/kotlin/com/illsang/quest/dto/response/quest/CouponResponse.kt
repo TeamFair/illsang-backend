@@ -29,6 +29,4 @@ data class CouponResponse(
 }
 
 
-data class CouponPasswordVerifyResponse(
-    val success: Boolean
-)
+

@@ -42,8 +42,6 @@ data class CouponUpdateRequest(
     val description: String? = null
 )
 
-data class CouponPasswordVerifyRequest(
-    val password: String
-)
+
 
 
