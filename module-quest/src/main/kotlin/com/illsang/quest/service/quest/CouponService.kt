@@ -67,21 +67,25 @@ class CouponService(
 
         coupon.validFrom?.let {
             if (now.isBefore(it)) {
-                throw IllegalStateException("유효기간 시작 전 쿠폰은 발급할 수 없습니다. couponId=${id}")
+                throw IllegalArgumentException("유효기간 시작 전 쿠폰은 발급할 수 없습니다. couponId=${id}")
             }
         }
         coupon.validTo?.let {
             if (now.isAfter(it)) {
-                throw IllegalStateException("이미 만료된 쿠폰은 발급할 수 없습니다. couponId=${id}")
+                throw IllegalArgumentException("이미 만료된 쿠폰은 발급할 수 없습니다. couponId=${id}")
             }
         }
     }
 
 
-    fun verifyPassword(id: Long, rawPassword: String): Boolean {
+    fun verifyPassword(id: Long, rawPassword: String) {
         val entity = findById(id)
-        val stored = entity.password ?: return false
-        return PasswordUtil.matches(rawPassword, stored)
+        val storedPassword = entity.password
+        storedPassword?.let {
+            if(!PasswordUtil.matches(rawPassword, it)){
+                throw IllegalArgumentException("비밀번호가 틀렸습니다.")
+            }
+        }
     }
 
 }

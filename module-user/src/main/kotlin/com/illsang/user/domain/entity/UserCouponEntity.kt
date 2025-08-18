@@ -66,7 +66,7 @@ class UserCouponEntity(
             } else {
                 // 한 번 사용된 쿠폰은 미사용으로 되돌릴 수 없음
                 if (this.couponUseYn) {
-                    throw IllegalStateException("이미 사용된 쿠폰은 미사용으로 되돌릴 수 없습니다.")
+                    throw IllegalArgumentException("이미 사용된 쿠폰은 미사용으로 되돌릴 수 없습니다.")
                 }
                 // 이미 미사용이면 변화 없음
             }
@@ -79,7 +79,7 @@ class UserCouponEntity(
             } else {
                 // 한 번 만료되면 만료 해제 불가
                 if (this.couponExpireYn) {
-                    throw IllegalStateException("이미 만료된 쿠폰은 만료 해제할 수 없습니다.")
+                    throw IllegalArgumentException("이미 만료된 쿠폰은 만료 해제할 수 없습니다.")
                 }
                 // 이미 미만료이면 변화 없음
             }
@@ -89,20 +89,20 @@ class UserCouponEntity(
 
     private fun ensureNotExpired() {
         if (this.couponExpireYn) {
-            throw IllegalStateException("만료된 쿠폰은 사용할 수 없습니다.")
+            throw IllegalArgumentException("만료된 쿠폰은 사용할 수 없습니다.")
         }
     }
 
     private fun ensureNotUsed() {
         if (this.couponUseYn) {
-            throw IllegalStateException("이미 사용된 쿠폰은 다시 사용할 수 없습니다.")
+            throw IllegalArgumentException("이미 사용된 쿠폰은 다시 사용할 수 없습니다.")
         }
     }
 
     // 만료 명령: 만료 해제 금지 정책 강제
     fun expire() {
         if (this.couponExpireYn) {
-            throw IllegalStateException("이미 만료된 쿠폰은 만료 해제할 수 없습니다.")
+            throw IllegalArgumentException("이미 만료된 쿠폰은 만료 해제할 수 없습니다.")
         }
         this.couponExpireYn = true
         this.updatedAt = LocalDateTime.now()

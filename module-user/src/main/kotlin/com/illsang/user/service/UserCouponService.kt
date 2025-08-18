@@ -1,7 +1,7 @@
 package com.illsang.user.service
 
 import com.illsang.common.event.user.coupon.CouponExistOrThrowEvent
-import com.illsang.common.port.coupon.CouponVerificationPort
+import com.illsang.common.event.user.coupon.CouponPasswordVerificationOrThrowEvent
 import com.illsang.user.domain.entity.UserCouponEntity
 import com.illsang.user.domain.model.UserCouponModel
 import com.illsang.user.dto.request.UserCouponCreateRequest
@@ -17,8 +17,7 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional(readOnly = true)
 class UserCouponService(
     private val userCouponRepository: UserCouponRepository,
-    private val eventPublisher: ApplicationEventPublisher,
-    private val couponVerificationPort: CouponVerificationPort
+    private val eventPublisher: ApplicationEventPublisher
 ) {
 
     fun getById(id: Long): UserCouponModel {
@@ -54,10 +53,12 @@ class UserCouponService(
         return UserCouponModel.from(entity)
     }
 
-    fun verifyPassword(id: Long, rawPassword: String): Boolean {
+    fun verifyPassword(id: Long, rawPassword: String) {
         val userCoupon = userCouponRepository.findByIdOrNull(id)
             ?: throw IllegalArgumentException("존재하지 않는 유저쿠폰입니다. id=$id")
-        return couponVerificationPort.verifyPassword(userCoupon.couponId, rawPassword)
+
+        eventPublisher.publishEvent(CouponPasswordVerificationOrThrowEvent(userCoupon.couponId, rawPassword))
+
     }
 
     private fun findById(id: Long): UserCouponEntity =

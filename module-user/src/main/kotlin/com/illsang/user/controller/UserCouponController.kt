@@ -73,8 +73,8 @@ class UserCouponController(
         @PathVariable id: Long,
         @RequestBody request: CouponPasswordVerifyRequest
     ): ResponseEntity<CouponPasswordVerifyResponse> {
-        val success = userCouponService.verifyPassword(id, request.password)
-        return ResponseEntity.ok(CouponPasswordVerifyResponse(success))
+        userCouponService.verifyPassword(id, request.password)
+        return ResponseEntity.ok(CouponPasswordVerifyResponse(true))
     }
 
 }
