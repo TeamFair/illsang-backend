@@ -1,5 +1,7 @@
 package com.illsang.common.config
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition
+import io.swagger.v3.oas.annotations.servers.Server
 import io.swagger.v3.oas.models.Components
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.security.*
@@ -10,6 +12,13 @@ import org.springframework.context.annotation.Configuration
 import org.springframework.security.access.prepost.PreAuthorize
 import java.lang.reflect.Method
 
+@OpenAPIDefinition(
+    servers = [
+        Server(url = "https://api-dev.illsangtech.com", description = "illsang 개발"),
+        Server(url = "https://api.illsangtech.com", description = "illsang 운영"),
+        Server(url = "http://localhost:8080", description = "로컬")
+    ]
+)
 @Configuration
 class OpenApiConfig {
 
