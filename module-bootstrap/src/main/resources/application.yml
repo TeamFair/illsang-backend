@@ -41,6 +41,7 @@ jwt:
 
 server:
   port: 8080
+  forward-headers-strategy: framework
 
 management:
   endpoints:
@@ -68,4 +69,3 @@ decorator:
       logging: slf4j
       log-format: "%(executionTime)ms|%(category)|connection %(connectionId)|\n%(sql)"
       exclude categories: commit
-
