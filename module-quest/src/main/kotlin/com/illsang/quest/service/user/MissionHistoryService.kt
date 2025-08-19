@@ -76,16 +76,20 @@ class MissionHistoryService(
     fun findLikeCountByMissionId(questId: Long) =
         this.missionHistoryRepository.findTop3ByMissionIdOrderByLikeCountDesc(questId)
 
-    fun findAllRandom(pageable: Pageable): Page<MissionHistoryRandomResponse> {
+    fun findAllRandom(userId: String, pageable: Pageable): Page<MissionHistoryRandomResponse> {
         val missionHistory = this.missionHistoryRepository.findAllRandom(MissionType.PHOTO, pageable)
 
         val usersEvent = UserInfoGetEvent(missionHistory.content.map { it.userId })
         this.eventPublisher.publishEvent(usersEvent)
 
+        val userEmojiHistory =
+            this.missionHistoryEmojiRepository.findByUserIdAndMissionHistoryIn(userId, missionHistory.content)
+
         return missionHistory.map {
             MissionHistoryRandomResponse.from(
                 missionHistory = it,
-                userInfo = usersEvent.response.find { user -> it.userId == user.userId }!!
+                userInfo = usersEvent.response.find { user -> it.userId == user.userId }!!,
+                userEmojiHistory = userEmojiHistory,
             )
         }
     }

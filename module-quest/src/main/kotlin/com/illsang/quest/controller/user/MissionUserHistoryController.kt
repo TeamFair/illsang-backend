@@ -26,11 +26,12 @@ class MissionUserHistoryController(
 
     @GetMapping("/random")
     @PreAuthorize("hasRole('USER')")
-    @Operation(operationId = "MIU001", summary = "이력 조회")
+    @Operation(operationId = "MIU001", summary = "랜덤 이력 조회")
     fun selectAllRandom(
         @ParameterObject @PageableDefault(size = 10) pageable: Pageable,
+        @AuthenticationPrincipal authenticationModel: AuthenticationModel,
     ): ResponseEntity<Page<MissionHistoryRandomResponse>> {
-        val missionHistories = this.missionHistoryService.findAllRandom(pageable)
+        val missionHistories = this.missionHistoryService.findAllRandom(authenticationModel.userId, pageable)
 
         return ResponseEntity.ok(missionHistories)
     }
@@ -73,14 +74,16 @@ class MissionUserHistoryController(
         return ResponseEntity.ok().build()
     }
 
-    @DeleteMapping("/owner")
+    @GetMapping
     @PreAuthorize("hasRole('USER')")
     @Operation(operationId = "MIU005", summary = "수행한 퀘스트 이력")
     fun selectAllOwner(
         @ParameterObject @PageableDefault(size = 10) pageable: Pageable,
+        @RequestParam(required = false) userId: String?,
         @AuthenticationPrincipal authenticationModel: AuthenticationModel,
     ): ResponseEntity<Page<MissionHistoryOwnerResponse>> {
-        val missionHistories = this.missionHistoryService.findByUserId(authenticationModel.userId, pageable)
+        val userId = userId?.let { authenticationModel.userId }
+        val missionHistories = this.missionHistoryService.findByUserId(userId!!, pageable)
 
         return ResponseEntity.ok(missionHistories)
     }
