@@ -119,3 +119,23 @@ data class UserPointStatisticResponse(
         }
     }
 }
+
+data class UserPointSummaryResponse(
+    val topMetroAreaCode: String?,
+    val topCommercialAreaCode: String?,
+    val topContributionPoint: Long?
+) {
+    companion object {
+        fun from(
+            topMetroAreaCode: String?,
+            topCommercialAreaCode: String?,
+            topContributionPoint: Long?
+        ): UserPointSummaryResponse {
+            return UserPointSummaryResponse(
+                topMetroAreaCode = topMetroAreaCode,
+                topCommercialAreaCode = topCommercialAreaCode,
+                topContributionPoint = topContributionPoint,
+            )
+        }
+    }
+}

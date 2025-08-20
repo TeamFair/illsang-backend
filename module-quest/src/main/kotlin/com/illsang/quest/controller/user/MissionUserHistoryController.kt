@@ -82,8 +82,8 @@ class MissionUserHistoryController(
         @RequestParam(required = false) userId: String?,
         @AuthenticationPrincipal authenticationModel: AuthenticationModel,
     ): ResponseEntity<Page<MissionHistoryOwnerResponse>> {
-        val userId = userId?.let { authenticationModel.userId }
-        val missionHistories = this.missionHistoryService.findByUserId(userId!!, pageable)
+        val userId = userId ?: authenticationModel.userId
+        val missionHistories = this.missionHistoryService.findByUserId(userId, pageable)
 
         return ResponseEntity.ok(missionHistories)
     }

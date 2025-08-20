@@ -6,10 +6,7 @@ import com.illsang.common.event.user.point.UserPointCreateRequest
 import com.illsang.user.domain.entity.UserPointHistoryEntity
 import com.illsang.user.domain.entity.UserPointKey
 import com.illsang.user.domain.model.UserRankModel
-import com.illsang.user.dto.response.UserCommercialContributionResponse
-import com.illsang.user.dto.response.UserCommercialPointResponse
-import com.illsang.user.dto.response.UserPointStatisticResponse
-import com.illsang.user.dto.response.UserTopCommercialPointResponse
+import com.illsang.user.dto.response.*
 import com.illsang.user.repository.UserPointHistoryRepository
 import com.illsang.user.repository.UserPointRepository
 import org.springframework.context.ApplicationEventPublisher
@@ -138,6 +135,35 @@ class UserPointService(
             metroAreaPoint = ownerPointStatistic.findLast { it.first == PointType.METRO }?.second ?: 0,
             commercialAreaPoint = ownerPointStatistic.findLast { it.first == PointType.COMMERCIAL }?.second ?: 0,
             contributionPoint = ownerPointStatistic.findLast { it.first == PointType.CONTRIBUTION }?.second ?: 0,
+        )
+    }
+
+    fun findPointSeasonSummary(userId: String, seasonId: Long): UserPointSummaryResponse {
+        val userPoints = this.userPointRepository.findById_User_IdAndId_SeasonId(userId, seasonId)
+
+        val topMetroAreaCode = userPoints
+            .filter { it.id.pointType == PointType.METRO }
+            .groupingBy { it.id.metroAreaCode }
+            .fold(0L) { total, pointEntity -> total + pointEntity.point }
+            .maxByOrNull { it.value }
+            ?.key
+        val topCommercialAreaCode = userPoints
+            .filter { it.id.pointType == PointType.COMMERCIAL }
+            .groupingBy { it.id.commercialAreaCode }
+            .fold(0L) { total, pointEntity -> total + pointEntity.point }
+            .maxByOrNull { it.value }
+            ?.key
+        val topContributionPoint = userPoints
+            .filter { it.id.pointType == PointType.CONTRIBUTION }
+            .groupingBy { it.id.commercialAreaCode }
+            .fold(0L) { total, pointEntity -> total + pointEntity.point }
+            .maxByOrNull { it.value }
+            ?.value
+
+        return UserPointSummaryResponse.from(
+            topMetroAreaCode = topMetroAreaCode,
+            topCommercialAreaCode = topCommercialAreaCode,
+            topContributionPoint,
         )
     }
 

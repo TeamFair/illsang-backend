@@ -8,6 +8,7 @@ import com.illsang.user.dto.request.UpdateUserTitleRequest
 import com.illsang.user.dto.response.UserCommercialPointResponse
 import com.illsang.user.dto.response.UserInfoResponse
 import com.illsang.user.dto.response.UserPointStatisticResponse
+import com.illsang.user.dto.response.UserPointSummaryResponse
 import com.illsang.user.service.UserPointService
 import com.illsang.user.service.UserService
 import io.swagger.v3.oas.annotations.Operation
@@ -93,9 +94,11 @@ class UserInfoController(
     @PreAuthorize("hasRole('USER')")
     @Operation(operationId = "USI006", summary = "많이 기여한 일상존 포인트 조회")
     fun getPointByCommercial(
+        @RequestParam(required = false) userId: String?,
         @AuthenticationPrincipal auth: AuthenticationModel,
     ): ResponseEntity<UserCommercialPointResponse> {
-        val points = userPointService.findPointByCommercial(auth.userId)
+        val userId = userId ?: auth.userId
+        val points = userPointService.findPointByCommercial(userId)
 
         return ResponseEntity.ok(points)
     }
@@ -104,10 +107,24 @@ class UserInfoController(
     @PreAuthorize("hasRole('USER')")
     @Operation(operationId = "USI007", summary = "내 포인트 조회")
     fun getMyPoint(
+        @RequestParam(required = false) userId: String?,
         @RequestParam seasonId: Long?,
         @AuthenticationPrincipal auth: AuthenticationModel,
     ): ResponseEntity<UserPointStatisticResponse> {
-        val result = userPointService.findPointStatistic(auth.userId, seasonId)
+        val userId = userId ?: auth.userId
+        val result = userPointService.findPointStatistic(userId, seasonId)
+
+        return ResponseEntity.ok(result)
+    }
+
+    @GetMapping("/point/summary")
+    @PreAuthorize("hasRole('USER')")
+    @Operation(operationId = "USI008", summary = "시즌 요약")
+    fun getSeasonSummary(
+        @RequestParam seasonId: Long,
+        @AuthenticationPrincipal auth: AuthenticationModel,
+    ): ResponseEntity<UserPointSummaryResponse> {
+        val result = userPointService.  findPointSeasonSummary(auth.userId, seasonId)
 
         return ResponseEntity.ok(result)
     }
