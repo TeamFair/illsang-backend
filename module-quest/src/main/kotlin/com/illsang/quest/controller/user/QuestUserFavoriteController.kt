@@ -12,7 +12,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/vi/quest/user/favorite")
+@RequestMapping("/api/v1/quest/user/favorite")
 @Tag(name = "Quest User Favorite", description = "사용자 퀘스트 즐겨찾기")
 class QuestUserFavoriteController(
     private val questUserQuestFavoriteService: UserQuestFavoriteService,

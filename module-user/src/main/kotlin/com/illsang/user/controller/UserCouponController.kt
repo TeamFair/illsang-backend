@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("/api/vi/user/coupon")
+@RequestMapping("/api/v1/user/coupon")
 @Tag(name = "Coupon User", description = "쿠폰 사용자")
 class UserCouponController(
     private val userCouponService: UserCouponService

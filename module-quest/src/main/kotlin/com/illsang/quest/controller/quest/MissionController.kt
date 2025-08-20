@@ -14,7 +14,7 @@ import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/vi/mission")
+@RequestMapping("/api/v1/mission")
 @Tag(name = "Mission", description = "미션")
 class MissionController(
     private val missionService: MissionService,
