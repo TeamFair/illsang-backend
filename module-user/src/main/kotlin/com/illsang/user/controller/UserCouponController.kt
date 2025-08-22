@@ -39,7 +39,7 @@ class UserCouponController(
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @Operation(operationId = "USC002", summary = "사용자 쿠폰 사용자ID 별 리스트 조회")
     fun listByUser(
-        @PathVariable userId: Long,
+        @PathVariable userId: String,
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "20") size: Int
     ): ResponseEntity<List<UserCouponResponse>> {
@@ -76,5 +76,4 @@ class UserCouponController(
         userCouponService.verifyPassword(id, request.password)
         return ResponseEntity.ok(CouponPasswordVerifyResponse(true))
     }
-
 }

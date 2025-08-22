@@ -35,7 +35,7 @@ class CouponService(
         return CouponModel.from(entity)
     }
 
-    fun listByStore(storeId: Long): List<CouponModel> {
+    fun listByStore(storeId: String): List<CouponModel> {
         return couponRepository.findAllByStoreId(storeId).map(CouponModel::from)
     }
 
@@ -51,9 +51,10 @@ class CouponService(
     }
 
     @Transactional
-    fun delete(id: Long) {
-        val entity = findById(id)
-        couponRepository.delete(entity)
+    fun softDelete(id: Long) {
+        val entity = this.findById(id)
+        if (entity.deleteYn) return
+        entity.deleteYn = true
     }
 
     private fun findById(id: Long): CouponEntity {
@@ -67,13 +68,17 @@ class CouponService(
 
         coupon.validFrom?.let {
             if (now.isBefore(it)) {
-                throw IllegalArgumentException("유효기간 시작 전 쿠폰은 발급할 수 없습니다. couponId=${id}")
+                throw IllegalArgumentException("유효기간 시작 전 쿠폰은 사용할 수 없습니다. couponId=${id}")
             }
         }
         coupon.validTo?.let {
             if (now.isAfter(it)) {
-                throw IllegalArgumentException("이미 만료된 쿠폰은 발급할 수 없습니다. couponId=${id}")
+                throw IllegalArgumentException("이미 만료된 쿠폰은 사용할 수 없습니다. couponId=${id}")
             }
+        }
+
+        if(coupon.deleteYn){
+            throw IllegalArgumentException("삭제된 쿠폰입니다. couponId=${id}")
         }
     }
 

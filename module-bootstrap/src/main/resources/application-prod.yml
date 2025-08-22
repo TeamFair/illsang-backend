@@ -22,6 +22,9 @@ spring:
       host: ${.elastic_cache_endpoint}
       port: ${.elastic_cache_port}
       useSsl: true
+  servlet:
+    multipart:
+      enabled: true
 
 oauth:
   token:

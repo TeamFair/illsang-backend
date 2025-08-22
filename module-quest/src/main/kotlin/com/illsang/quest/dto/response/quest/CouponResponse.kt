@@ -11,8 +11,9 @@ data class CouponResponse(
     val imageId: String?,
     val validFrom: LocalDateTime?,
     val validTo: LocalDateTime?,
-    val storeId: Long?,
-    val description: String?
+    val storeId: String?,
+    val description: String?,
+    val deleteYn: Boolean
 ) {
     companion object {
         fun from(model: CouponModel) = CouponResponse(
@@ -23,7 +24,8 @@ data class CouponResponse(
             validFrom = model.validFrom,
             validTo = model.validTo,
             storeId = model.storeId,
-            description = model.description
+            description = model.description,
+            deleteYn = model.deleteYn
         )
     }
 }

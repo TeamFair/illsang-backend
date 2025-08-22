@@ -19,7 +19,7 @@ class UserCouponEntity(
     var id: Long? = null,
 
     @Column(name = "user_id")
-    var userId: Long = 0,
+    var userId: String,
 
     @Column(name = "coupon_id")
     var couponId: Long = 0,
@@ -38,7 +38,7 @@ class UserCouponEntity(
 
     companion object {
         // 발급 팩토리: 항상 미사용/미만료 상태로 시작하도록 강제
-        fun issue(userId: Long, couponId: Long): UserCouponEntity {
+        fun issue(userId: String, couponId: Long): UserCouponEntity {
             return UserCouponEntity(
                 userId = userId,
                 couponId = couponId,

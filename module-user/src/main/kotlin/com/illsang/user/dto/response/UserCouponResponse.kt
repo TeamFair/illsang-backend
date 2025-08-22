@@ -5,7 +5,7 @@ import java.time.LocalDateTime
 
 data class UserCouponResponse(
     val id: Long,
-    val userId: Long,
+    val userId: String,
     val couponId: Long,
     val couponUseYn: Boolean,
     val couponExpireYn: Boolean,

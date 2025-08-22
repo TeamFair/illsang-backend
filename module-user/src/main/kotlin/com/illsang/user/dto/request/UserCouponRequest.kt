@@ -5,7 +5,7 @@ import software.amazon.awssdk.annotations.NotNull
 
 data class UserCouponCreateRequest(
     @field:NotNull
-    val userId: Long,
+    val userId: String,
     @field:NotNull
     val couponId: Long,
     val couponUseYn: Boolean = false,

@@ -13,12 +13,13 @@ data class CouponModel(
     val password: String?,
     val validFrom: LocalDateTime?,
     val validTo: LocalDateTime?,
-    val storeId: Long?,
+    val storeId: String?,
     val description: String?,
     val createdBy: String?,
     val createdAt: LocalDateTime?,
     val updatedBy: String?,
-    val updatedAt: LocalDateTime?
+    val updatedAt: LocalDateTime?,
+    val deleteYn: Boolean
 ) {
     companion object {
         fun from(entity: CouponEntity) = CouponModel(
@@ -34,7 +35,8 @@ data class CouponModel(
             createdBy = entity.createdBy,
             createdAt = entity.createdAt,
             updatedBy = entity.updatedBy,
-            updatedAt = entity.updatedAt
+            updatedAt = entity.updatedAt,
+            deleteYn = entity.deleteYn
         )
     }
 }

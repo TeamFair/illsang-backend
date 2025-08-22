@@ -21,11 +21,11 @@ class UserCouponService(
 ) {
 
     fun getById(id: Long): UserCouponModel {
-        val entity = findById(id)
+        val entity = this.findById(id)
         return UserCouponModel.from(entity)
     }
 
-    fun listByUser(userId: Long, page: Int, size: Int): List<UserCouponModel> {
+    fun listByUser(userId: String, page: Int, size: Int): List<UserCouponModel> {
         val pageable = PageRequest.of(page, size)
         return userCouponRepository.findAllByUserId(userId, pageable)
             .content
@@ -54,9 +54,7 @@ class UserCouponService(
     }
 
     fun verifyPassword(id: Long, rawPassword: String) {
-        val userCoupon = userCouponRepository.findByIdOrNull(id)
-            ?: throw IllegalArgumentException("존재하지 않는 유저쿠폰입니다. id=$id")
-
+        val userCoupon = this.findById(id)
         eventPublisher.publishEvent(CouponPasswordVerificationOrThrowEvent(userCoupon.couponId, rawPassword))
 
     }

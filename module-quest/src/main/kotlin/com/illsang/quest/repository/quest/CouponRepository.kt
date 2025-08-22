@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.Query
 
 interface CouponRepository : JpaRepository<CouponEntity, Long>{
     @Query("select c from CouponEntity c where c.storeId = :storeId")
-    fun findAllByStoreId(storeId: Long): List<CouponEntity>
+    fun findAllByStoreId(storeId: String): List<CouponEntity>
 }

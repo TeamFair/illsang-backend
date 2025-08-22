@@ -46,10 +46,13 @@ class CouponEntity(
     var validTo: LocalDateTime? = null,
 
     @Column(name = "store_id")
-    var storeId: Long? = null,
+    var storeId: String?= null,
 
     @Column(name = "description")
     var description: String? = null,
+
+    @Column(name = "delete_yn")
+    var deleteYn: Boolean = false,
 
     @OneToMany(mappedBy = "coupon", cascade = [CascadeType.ALL], orphanRemoval = false)
     val questRewards: MutableList<QuestRewardEntity> = mutableListOf()
@@ -64,6 +67,7 @@ class CouponEntity(
         this.validTo = request.validTo
         this.storeId = request.storeId
         this.description = request.description
+        this.deleteYn = request.deleteYn
         this.updatedAt = LocalDateTime.now()
     }
 

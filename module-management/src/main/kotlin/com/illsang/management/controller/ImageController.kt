@@ -18,14 +18,13 @@ class ImageController(
     private val imageService: ImageService,
 ) {
 
-    @PostMapping
+    @PostMapping(consumes = [MediaType.MULTIPART_FORM_DATA_VALUE])
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @Operation(operationId = "IMG001", summary= "이미지 생성")
     fun createImage(
-        @RequestBody request: ImageCreateRequest,
+        @ModelAttribute request: ImageCreateRequest
     ): ResponseEntity<ImageResponse> {
         val image = this.imageService.createImage(request)
-
         return ResponseEntity.status(HttpStatus.CREATED).body(ImageResponse.from(image))
     }
 
