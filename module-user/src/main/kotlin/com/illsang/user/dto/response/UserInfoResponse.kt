@@ -17,6 +17,7 @@ data class UserInfoResponse(
     val statusUpdatedAt: LocalDateTime?,
     val profileImageId: String?,
     val commercialAreaCode: String?,
+    val title: UserTitleResponse?,
 ) {
     companion object {
         fun from(user: UserModel): UserInfoResponse {
@@ -29,6 +30,7 @@ data class UserInfoResponse(
                 statusUpdatedAt = user.updatedAt,
                 profileImageId = user.profileImageId,
                 commercialAreaCode = user.commercialAreaCode,
+                title = user.title?.let { UserTitleResponse.from(it) },
             )
         }
     }

@@ -25,10 +25,11 @@ class AreaPointService(
         val metroEvent = MetroAreaGetEvent(metroRank.content.mapNotNull { it?.first })
         this.eventPublisher.publishEvent(metroEvent)
 
-        return metroRank.content.map {
+        return metroRank.content.mapIndexed { index, it ->
             MetroRankResponse(
                 metroCode = it?.first!!,
                 point = it.second,
+                rank = index + 1,
                 areaName = metroEvent.response.find { metro -> metro.code == it.first }!!.areaName,
                 images = metroEvent.response.find { metro -> metro.code == it.first }!!.images
             )
@@ -42,10 +43,11 @@ class AreaPointService(
         val commercialEvent = CommercialAreaGetEvent(commercialRank.content.mapNotNull { it?.first })
         this.eventPublisher.publishEvent(commercialEvent)
 
-        return commercialRank.content.map {
-            CommercialRankResponse(
+        return commercialRank.content.mapIndexed { index, it ->
+        CommercialRankResponse(
                 commercialCode = it?.first!!,
                 point = it.second,
+                rank = index + 1,
                 areaName = commercialEvent.response.find { metro -> metro.code == it.first }!!.areaName,
                 images = commercialEvent.response.find { metro -> metro.code == it.first }!!.images,
             )

@@ -87,6 +87,8 @@ data class QuestUserTypeResponse(
     val expireDate: LocalDateTime?,
     var rewards: List<QuestUserReward>,
     var favoriteYn: Boolean,
+    val questType: QuestType?,
+    val repeatFrequency: QuestRepeatFrequency?,
 ) {
     companion object {
         fun from(quest: QuestEntity, favorite: UserQuestFavoriteEntity?): QuestUserTypeResponse {
@@ -99,6 +101,8 @@ data class QuestUserTypeResponse(
                 expireDate = quest.expireDate,
                 rewards = quest.rewards.map { QuestUserReward.from(it) },
                 favoriteYn = favorite?.let { true } ?: false,
+                questType = quest.type,
+                repeatFrequency = quest.repeatFrequency,
             )
         }
     }

@@ -29,6 +29,7 @@ data class MetroRankResponse(
     val areaName: String,
     val point: Long,
     val images: List<String>,
+    val rank: Int,
 )
 
 data class CommercialRankResponse(
@@ -36,6 +37,7 @@ data class CommercialRankResponse(
     val areaName: String,
     val point: Long,
     val images: List<String>,
+    val rank: Int,
 )
 
 data class UserRankListResponse(
