@@ -55,6 +55,7 @@ class OpenApiConfig {
             .group("all-resource")
             .displayName("1. All Resource")
             .pathsToMatch("/**")
+            .addOpenApiCustomizer(this::applyPageableCustomizer)
             .build()
     }
 
@@ -64,6 +65,7 @@ class OpenApiConfig {
             .group("admin-resource")
             .displayName("2. Admin Resource")
             .addOpenApiMethodFilter(::isAdminMethod)
+            .addOpenApiCustomizer(this::applyPageableCustomizer)
             .build()
     }
 
@@ -73,6 +75,7 @@ class OpenApiConfig {
             .group("user-resource")
             .displayName("3. User Resource")
             .addOpenApiMethodFilter(::isUserMethod)
+            .addOpenApiCustomizer(this::applyPageableCustomizer)
             .build()
     }
 
@@ -82,7 +85,43 @@ class OpenApiConfig {
             .group("open-resource")
             .displayName("4. Open Resource")
             .addOpenApiMethodFilter(::isPublicMethod)
+            .addOpenApiCustomizer(this::applyPageableCustomizer)
             .build()
+    }
+
+    /**
+     * Page 객체의 OpenAPI 스키마를 간결한 형태로 변환하는 공통 Customizer 로직입니다.
+     */
+    private fun applyPageableCustomizer(openApi: OpenAPI) {
+        val schemas = openApi.components.schemas ?: return
+
+        // 구조(프로퍼티)를 기반으로 Page 스키마를 식별합니다.
+        val pageSchemas = schemas.filter { (_, schema) ->
+            val props = schema.properties
+            props != null && props.containsKey("pageable") && props.containsKey("totalPages") && props.containsKey("sort")
+        }
+
+        pageSchemas.forEach { (_, schema) ->
+            val props = schema.properties ?: return@forEach
+
+            props.remove("number")?.let {
+                it.description("현재 페이지 번호 (0부터 시작)")
+                props["page"] = it
+            }
+
+            props.remove("last")?.let {
+                it.description("마지막 페이지 여부")
+                props["isLast"] = it
+            }
+
+            props.remove("pageable")
+            props.remove("sort")
+            props.remove("first")
+            props.remove("empty")
+            props.remove("numberOfElements")
+
+            schema.description("페이징 처리 응답 모델")
+        }
     }
 
     private fun isAdminMethod(method: Method): Boolean {
