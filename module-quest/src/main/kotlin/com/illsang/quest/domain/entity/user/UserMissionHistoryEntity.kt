@@ -3,6 +3,8 @@ package com.illsang.quest.domain.entity.user
 import com.illsang.common.entity.BaseEntity
 import com.illsang.quest.domain.entity.quest.MissionEntity
 import com.illsang.quest.enums.EmojiType
+import com.illsang.quest.enums.MissionHistoryStatus
+import com.illsang.quest.enums.QuestHistoryStatus
 import jakarta.persistence.*
 
 @Entity
@@ -35,6 +37,10 @@ class UserMissionHistoryEntity(
     @Column(name = "view_count")
     var viewCount: Int = 0,
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    var status: MissionHistoryStatus = MissionHistoryStatus.SUBMITTED,
+
     @OneToOne(mappedBy = "missionHistory", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     var quizHistory: UserQuizHistoryEntity? = null,
 
@@ -60,6 +66,10 @@ class UserMissionHistoryEntity(
     fun removeEmoji(emojiEntity: UserMissionHistoryEmojiEntity) {
         if (emojiEntity.type == EmojiType.LIKE) this.likeCount--
         else this.hateCount--
+    }
+
+    fun report() {
+        this.status = MissionHistoryStatus.REPORTED
     }
 
 }

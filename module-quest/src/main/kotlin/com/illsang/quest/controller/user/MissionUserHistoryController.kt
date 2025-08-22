@@ -88,4 +88,27 @@ class MissionUserHistoryController(
         return ResponseEntity.ok(missionHistories)
     }
 
+    @PutMapping("/{missionHistoryId}")
+    @PreAuthorize("hasRole('USER')")
+    @Operation(operationId = "MIU006", summary = "신고하기")
+    fun reportMissionHistory(
+        @PathVariable missionHistoryId: Long,
+    ): ResponseEntity<Void> {
+        this.missionHistoryService.reportMissionHistory(missionHistoryId)
+
+        return ResponseEntity.ok().build()
+    }
+
+    @DeleteMapping("/{missionHistoryId}")
+    @PreAuthorize("hasRole('USER')")
+    @Operation(operationId = "MIU007", summary = "수행한 이력 삭제")
+    fun deleteMissionHistory(
+        @PathVariable missionHistoryId: Long,
+        @AuthenticationPrincipal authenticationModel: AuthenticationModel,
+        ): ResponseEntity<Void> {
+        this.missionHistoryService.deleteMissionHistory(missionHistoryId, authenticationModel.userId)
+
+        return ResponseEntity.ok().build()
+    }
+
 }

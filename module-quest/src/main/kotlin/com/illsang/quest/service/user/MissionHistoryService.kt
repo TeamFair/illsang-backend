@@ -74,7 +74,7 @@ class MissionHistoryService(
     }
 
     fun findLikeCountByMissionId(questId: Long) =
-        this.missionHistoryRepository.findTop3ByMissionIdOrderByLikeCountDesc(questId)
+        this.missionHistoryRepository.findTop3ByMissionIdAndStatusInOrderByLikeCountDesc(questId)
 
     fun findAllRandom(userId: String, pageable: Pageable): Page<MissionHistoryRandomResponse> {
         val missionHistory = this.missionHistoryRepository.findAllRandom(MissionType.PHOTO, pageable)
@@ -126,9 +126,25 @@ class MissionHistoryService(
     }
 
     fun findByUserId(userId: String, pageable: Pageable): Page<MissionHistoryOwnerResponse> {
-        val missionHistories = this.missionHistoryRepository.findAllByUserId(userId, pageable)
+        val missionHistories = this.missionHistoryRepository.findAllByUserIdAndStatusIn(userId, pageable)
 
         return missionHistories.map { MissionHistoryOwnerResponse.from(it) }
+    }
+
+    @Transactional
+    fun reportMissionHistory(missionHistoryId: Long) {
+        val missionHistoryEntity = this.findById(missionHistoryId)
+        missionHistoryEntity.report()
+    }
+
+    @Transactional
+    fun deleteMissionHistory(missionHistoryId: Long, userId: String) {
+        val missionHistoryEntity = this.findById(missionHistoryId)
+        if (missionHistoryEntity.userId != userId) {
+            throw IllegalArgumentException("Mission User not equal")
+        }
+
+        this.missionHistoryRepository.delete(missionHistoryEntity)
     }
 
     private fun findById(missionHistoryId: Long): UserMissionHistoryEntity =

@@ -27,6 +27,7 @@ class UserQuestHistoryEntity(
     val missionHistory: MutableList<UserMissionHistoryEntity> = mutableListOf(),
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "status")
     var status: QuestHistoryStatus = QuestHistoryStatus.PROGRESSING,
 
     @Column(name = "completed_at")
