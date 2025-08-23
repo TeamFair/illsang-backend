@@ -24,12 +24,16 @@ class SeasonService(
 
     @Transactional
     fun createSeason(request: SeasonCreateRequest): SeasonModel {
-        this.seasonRepository.findBySeasonNumber(request.seasonNumber)
-            ?: throw IllegalArgumentException("Season already exists")
-        this.seasonRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqual(
-            request.endDate,
-            request.startDate
-        ) ?: throw IllegalArgumentException("This time slot overlaps with another Season")
+        if (this.seasonRepository.findBySeasonNumber(request.seasonNumber) != null) {
+            throw IllegalArgumentException("Season already exists")
+        }
+        if (this.seasonRepository.findByStartDateLessThanEqualAndEndDateGreaterThanEqual(
+                request.endDate,
+                request.startDate
+            ) != null
+        ) {
+            throw IllegalArgumentException("This time slot overlaps with another Season")
+        }
 
         val season = this.seasonRepository.save(request.toEntity())
 
@@ -58,8 +62,10 @@ class SeasonService(
         this.seasonRepository.delete(season)
     }
 
-    fun findCurrentSeason(currentDate: LocalDateTime): SeasonModel {
-        val season = this.seasonRepository.findByCurrentDate(currentDate)
+    fun findCurrentSeason(currentDate: LocalDateTime): SeasonModel? {
+
+        val season = seasonRepository.findByCurrentDate(currentDate)
+            ?: throw IllegalArgumentException("현재 진행중인 시즌이 없습니다.")
 
         return SeasonModel.from(season)
     }

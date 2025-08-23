@@ -13,12 +13,14 @@ class SeasonEventListener(
     @EventListener
     fun findCurrentSeason(event: SeasonGetCurrentEvent) {
         val season = this.seasonService.findCurrentSeason(event.currentDate)
-        event.response = SeasonGetCurrentEvent.CurrentSeason(
-            seasonId = season.id,
-            seasonNumber = season.seasonNumber,
-            startDate = season.startDate,
-            endDate = season.endDate,
-        )
+        season?.let {
+            event.response = SeasonGetCurrentEvent.CurrentSeason(
+                seasonId = it.id,
+                seasonNumber = season.seasonNumber,
+                startDate = season.startDate,
+                endDate = season.endDate,
+            )
+        }
     }
 
 }

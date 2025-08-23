@@ -31,7 +31,7 @@ class UserQuestHistoryEntity(
     var status: QuestHistoryStatus = QuestHistoryStatus.PROGRESSING,
 
     @Column(name = "completed_at")
-    val completedAt: LocalDateTime? = null,
+    val completedAt: LocalDateTime = LocalDateTime.now(),
 ) : BaseEntity() {
 
     fun addMissionHistory(missionHistory: UserMissionHistoryEntity) {

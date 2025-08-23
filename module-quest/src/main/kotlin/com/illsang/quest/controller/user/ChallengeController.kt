@@ -14,7 +14,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/v1//challenge")
+@RequestMapping("/api/v1/challenge")
 @Tag(name = "Challenge", description = "미션 도전")
 class ChallengeController(
     private val quizService: QuizService,

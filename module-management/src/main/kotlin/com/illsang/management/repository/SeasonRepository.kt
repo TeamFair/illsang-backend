@@ -4,6 +4,7 @@ import com.illsang.management.domain.entity.SeasonEntity
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import java.time.LocalDateTime
+import java.util.Optional
 
 interface SeasonRepository : JpaRepository<SeasonEntity, Long> {
     fun findBySeasonNumber(seasonNumber: Int): SeasonEntity?
@@ -18,7 +19,7 @@ interface SeasonRepository : JpaRepository<SeasonEntity, Long> {
         id: Long,
     ): SeasonEntity?
 
-    @Query("SELECT e FROM SeasonEntity e WHERE :now BETWEEN e.startDate AND e.endDate")
-    fun findByCurrentDate(currentDate: LocalDateTime): SeasonEntity
+    @Query("SELECT e FROM SeasonEntity e WHERE :currentDate BETWEEN e.startDate AND e.endDate")
+    fun findByCurrentDate(currentDate: LocalDateTime): SeasonEntity?
 
 }

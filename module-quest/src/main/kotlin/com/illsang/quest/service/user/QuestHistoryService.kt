@@ -28,12 +28,17 @@ class QuestHistoryService(
         this.eventPublisher.publishEvent(currentSeasonEvent)
         val currentSeason = currentSeasonEvent.response
 
-        return this.userQuestHistoryRepository.findByUserIdAndQuest(userId, quest)
-            ?: UserQuestHistoryEntity(
-                userId = userId,
-                quest = quest,
-                seasonId = currentSeason.seasonId,
-            )
+        val userQuestHistory = this.userQuestHistoryRepository.findByUserIdAndQuest(userId, quest)
+        return userQuestHistoryRepository.findByUserIdAndQuest(userId, quest)
+            ?: run {
+                // 없으면 새로 생성 후 저장
+                val newHistory = UserQuestHistoryEntity(
+                    userId = userId,
+                    quest = quest,
+                    seasonId = currentSeason.seasonId,
+                )
+                userQuestHistoryRepository.save(newHistory)
+            }
     }
 
     @Transactional
