@@ -29,7 +29,6 @@ class QuestUserCustomRepositoryImpl(
         request: QuestUserRequest,
         pageable: Pageable,
     ): Page<QuestEntity> {
-        // 1단계: 페이지네이션을 적용하여 대상 Quest의 ID만 조회 (fetchJoin 없음)
         val contentIds = this.queryFactory
             .select(questEntity.id)
             .from(questEntity)

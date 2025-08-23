@@ -25,6 +25,7 @@ data class QuestUserTypeRequest(
 )
 
 data class QuestUserBannerRequest(
+    val completedYn: Boolean = false,
     val orderExpiredDesc: Boolean? = null,
     val orderRewardDesc: Boolean? = null,
 )

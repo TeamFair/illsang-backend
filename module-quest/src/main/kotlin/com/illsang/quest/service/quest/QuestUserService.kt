@@ -85,6 +85,7 @@ class QuestUserService(
             orderExpiredDesc = request.orderExpiredDesc,
             orderRewardDesc = request.orderRewardDesc,
             bannerId = bannerId,
+            completedYn = request.completedYn,
         )
 
         val quests = this.findUserQuest(questRequest, pageable)
