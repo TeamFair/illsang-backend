@@ -98,7 +98,7 @@ class UserPointCustomRepositoryImpl(
             )
         }
 
-        val targetPoints = targetUserData.get(userPointEntity.point.sumLong())!!
+        val targetPoints = targetUserData.get(userPointEntity.point.sumLong().coalesce(0L))!!
         val targetCreatedAt = targetUserData.get(userPointEntity.createdAt.max())!!
 
         val higherRankedCount = queryFactory
@@ -190,7 +190,7 @@ class UserPointCustomRepositoryImpl(
             .map { tuple ->
                 Pair(
                     tuple.get(groupByPointType(pointType))!!,
-                    tuple.get(userPointEntity.point.sumLong())!!,
+                    tuple.get(userPointEntity.point.sumLong().coalesce(0L))!!,
                 )
             }
     }
@@ -203,6 +203,7 @@ class UserPointCustomRepositoryImpl(
             )
             .from(userPointEntity)
             .where(
+                userPointEntity.id.user.id.eq(userId),
                 seasonEq(seasonId),
             )
             .groupBy(
@@ -212,7 +213,7 @@ class UserPointCustomRepositoryImpl(
             .map { tuple ->
                 Pair(
                     tuple.get(userPointEntity.id.pointType)!!,
-                    tuple.get(userPointEntity.point.sumLong())!!,
+                    tuple.get(userPointEntity.point.sumLong().coalesce(0L))!!,
                 )
             }
     }
