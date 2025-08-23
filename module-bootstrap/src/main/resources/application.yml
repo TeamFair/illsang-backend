@@ -71,4 +71,4 @@ decorator:
       enable-logging: true
       logging: slf4j
       log-format: "%(executionTime)ms|%(category)|connection %(connectionId)|\n%(sql)"
-      exclude categories: commit
+      exclude categories: commit,result,resultset

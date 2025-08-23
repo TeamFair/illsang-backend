@@ -28,12 +28,6 @@ class QuizEntity(
     val answers: MutableList<QuizAnswerEntity> = mutableListOf(),
 ) : BaseEntity() {
 
-    init {
-        if (this.answers.isEmpty()) {
-            throw IllegalArgumentException("There are no answers for this quiz")
-        }
-    }
-
     fun addAnswer(answers: List<QuizAnswerEntity>) {
        this.answers.addAll(answers)
     }
