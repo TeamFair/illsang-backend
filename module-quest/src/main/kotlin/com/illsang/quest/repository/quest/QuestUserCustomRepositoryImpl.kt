@@ -32,17 +32,18 @@ class QuestUserCustomRepositoryImpl(
         val result = this.queryFactory
             .selectFrom(questEntity)
             .leftJoin(questEntity.rewards, questRewardEntity).fetchJoin()
-            .leftJoin(questEntity, userQuestHistoryEntity.quest).fetchJoin()
-            .leftJoin(userQuestFavoriteEntity).on(
-                questEntity.id.eq(userQuestFavoriteEntity.questId),
-                userQuestFavoriteEntity.userId.eq(request.userId),
-            )
+            .leftJoin(userQuestHistoryEntity)
             .on(
+                userQuestHistoryEntity.quest.eq(questEntity),
                 userQuestHistoryEntity.userId.eq(request.userId),
                 ExpressionUtils.or(
                     questEntity.type.ne(QuestType.REPEAT),
                     repeatQuestCondition(LocalDateTime.now())
                 )
+            ).fetchJoin()
+            .leftJoin(userQuestFavoriteEntity).on(
+                questEntity.id.eq(userQuestFavoriteEntity.questId),
+                userQuestFavoriteEntity.userId.eq(request.userId),
             )
             .where(
                 questEntity.useYn.isTrue,
@@ -65,17 +66,18 @@ class QuestUserCustomRepositoryImpl(
             .select(questEntity.id.countDistinct())
             .from(questEntity)
             .leftJoin(questEntity.rewards, questRewardEntity).fetchJoin()
-            .leftJoin(questEntity, userQuestHistoryEntity.quest).fetchJoin()
-            .leftJoin(userQuestFavoriteEntity).on(
-                questEntity.id.eq(userQuestFavoriteEntity.questId),
-                userQuestFavoriteEntity.userId.eq(request.userId),
-            )
+            .leftJoin(userQuestHistoryEntity)
             .on(
+                userQuestHistoryEntity.quest.eq(questEntity),
                 userQuestHistoryEntity.userId.eq(request.userId),
                 ExpressionUtils.or(
                     questEntity.type.ne(QuestType.REPEAT),
                     repeatQuestCondition(LocalDateTime.now())
                 )
+            ).fetchJoin()
+            .leftJoin(userQuestFavoriteEntity).on(
+                questEntity.id.eq(userQuestFavoriteEntity.questId),
+                userQuestFavoriteEntity.userId.eq(request.userId),
             )
             .where(
                 questEntity.useYn.isTrue,
