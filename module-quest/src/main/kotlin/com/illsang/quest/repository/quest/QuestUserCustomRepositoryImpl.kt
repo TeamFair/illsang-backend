@@ -65,7 +65,7 @@ class QuestUserCustomRepositoryImpl(
         val count = this.queryFactory
             .select(questEntity.id.countDistinct())
             .from(questEntity)
-            .leftJoin(questEntity.rewards, questRewardEntity).fetchJoin()
+            .leftJoin(questEntity.rewards, questRewardEntity)
             .leftJoin(userQuestHistoryEntity)
             .on(
                 userQuestHistoryEntity.quest.eq(questEntity),
@@ -74,7 +74,7 @@ class QuestUserCustomRepositoryImpl(
                     questEntity.type.ne(QuestType.REPEAT),
                     repeatQuestCondition(LocalDateTime.now())
                 )
-            ).fetchJoin()
+            )
             .leftJoin(userQuestFavoriteEntity).on(
                 questEntity.id.eq(userQuestFavoriteEntity.questId),
                 userQuestFavoriteEntity.userId.eq(request.userId),
@@ -117,15 +117,19 @@ class QuestUserCustomRepositoryImpl(
             return null
         }
 
+        if(repeatFrequency == null){
+            return questEntity.type.eq(questType)
+        }
+
         return questEntity.type.eq(questType).and(questEntity.repeatFrequency.eq(repeatFrequency))
     }
 
     private fun completedYnEq(completedYn: Boolean): BooleanExpression {
         if (completedYn) {
-            return userQuestHistoryEntity.isNull
+            return userQuestHistoryEntity.id.isNotNull
         }
 
-        return userQuestHistoryEntity.isNotNull
+        return userQuestHistoryEntity.id.isNull
     }
 
     private fun orderCondition(request: QuestUserRequest): Array<OrderSpecifier<*>> {
