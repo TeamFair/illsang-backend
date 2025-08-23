@@ -14,7 +14,7 @@ data class ImageCreateRequest(
             id = fileName,
             type = type,
             fileSize = file.size,
-            fileName = file.name
+            fileName = file.originalFilename!!
         )
     }
 
