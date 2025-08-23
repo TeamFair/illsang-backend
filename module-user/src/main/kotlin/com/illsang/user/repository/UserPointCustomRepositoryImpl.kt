@@ -4,6 +4,7 @@ import com.illsang.common.enums.PointType
 import com.illsang.user.domain.entity.QUserEntity.Companion.userEntity
 import com.illsang.user.domain.entity.QUserPointEntity.Companion.userPointEntity
 import com.illsang.user.domain.model.UserRankModel
+import com.querydsl.core.BooleanBuilder
 import com.querydsl.core.types.dsl.BooleanExpression
 import com.querydsl.core.types.dsl.StringPath
 import com.querydsl.jpa.impl.JPAQueryFactory
@@ -30,7 +31,7 @@ class UserPointCustomRepositoryImpl(
                 userPointEntity.point.sumLong(),
             )
             .from(userPointEntity)
-            .innerJoin(userEntity, userPointEntity.id.user).fetchJoin()
+            .innerJoin(userPointEntity.id.user, userEntity)
             .where(
                 metroCodeEq(metroCode),
                 commercialAreaCodeEq(commercialAreaCode),
@@ -76,53 +77,62 @@ class UserPointCustomRepositoryImpl(
         areaCode: String?,
         pointType: PointType,
     ): UserRankModel {
+        val totalPoints = userPointEntity.point.sumLong().coalesce(0L)
+        val lastPointTime = userPointEntity.createdAt.max()
+
+        val onCondition = BooleanBuilder()
+            .and(pointTypeEq(pointType))
+            .and(areaCodeEq(areaCode, pointType))
+            .and(seasonEq(seasonId))
+
         val targetUserData = queryFactory
             .select(
                 userEntity,
-                userPointEntity.point.sumLong().coalesce(0L),
-                userPointEntity.createdAt.max(),
+                totalPoints,
+                lastPointTime,
             )
             .from(userEntity)
-            .innerJoin(userEntity, userPointEntity.id.user).fetchJoin()
+            .leftJoin(userEntity.userPoints, userPointEntity).on(onCondition)
             .where(
                 userEntity.id.eq(userId),
-                areaCodeEq(areaCode, pointType),
-                seasonEq(seasonId)
             )
             .groupBy(userEntity.id)
-            .fetchOne()
+            .fetchOne() ?: throw IllegalStateException("User not found for rank calculation: $userId")
 
-        if (targetUserData!!.get(userPointEntity.point.sumLong()) == 0L) {
+        val user = targetUserData.get(userEntity)!!
+        val userPoints = targetUserData.get(totalPoints)!!
+
+        if (userPoints == 0L) {
             return UserRankModel.from(
-                user = targetUserData.get(userEntity)!!,
+                user = user,
             )
         }
 
-        val targetPoints = targetUserData.get(userPointEntity.point.sumLong().coalesce(0L))!!
-        val targetCreatedAt = targetUserData.get(userPointEntity.createdAt.max())!!
+        val targetCreatedAt = targetUserData.get(lastPointTime)
+            ?: throw IllegalStateException("lastPointTime is null for a user with points")
 
         val higherRankedCount = queryFactory
             .select(userEntity.id.countDistinct())
             .from(userPointEntity)
-            .innerJoin(userEntity, userPointEntity.id.user)
+            .innerJoin(userPointEntity.id.user, userEntity)
             .where(
-                areaCodeEq(areaCode, pointType),
                 pointTypeEq(pointType),
+                areaCodeEq(areaCode, pointType),
                 seasonEq(seasonId)
             )
             .groupBy(userEntity.id)
             .having(
-                userPointEntity.point.sumLong().gt(targetPoints)
+                userPointEntity.point.sumLong().gt(userPoints)
                     .or(
-                        userPointEntity.point.sumLong().eq(targetPoints)
+                        userPointEntity.point.sumLong().eq(userPoints)
                             .and(userPointEntity.createdAt.max().lt(targetCreatedAt))
                     )
             )
             .fetchOne() ?: 0
 
         return UserRankModel.from(
-            user = targetUserData.get(userEntity)!!,
-            point = targetPoints,
+            user = user,
+            point = userPoints,
             rank = higherRankedCount + 1L,
         )
     }
@@ -219,20 +229,15 @@ class UserPointCustomRepositoryImpl(
     }
 
     private fun areaCodeEq(areaCode: String?, pointType: PointType): BooleanExpression? {
+        if (areaCode == null) {
+            return null
+        }
         return when (pointType) {
-            PointType.METRO ->
-                userPointEntity.id.metroAreaCode.eq(areaCode).and(userPointEntity.id.pointType.eq(pointType))
-
-            PointType.COMMERCIAL ->
-                userPointEntity.id.commercialAreaCode.eq(areaCode).and(userPointEntity.id.pointType.eq(pointType))
-
-            PointType.CONTRIBUTION ->
-                userPointEntity.id.pointType.eq(pointType)
-
-            else -> throw IllegalAccessException("Invalid point type")
+            PointType.METRO -> userPointEntity.id.metroAreaCode.eq(areaCode)
+            PointType.COMMERCIAL -> userPointEntity.id.commercialAreaCode.eq(areaCode)
+            else -> null
         }
     }
-
     private fun metroCodeEq(metroCode: String?): BooleanExpression? {
         return metroCode?.let { userPointEntity.id.metroAreaCode.eq(it) }
     }
@@ -242,7 +247,7 @@ class UserPointCustomRepositoryImpl(
     }
 
     private fun commercialAreaCodeEq(commercialAreaCode: String?): BooleanExpression? =
-        userPointEntity.id.commercialAreaCode.eq(commercialAreaCode)
+        commercialAreaCode?.let { userPointEntity.id.commercialAreaCode.eq(commercialAreaCode) }
 
     private fun seasonEq(seasonId: Long?): BooleanExpression? {
         return seasonId?.let { userPointEntity.id.seasonId.eq(it) }
