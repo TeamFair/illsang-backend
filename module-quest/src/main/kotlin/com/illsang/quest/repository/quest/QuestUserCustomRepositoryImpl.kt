@@ -29,9 +29,11 @@ class QuestUserCustomRepositoryImpl(
         request: QuestUserRequest,
         pageable: Pageable,
     ): Page<QuestEntity> {
-        val result = this.queryFactory
-            .selectFrom(questEntity)
-            .leftJoin(questEntity.rewards, questRewardEntity).fetchJoin()
+        // 1단계: 페이지네이션을 적용하여 대상 Quest의 ID만 조회 (fetchJoin 없음)
+        val contentIds = this.queryFactory
+            .select(questEntity.id)
+            .from(questEntity)
+            .leftJoin(questEntity.rewards, questRewardEntity)
             .leftJoin(userQuestHistoryEntity)
             .on(
                 userQuestHistoryEntity.quest.eq(questEntity),
@@ -40,7 +42,7 @@ class QuestUserCustomRepositoryImpl(
                     questEntity.type.ne(QuestType.REPEAT),
                     repeatQuestCondition(LocalDateTime.now())
                 )
-            ).fetchJoin()
+            )
             .leftJoin(userQuestFavoriteEntity).on(
                 questEntity.id.eq(userQuestFavoriteEntity.questId),
                 userQuestFavoriteEntity.userId.eq(request.userId),
@@ -62,7 +64,31 @@ class QuestUserCustomRepositoryImpl(
             .limit(pageable.pageSize.toLong())
             .fetch()
 
-        val count = this.queryFactory
+        if (contentIds.isEmpty()) {
+            return Page.empty(pageable)
+        }
+
+        val result = this.queryFactory
+            .selectFrom(questEntity)
+            .leftJoin(questEntity.rewards, questRewardEntity).fetchJoin()
+            .leftJoin(userQuestHistoryEntity)
+            .on(
+                userQuestHistoryEntity.quest.eq(questEntity),
+                userQuestHistoryEntity.userId.eq(request.userId),
+                ExpressionUtils.or(
+                    questEntity.type.ne(QuestType.REPEAT),
+                    repeatQuestCondition(LocalDateTime.now())
+                )
+            ).fetchJoin()
+            .leftJoin(userQuestFavoriteEntity).on(
+                questEntity.id.eq(userQuestFavoriteEntity.questId),
+                userQuestFavoriteEntity.userId.eq(request.userId),
+            )
+            .where(questEntity.id.`in`(contentIds))
+            .orderBy(*orderCondition(request))
+            .fetch()
+
+        val countQuery = this.queryFactory
             .select(questEntity.id.countDistinct())
             .from(questEntity)
             .leftJoin(questEntity.rewards, questRewardEntity)
@@ -87,11 +113,10 @@ class QuestUserCustomRepositoryImpl(
                 popularYnEq(request.popularYn),
                 favoriteYnEq(request.favoriteYn),
                 commercialAreaCodeEq(request.commercialAreaCode),
+                bannerEq(request.bannerId),
             )
 
-        return PageableExecutionUtils.getPage(result, pageable) {
-            count.fetchOne() ?: 0L
-        }
+        return PageableExecutionUtils.getPage(result, pageable) { countQuery.fetchOne() ?: 0L }
     }
 
     private fun bannerEq(bannerId: Long?): BooleanExpression? {
@@ -133,24 +158,24 @@ class QuestUserCustomRepositoryImpl(
     }
 
     private fun orderCondition(request: QuestUserRequest): Array<OrderSpecifier<*>> {
-        val orderSpecifier = arrayOf<OrderSpecifier<*>>()
+        val orderSpecifiers = mutableListOf<OrderSpecifier<*>>()
 
         request.orderRewardDesc?.let {
-            orderSpecifier.plus(if (it) questEntity.totalPoint.desc() else questEntity.totalPoint.asc())
+            orderSpecifiers.add(if (it) questEntity.totalPoint.desc() else questEntity.totalPoint.asc())
         }
 
         request.orderExpiredDesc?.let {
-            orderSpecifier.plus(if (it) questEntity.expireDate.desc() else questEntity.expireDate.asc())
+            orderSpecifiers.add(if (it) questEntity.expireDate.desc() else questEntity.expireDate.asc())
         }
 
-        orderSpecifier.plus(
+        orderSpecifiers.addAll(
             listOf(
                 questEntity.sortOrder.desc(),
                 questEntity.createdAt.asc(),
             )
         )
 
-        return orderSpecifier
+        return orderSpecifiers.toTypedArray()
     }
 
     private fun repeatQuestCondition(today: LocalDateTime): Predicate? {
