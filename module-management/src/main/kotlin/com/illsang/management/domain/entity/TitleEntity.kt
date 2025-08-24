@@ -3,6 +3,7 @@ package com.illsang.management.domain.entity
 import com.illsang.common.entity.BaseEntity
 import com.illsang.common.enums.TitleGrade
 import com.illsang.common.enums.TitleType
+import com.illsang.management.dto.request.TitleRequest
 import jakarta.persistence.*
 
 @Entity
@@ -27,4 +28,13 @@ class TitleEntity(
 
     @Column(name = "use_yn")
     var useYn: Boolean = false,
-) : BaseEntity()
+) : BaseEntity() {
+
+    fun update(request: TitleRequest) {
+        this.name = request.name;
+        this.grade = request.grade;
+        this.useYn = request.useYn;
+        this.type = request.type;
+        this.condition = request.condition;
+    }
+}
