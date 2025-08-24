@@ -28,11 +28,11 @@ class ImageController(
         return ResponseEntity.status(HttpStatus.CREATED).body(ImageResponse.from(image))
     }
 
-    @GetMapping("/{id}")
+    @GetMapping
     @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     @Operation(operationId = "IMG002", summary= "이미지 다운로드")
     fun downloadImage(
-        @PathVariable id: String,
+        @RequestParam id: String,
     ): ResponseEntity<ByteArray> {
         val image = this.imageService.downloadImage(id)
 

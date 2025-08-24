@@ -54,7 +54,7 @@ management:
 
 cloud:
   bucket:
-    name: illsang
+    name: illsang-image-bucket
 
 springdoc:
   swagger-ui:
