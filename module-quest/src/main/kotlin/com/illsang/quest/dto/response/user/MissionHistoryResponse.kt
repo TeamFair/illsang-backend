@@ -30,7 +30,7 @@ data class MissionHistoryRandomResponse(
                 title = missionHistory.mission.quest.title,
                 submitImageId = missionHistory.submitImageId,
                 commercialAreaCode = missionHistory.mission.quest.commercialAreaCode,
-                currentUserEmojis = userEmojiHistory.filter { it.userId == userInfo.userId && it.missionHistory.id == missionHistory.id }.map { it.type },
+                currentUserEmojis = userEmojiHistory.filter { it.missionHistory.id == missionHistory.id }.map { it.type },
                 likeCount = missionHistory.likeCount,
                 hateCount = missionHistory.hateCount,
                 viewCount = missionHistory.viewCount,
