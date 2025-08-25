@@ -77,7 +77,7 @@ jobs:
           echo "export ECR_REPOSITORY=${{ env.ECR_REPOSITORY }}" >> deploy/deploy.env
           echo "export IMAGE_TAG=${{ env.IMAGE_TAG }}" >> deploy/deploy.env
           echo "export JAVA_HEAP_SIZE=512m" >> deploy/deploy.env
-          echo "export DOCKER_MEMORY_LIMIT=768m" >> deploy/deploy.env
+          echo "export DOCKER_MEMORY_LIMIT=1g" >> deploy/deploy.env
           cp appspec.yml deploy/
           cp -r scripts deploy/
 
