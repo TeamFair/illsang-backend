@@ -86,7 +86,7 @@ class QuestUserController(
 
     @GetMapping("/search/banner/{bannerId}")
     @PreAuthorize("hasRole('USER')")
-    @Operation(operationId = "QUS005", summary = "이벤트 퀘스트 조회")
+    @Operation(operationId = "QUS005", summary = "배너 퀘스트 조회")
     fun selectAllBanner(
         @PathVariable bannerId: Long,
         @ParameterObject request: QuestUserBannerRequest,

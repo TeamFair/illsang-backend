@@ -34,10 +34,10 @@ oauth:
 
   client:
     google:
-      ios: "654001951429-ne4ev00taadiag4tr4euigqlv3jgkvr8.apps.googleusercontent.com"
+      ios: "702150906844-g5jvs1fm6u1j1rfnvptkoe4eraak2uk9.apps.googleusercontent.com"
       aos: "702150906844-sspv7ls7t1pfonhde25gcuno5uattped.apps.googleusercontent.com"
     apple:
-      ios: "com.ilsang240615.dev"
+      ios: "com.ilsang240615"
       aos: "test-apple-aos-client-id"
 
 jwt:

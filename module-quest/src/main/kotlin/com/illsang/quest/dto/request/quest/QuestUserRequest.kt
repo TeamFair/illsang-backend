@@ -19,6 +19,7 @@ data class QuestUserRequest(
 data class QuestUserTypeRequest(
     val questType: QuestType? = null,
     val repeatFrequency: QuestRepeatFrequency? = null,
+    val orderExpiredDesc: Boolean? = null,
     val orderRewardDesc: Boolean? = null,
     val favoriteYn: Boolean? = null,
     val completedYn: Boolean = false,

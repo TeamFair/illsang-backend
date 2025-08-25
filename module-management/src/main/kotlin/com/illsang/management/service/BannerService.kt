@@ -62,6 +62,12 @@ class BannerService(
         this.findById(bannerId)
     }
 
+    fun searchForUser(): List<BannerModel> {
+        val bannerEntities = this.bannerRepository.findAllByUseYn(true)
+
+        return bannerEntities.map { BannerModel.from(it) }
+    }
+
     private fun findById(id: Long): BannerEntity = (this.bannerRepository.findByIdOrNull(id)
         ?: throw IllegalArgumentException("Banner not found with id: $id"))
 

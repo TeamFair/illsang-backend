@@ -4,6 +4,7 @@ import com.illsang.management.dto.request.BannerCreateRequest
 import com.illsang.management.dto.request.BannerSearchRequest
 import com.illsang.management.dto.request.BannerUpdateRequest
 import com.illsang.management.dto.response.BannerResponse
+import com.illsang.management.dto.response.BannerUserResponse
 import com.illsang.management.service.BannerService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -63,7 +64,7 @@ class BannerController(
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    @Operation(operationId = "BAN004", summary= "배너 검색")
+    @Operation(operationId = "BAN004", summary= "배너 검색 - 관리자용")
     fun findBySearch(
         @ParameterObject request: BannerSearchRequest,
         @ParameterObject @PageableDefault(size = 10) pageable: Pageable,
@@ -72,6 +73,18 @@ class BannerController(
 
         return ResponseEntity.ok(
             banners.map(BannerResponse::from)
+        )
+    }
+
+    @GetMapping("/user")
+    @PreAuthorize("hasRole('USER')")
+    @Operation(operationId = "BAN005", summary= "배너 검색 - 사용자용")
+    fun findBySearchForUser(
+    ): ResponseEntity<List<BannerUserResponse>> {
+        val banners = this.bannerService.searchForUser()
+
+        return ResponseEntity.ok(
+            banners.map(BannerUserResponse::from)
         )
     }
 

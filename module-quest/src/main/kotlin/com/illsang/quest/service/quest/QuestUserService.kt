@@ -65,6 +65,7 @@ class QuestUserService(
             repeatFrequency = request.repeatFrequency,
             favoriteYn = request.favoriteYn,
             completedYn = request.completedYn,
+            orderExpiredDesc = request.orderExpiredDesc,
         )
 
         val quests = this.findUserQuest(questRequest, pageable)
