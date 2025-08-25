@@ -8,6 +8,14 @@ NGINX_CONFIG="/etc/nginx/conf.d/service-url.inc"
 BLUE_PORT=8081
 GREEN_PORT=8082
 
+cleanup() {
+  echo "> 스크립트가 종료됩니다. 사용하지 않는 모든 도커 이미지를 정리합니다..."
+  # -f: 확인 질문 없이 바로 삭제
+  sudo docker image prune -a -f
+}
+
+trap cleanup EXIT
+
 # GitHub Actions에서 생성한 환경 변수 파일 로드
 if [ -f "$ENV_FILE" ]; then
   echo "> Loading environment variables from $ENV_FILE"
