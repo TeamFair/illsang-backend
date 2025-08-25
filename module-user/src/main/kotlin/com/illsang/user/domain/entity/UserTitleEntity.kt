@@ -32,4 +32,14 @@ class UserTitleEntity(
 
     @Column(name = "read_yn")
     var readYn: Boolean = false,
-) : BaseEntity()
+) : BaseEntity(){
+    fun changeTitle(titleType: TitleType, titleGrade: TitleGrade){
+        readYn = false
+        this.titleType = titleType
+        this.titleGrade = titleGrade
+    }
+
+    fun readTitle(){
+        readYn = true
+    }
+}
