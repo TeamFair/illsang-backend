@@ -20,14 +20,15 @@ class UserTitleService(
             ?: throw IllegalArgumentException("UserTitle not found with id: $id")
     }
 
-    fun EvaluateUserTitle(userId: String): UserTitleModel {
+    @Transactional
+    fun evaluateUserTitle(
+        userId: String,
+        titleType: TitleType = TitleType.METRO,
+        titleGrade: TitleGrade = TitleGrade.STANDARD,
+    ): UserTitleModel {
         val userTitle = userTitleRepository.findByUserId(userId)
-
-        var type = TitleType.METRO
-        var grade = TitleGrade.STANDARD
-
-        userTitle.changeTitle(type,grade)
-
+        userTitle.changeTitle(titleType, titleGrade)
         return UserTitleModel.from(userTitle)
     }
+
 }
