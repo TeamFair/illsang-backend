@@ -1,15 +1,18 @@
 package com.illsang.quest.dto.response.user
 
+import com.illsang.common.enums.ResultCode
 import com.illsang.quest.domain.model.quset.QuizModel
 import com.illsang.quest.domain.model.user.ChallengeModel
 
 data class ChallengeResponse(
-    val challengeId: Long,
+    val resultCode: String,
+    val challengeId: Long?,
 ) {
     companion object {
-        fun from(challenge: ChallengeModel): ChallengeResponse {
+        fun from(resultCode: ResultCode, challenge: ChallengeModel?): ChallengeResponse {
             return ChallengeResponse(
-                challengeId = challenge.id
+                resultCode = resultCode.code,
+                challengeId = challenge?.id,
             )
         }
     }

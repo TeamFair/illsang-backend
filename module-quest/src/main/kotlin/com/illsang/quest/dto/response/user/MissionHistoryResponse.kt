@@ -40,6 +40,40 @@ data class MissionHistoryRandomResponse(
     }
 }
 
+data class MissionHistoryExampleResponse(
+    val missionHistoryId: Long?,
+    val user: UserResponse,
+    val title: String,
+    val submitImageId: String?,
+    val commercialAreaCode: String,
+    val likeCount: Int,
+    val hateCount: Int,
+    val viewCount: Int,
+    val currentUserEmojis: List<EmojiType>,
+    val createdAt: LocalDateTime,
+) {
+    companion object {
+        fun from(
+            missionHistory: UserMissionHistoryEntity,
+            userInfo: UserInfoGetEvent.UserInfo,
+            userEmojiHistory: List<UserMissionHistoryEmojiEntity>,
+        ): MissionHistoryExampleResponse {
+            return MissionHistoryExampleResponse(
+                missionHistoryId = missionHistory.id,
+                user = UserResponse.from(userInfo),
+                title = missionHistory.mission.quest.title,
+                submitImageId = missionHistory.submitImageId,
+                commercialAreaCode = missionHistory.mission.quest.commercialAreaCode,
+                currentUserEmojis = userEmojiHistory.filter { it.missionHistory.id == missionHistory.id }.map { it.type },
+                likeCount = missionHistory.likeCount,
+                hateCount = missionHistory.hateCount,
+                viewCount = missionHistory.viewCount,
+                createdAt = missionHistory.createdAt!!,
+            )
+        }
+    }
+}
+
 data class MissionHistoryOwnerResponse(
     val missionHistoryId: Long?,
     val title: String,

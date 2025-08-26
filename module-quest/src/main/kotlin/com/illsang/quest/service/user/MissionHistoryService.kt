@@ -1,6 +1,7 @@
 package com.illsang.quest.service.user
 
 import com.illsang.auth.domain.model.AuthenticationModel
+import com.illsang.common.enums.ResultCode
 import com.illsang.common.event.management.image.ImageExistOrThrowEvent
 import com.illsang.common.event.user.info.UserInfoGetEvent
 import com.illsang.quest.domain.entity.user.UserMissionHistoryEmojiEntity
@@ -8,6 +9,7 @@ import com.illsang.quest.domain.entity.user.UserMissionHistoryEntity
 import com.illsang.quest.domain.entity.user.UserQuizHistoryEntity
 import com.illsang.quest.domain.model.user.ChallengeModel
 import com.illsang.quest.dto.request.user.ChallengeCreateRequest
+import com.illsang.quest.dto.response.user.MissionHistoryExampleResponse
 import com.illsang.quest.dto.response.user.MissionHistoryOwnerResponse
 import com.illsang.quest.dto.response.user.MissionHistoryRandomResponse
 import com.illsang.quest.enums.EmojiType
@@ -35,8 +37,30 @@ class MissionHistoryService(
 ) {
 
     @Transactional
-    fun submitMission(request: ChallengeCreateRequest, authenticationModel: AuthenticationModel): ChallengeModel {
+    fun submitMission(
+        request: ChallengeCreateRequest,
+        authenticationModel: AuthenticationModel
+    ): Pair<ResultCode, ChallengeModel?> {
         val mission = this.missionService.findById(request.missionId)
+
+        val quizAndAnswer = if (mission.type.requireQuiz()) {
+            val quizId = requireNotNull(request.quizId) { "Quiz Id not found" }
+            val answerText = requireNotNull(request.answer) { "Answer not found" }
+
+            val quiz = this.quizService.findById(quizId)
+            val answer = quiz.findQuizAnswer(answerText)
+                ?: return Pair(ResultCode.INCORRECT_QUIZ, null)
+            quiz to answer
+        } else {
+            request.imageId?.let {
+                this.eventPublisher.publishEvent(ImageExistOrThrowEvent(it))
+            } ?: throw IllegalArgumentException("Mission Image not found")
+
+            null
+        }
+
+        // TODO 반복퀘스트 이미 처리된 이력 있는지
+
         val questHistory = this.questHistoryService.findOrCreate(authenticationModel.userId, mission.quest)
         val missionHistory = UserMissionHistoryEntity(
             userId = authenticationModel.userId,
@@ -46,35 +70,25 @@ class MissionHistoryService(
         )
         questHistory.addMissionHistory(missionHistory)
 
-        // TODO 반복퀘스트 이미 처리된 이력 있는지
 
-        if (!mission.type.requireQuiz()) {
-            request.imageId?.let {
-                this.eventPublisher.publishEvent(ImageExistOrThrowEvent(it))
-            } ?: throw IllegalArgumentException("Mission Image not found")
-        } else {
-            requireNotNull(request.quizId, { "Quiz Id not found" })
-            requireNotNull(request.answer, { "Answer not found" })
-
-            val quiz = this.quizService.findById(request.quizId)
-            val answer = quiz.findQuizAnswer(request.answer)
-                ?: throw IllegalArgumentException("정답이 아닙니다.")
+        if (mission.type.requireQuiz()) {
+            val (quiz, quizAnswer) = quizAndAnswer!!
             val quizHistory = UserQuizHistoryEntity(
                 quiz = quiz,
-                quizAnswer = answer,
+                quizAnswer = quizAnswer,
                 missionHistory = missionHistory,
-                answer = request.answer,
+                answer = request.answer!!,
             )
             missionHistory.addQuizHistory(quizHistory)
         }
 
         this.questHistoryService.complete(questHistory)
 
-        return ChallengeModel.from(questHistory)
+        return Pair(ResultCode.SUCCESS, ChallengeModel.from(questHistory))
     }
 
-    fun findLikeCountByMissionId(questId: Long) =
-        this.missionHistoryRepository.findTop3ByMissionIdAndStatusInOrderByLikeCountDesc(questId)
+    fun findLikeCountByMissionId(missionId: Long) =
+        this.missionHistoryRepository.findTop3ByMissionIdAndStatusInOrderByLikeCountDesc(missionId)
 
     fun findAllRandom(userId: String, pageable: Pageable): Page<MissionHistoryRandomResponse> {
         val missionHistory = this.missionHistoryRepository.findAllRandom(MissionType.PHOTO, pageable)
@@ -87,6 +101,29 @@ class MissionHistoryService(
 
         return missionHistory.map {
             MissionHistoryRandomResponse.from(
+                missionHistory = it,
+                userInfo = usersEvent.response.find { user -> it.userId == user.userId }!!,
+                userEmojiHistory = userEmojiHistory,
+            )
+        }
+    }
+
+    fun exampleMissionHistory(
+        missionId: Long,
+        userId: String,
+        pageable: Pageable
+    ): Page<MissionHistoryExampleResponse> {
+        val missionHistory =
+            this.missionHistoryRepository.findAllRandomByMissionId(MissionType.PHOTO, missionId, pageable)
+
+        val usersEvent = UserInfoGetEvent(missionHistory.content.map { it.userId })
+        this.eventPublisher.publishEvent(usersEvent)
+
+        val userEmojiHistory =
+            this.missionHistoryEmojiRepository.findByUserIdAndMissionHistoryIn(userId, missionHistory.content)
+
+        return missionHistory.map {
+            MissionHistoryExampleResponse.from(
                 missionHistory = it,
                 userInfo = usersEvent.response.find { user -> it.userId == user.userId }!!,
                 userEmojiHistory = userEmojiHistory,

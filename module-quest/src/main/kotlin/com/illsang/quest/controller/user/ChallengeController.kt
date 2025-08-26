@@ -28,10 +28,10 @@ class ChallengeController(
         @RequestBody request: ChallengeCreateRequest,
         @AuthenticationPrincipal authenticationModel: AuthenticationModel,
     ): ResponseEntity<ChallengeResponse> {
-        val challenge = this.missionHistoryService.submitMission(request, authenticationModel)
+        val result = this.missionHistoryService.submitMission(request, authenticationModel)
 
         return ResponseEntity.ok(
-            ChallengeResponse.from(challenge)
+            ChallengeResponse.from(result.first, result.second)
         )
     }
 

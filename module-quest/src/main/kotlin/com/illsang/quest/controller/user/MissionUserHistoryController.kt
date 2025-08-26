@@ -2,6 +2,7 @@ package com.illsang.quest.controller.user
 
 import com.illsang.auth.domain.model.AuthenticationModel
 import com.illsang.quest.dto.request.user.MissionHistoryEmojiCreateRequest
+import com.illsang.quest.dto.response.user.MissionHistoryExampleResponse
 import com.illsang.quest.dto.response.user.MissionHistoryOwnerResponse
 import com.illsang.quest.dto.response.user.MissionHistoryRandomResponse
 import com.illsang.quest.enums.EmojiType
@@ -105,10 +106,23 @@ class MissionUserHistoryController(
     fun deleteMissionHistory(
         @PathVariable missionHistoryId: Long,
         @AuthenticationPrincipal authenticationModel: AuthenticationModel,
-        ): ResponseEntity<Void> {
+    ): ResponseEntity<Void> {
         this.missionHistoryService.deleteMissionHistory(missionHistoryId, authenticationModel.userId)
 
         return ResponseEntity.ok().build()
+    }
+
+    @GetMapping("/example")
+    @PreAuthorize("hasRole('USER')")
+    @Operation(operationId = "MIU008", summary = "미션 수행 예시")
+    fun exampleMissionHistory(
+        @RequestParam missionId: Long,
+        @ParameterObject @PageableDefault(size = 10) pageable: Pageable,
+        @AuthenticationPrincipal authenticationModel: AuthenticationModel,
+    ): ResponseEntity<Page<MissionHistoryExampleResponse>> {
+        return ResponseEntity.ok(
+            this.missionHistoryService.exampleMissionHistory(missionId, authenticationModel.userId, pageable)
+        )
     }
 
 }

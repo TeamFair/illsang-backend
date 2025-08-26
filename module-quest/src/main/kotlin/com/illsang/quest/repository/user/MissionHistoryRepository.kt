@@ -31,6 +31,25 @@ interface MissionHistoryRepository : JpaRepository<UserMissionHistoryEntity, Lon
         )
     ): Page<UserMissionHistoryEntity>
 
+    @Query(
+        """
+        SELECT umh
+        FROM UserMissionHistoryEntity AS umh
+        INNER JOIN FETCH umh.mission AS m
+        INNER JOIN FETCH m.quest AS q
+        WHERE m.type = :missionType AND umh.status in :missionStatus AND m.id = :missionId
+        ORDER BY (CASE WHEN umh.likeCount = 0 THEN 0 ELSE 1 END) DESC
+    """
+    )
+    fun findAllRandomByMissionId(
+        missionType: MissionType,
+        missionId: Long,
+        pageable: Pageable,
+        missionStatus: List<MissionHistoryStatus> = listOf(
+            MissionHistoryStatus.APPROVED, MissionHistoryStatus.SUBMITTED
+        )
+    ): Page<UserMissionHistoryEntity>
+
     fun findAllByUserIdAndStatusIn(
         userId: String, pageable: Pageable,
         missionStatus: List<MissionHistoryStatus> = listOf(
