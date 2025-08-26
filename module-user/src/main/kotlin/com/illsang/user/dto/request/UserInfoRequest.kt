@@ -31,7 +31,7 @@ data class UpdateUserProfileImageRequest(
 )
 
 data class UpdateUserTitleRequest(
-    val titleHistoryId: String? = null,
+    val titleHistoryId: Long,
 )
 
 data class UpdateUserAreaZoneRequest(

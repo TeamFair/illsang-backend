@@ -74,7 +74,7 @@ class QuestHistoryService(
             this.eventPublisher.publishEvent(
                 UserTitleQuestCompleteEvent(
                     userId = questHistory.userId,
-                    maxStreak = maxStreakDay,
+                    maxStreak = maxStreakDay
                 )
             )
         }
