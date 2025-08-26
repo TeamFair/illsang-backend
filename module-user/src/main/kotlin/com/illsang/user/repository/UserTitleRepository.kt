@@ -4,5 +4,5 @@ import com.illsang.user.domain.entity.UserTitleEntity
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface UserTitleRepository : JpaRepository<UserTitleEntity, String>{
-    fun findByUserId(userId: String): UserTitleEntity
+    fun findAllByUserId(userId: String): List<UserTitleEntity>
 }
