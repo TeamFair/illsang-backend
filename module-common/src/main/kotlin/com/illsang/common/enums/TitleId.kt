@@ -3,7 +3,7 @@ package com.illsang.common.enums
 enum class TitleId(
     val titleId: String
 ) {
-    TITLE_2025_DAILY_PIONEER("TQ00001"),
+    TITLE_DAILY_PIONEER("TQ00001"),
     TITLE_FIRST_STEP("TQ00002"),
     TITLE_ONE_DAY("TQ00003"),
     TITLE_FOUR_DAYS("TQ00004"),

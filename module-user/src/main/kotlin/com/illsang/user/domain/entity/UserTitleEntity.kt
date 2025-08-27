@@ -33,15 +33,8 @@ class UserTitleEntity(
     @Column(name = "read_yn")
     var readYn: Boolean = false,
 ) : BaseEntity(){
-    fun createQuestTitle(titleGrade: TitleGrade, titleName: String,  titleId : String){
-        readYn = false
-        this.titleGrade = titleGrade
-        this.titleName = titleName
-        this.titleId = titleId
-        this.titleType = TitleType.METRO
-    }
 
-    fun readTitle(){
+    fun updateReadYn(){
         readYn = true
     }
 }

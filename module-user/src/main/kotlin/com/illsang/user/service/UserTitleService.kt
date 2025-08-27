@@ -34,13 +34,26 @@ class UserTitleService(
     }
 
     @Transactional
-    fun evaluateUserTitleByQuest(
+    fun updateReadStatus(id: Long) {
+        val userTitle = this.findById(id)
+        userTitle.updateReadYn()
+    }
+
+    @Transactional
+    fun deleteUserTitle(id: Long) {
+        val userTitle = this.findById(id)
+        userTitleRepository.delete(userTitle)
+    }
+
+    @Transactional
+    fun createUserTitle(
         userId: String,
         titleId: String,
         titleName: String,
         titleGrade: TitleGrade,
         titleType: TitleType,
     ) {
+
         val user = userRepository.findByIdOrNull(userId)
             ?: throw IllegalArgumentException("User not found with id: $userId")
 
@@ -56,7 +69,6 @@ class UserTitleService(
             userTitleRepository.save(newTitle)
             user.updateTitle(newTitle)
         }
-
     }
 
 
