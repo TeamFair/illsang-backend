@@ -12,6 +12,7 @@ class UserTitleEventListener(
 
     @EventListener
     fun evaluateUserTitleByQuest(event: UserTitleQuestCompleteEvent){
-        userTitleService.evaluateUserTitleByQuest(event.userId,event.maxStreak)
+        userTitleService.evaluateUserTitleByQuest(event.userId,event.titleId,event.titleName
+            ,event.titleGrade,event.titleType)
     }
 }

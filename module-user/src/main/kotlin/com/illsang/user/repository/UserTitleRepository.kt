@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface UserTitleRepository : JpaRepository<UserTitleEntity, Long>{
     fun findAllByUserId(userId: String): List<UserTitleEntity>
+    fun existsByUserIdAndTitleId(userId: String, titleId: String): Boolean
 }
