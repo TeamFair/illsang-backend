@@ -30,16 +30,6 @@ class MissionEntity(
     val quizzes: MutableList<QuizEntity> = mutableListOf(),
 ) : BaseEntity() {
 
-    init {
-        this.quest.addMission(this)
-        if (requiredQuiz()) {
-            if (this.quizzes.isEmpty()) {
-                throw IllegalArgumentException("There are no quizzes for this $type quest")
-            }
-        }
-    }
-
-
     fun update(request: MissionUpdateRequest) {
         this.title = request.title
         this.type = request.type
