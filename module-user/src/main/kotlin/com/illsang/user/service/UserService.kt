@@ -91,12 +91,10 @@ class UserService(
     }
 
     @Transactional
-    fun updateTitle(userId: String, titleHistoryId: String?): UserModel {
+    fun updateTitle(userId: String, titleHistoryId: Long): UserModel {
         val user = this.findById(userId)
 
-        val userTitle = titleHistoryId?.let {
-            this.userTitleService.findById(titleHistoryId)
-        }
+        val userTitle = this.userTitleService.findById(titleHistoryId)
 
         user.updateTitle(userTitle)
 

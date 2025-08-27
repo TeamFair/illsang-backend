@@ -6,7 +6,7 @@ import com.illsang.quest.enums.QuestHistoryStatus
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 
-interface QuestHistoryRepository : JpaRepository<UserQuestHistoryEntity, Long> {
+interface QuestHistoryRepository : JpaRepository<UserQuestHistoryEntity, Long>, QuestHistoryCustomRepository {
     fun findByUserIdAndQuest(userId: String, quest: QuestEntity): UserQuestHistoryEntity?
 
     @Query(

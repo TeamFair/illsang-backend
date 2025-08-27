@@ -1,12 +1,8 @@
 package com.illsang.user.dto.request
 
-import com.illsang.user.domain.entity.UserCouponEntity
-import software.amazon.awssdk.annotations.NotNull
 
 data class UserCouponCreateRequest(
-    @field:NotNull
     val userId: String,
-    @field:NotNull
     val couponId: Long,
     val couponUseYn: Boolean = false,
     val couponExpireYn: Boolean = false
