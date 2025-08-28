@@ -50,7 +50,7 @@ management:
   endpoints:
     web:
       exposure:
-        include: "*"  # "health", "info", "metrics"
+        include: health
 
 cloud:
   bucket:
@@ -64,9 +64,6 @@ springdoc:
     oauth:
       client-id: "702150906844-vt983n76k0dkkvnlatr894lfi9po4aq1.apps.googleusercontent.com"
       scopes: "openid,email,profile"
-  cache:
-    disabled: false
-
 decorator:
   datasource:
     p6spy:

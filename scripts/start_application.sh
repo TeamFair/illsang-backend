@@ -63,5 +63,5 @@ sudo docker run -d \
   -p "${TARGET_PORT}:8080" \
   -e "SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}" \
   --memory="${DOCKER_MEMORY_LIMIT}" \
-  --memory-swap="${DOCKER_MEMORY_LIMIT}" \
+  --memory-swap="${DOCKER_MEMORY_SWAP_LIMIT}" \
   "$IMAGE_NAME"
