@@ -62,7 +62,6 @@ sudo docker run -d \
   --name "$TARGET_CONTAINER_NAME" \
   -p "${TARGET_PORT}:8080" \
   -e "SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}" \
-  -e "JAVA_OPTS=-Xms256m -Xmx${JAVA_HEAP_SIZE} -Xss256k -XX:MaxMetaspaceSize=256m" \
   --memory="${DOCKER_MEMORY_LIMIT}" \
   --memory-swap="${DOCKER_MEMORY_LIMIT}" \
   "$IMAGE_NAME"
