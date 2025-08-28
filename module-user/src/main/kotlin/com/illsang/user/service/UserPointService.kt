@@ -105,10 +105,17 @@ class UserPointService(
         if (ownerPoints.isNotEmpty()) {
             val commercialTotalPoint =
                 this.userPointRepository.sumPointByCommercialArea(PointType.COMMERCIAL, ownerPoints[0].first)
+
+            val contributionPercent = if (commercialTotalPoint > 0L) {
+                (ownerPoints[0].second.toDouble() / commercialTotalPoint) * 100.0
+            } else {
+                0.0
+            }
+
             topCommercialContributionResponse = UserTopCommercialPointResponse.from(
                 code = ownerPoints[0].first,
                 point = ownerPoints[0].second,
-                contributionPercent = ownerPoints[0].second * commercialTotalPoint * 100,
+                contributionPercent = contributionPercent,
             )
         }
 

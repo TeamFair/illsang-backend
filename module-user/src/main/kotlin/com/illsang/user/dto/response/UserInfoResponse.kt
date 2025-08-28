@@ -86,10 +86,10 @@ data class UserCommercialContributionResponse(
 data class UserTopCommercialPointResponse(
     val commercialAreaCode: String,
     val point: Long,
-    val ownerContributionPercent: Long,
+    val ownerContributionPercent: Double,
 ) {
     companion object {
-        fun from(code: String, point: Long, contributionPercent: Long): UserTopCommercialPointResponse {
+        fun from(code: String, point: Long, contributionPercent: Double): UserTopCommercialPointResponse {
             return UserTopCommercialPointResponse(
                 commercialAreaCode = code,
                 point = point,
