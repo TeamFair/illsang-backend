@@ -85,7 +85,7 @@ class UserPointService(
         return this.userPointRepository.findAllUserRank(
             seasonId = seasonId,
             pointType = PointType.COMMERCIAL,
-            metroCode = commercialAreaCode,
+            commercialAreaCode = commercialAreaCode,
             pageable = Pageable.ofSize(30),
         ).content
     }

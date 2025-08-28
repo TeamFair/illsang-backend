@@ -50,8 +50,8 @@ interface MissionHistoryRepository : JpaRepository<UserMissionHistoryEntity, Lon
         )
     ): Page<UserMissionHistoryEntity>
 
-    fun findAllByUserIdAndStatusIn(
-        userId: String, pageable: Pageable,
+    fun findAllByMissionTypeAndUserIdAndStatusIn(
+        missionType: MissionType, userId: String, pageable: Pageable,
         missionStatus: List<MissionHistoryStatus> = listOf(
             MissionHistoryStatus.APPROVED, MissionHistoryStatus.SUBMITTED
         ),

@@ -163,7 +163,7 @@ class MissionHistoryService(
     }
 
     fun findByUserId(userId: String, pageable: Pageable): Page<MissionHistoryOwnerResponse> {
-        val missionHistories = this.missionHistoryRepository.findAllByUserIdAndStatusIn(userId, pageable)
+        val missionHistories = this.missionHistoryRepository.findAllByMissionTypeAndUserIdAndStatusIn(MissionType.PHOTO, userId, pageable)
 
         return missionHistories.map { MissionHistoryOwnerResponse.from(it) }
     }

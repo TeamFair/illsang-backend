@@ -53,7 +53,7 @@ class QuestUserService(
 
     fun findAllType(
         userId: String,
-        commercialAreaCode: String,
+        commercialAreaCode: String?,
         request: QuestUserTypeRequest,
         pageable: Pageable
     ): Page<QuestUserTypeResponse> {

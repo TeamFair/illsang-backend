@@ -78,6 +78,9 @@ data class MissionHistoryOwnerResponse(
     val missionHistoryId: Long?,
     val title: String,
     val submitImageId: String?,
+    val questImageId: String?,
+    val viewCount: Int = 0,
+    val likeCount: Int = 0,
     val createdAt: LocalDateTime,
 ) {
     companion object {
@@ -86,6 +89,9 @@ data class MissionHistoryOwnerResponse(
                 missionHistoryId = missionHistory.id,
                 title = missionHistory.mission.quest.title,
                 submitImageId = missionHistory.submitImageId,
+                questImageId = missionHistory.mission.quest.imageId,
+                viewCount = missionHistory.viewCount,
+                likeCount = missionHistory.likeCount,
                 createdAt = missionHistory.createdAt!!,
             )
         }

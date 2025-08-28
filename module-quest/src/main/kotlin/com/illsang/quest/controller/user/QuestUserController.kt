@@ -72,7 +72,7 @@ class QuestUserController(
     @PreAuthorize("hasRole('USER')")
     @Operation(operationId = "QUS004", summary = "퀘스트 유형별 조회")
     fun selectAllType(
-        @RequestParam commercialAreaCode: String,
+        @RequestParam(required = false) commercialAreaCode: String?,
         @ParameterObject request: QuestUserTypeRequest,
         @AuthenticationPrincipal authenticationModel: AuthenticationModel,
         @ParameterObject @PageableDefault(size = 10) pageable: Pageable,
