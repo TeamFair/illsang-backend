@@ -72,7 +72,6 @@ subprojects {
 
 		// Spring Security + OAuth2
 		implementation("org.springframework.boot:spring-boot-starter-security")
-		implementation("org.springframework.boot:spring-boot-starter-oauth2-authorization-server")
 		implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
 		implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
 		testImplementation("org.springframework.security:spring-security-test")
@@ -85,18 +84,10 @@ subprojects {
 
 		// Spring Web
 		implementation("org.springframework.boot:spring-boot-starter-web")
-		implementation("org.springframework.boot:spring-boot-starter-webflux")
-		implementation("org.springframework.cloud:spring-cloud-starter-gateway-mvc")
 
 		// Kotlin + Jackson + Reactor
 		implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-		implementation("io.projectreactor.kotlin:reactor-kotlin-extensions")
 		implementation("org.jetbrains.kotlin:kotlin-reflect")
-		implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor")
-
-		// Lombok
-		compileOnly("org.projectlombok:lombok")
-		annotationProcessor("org.projectlombok:lombok")
 
 		// AWS
 		implementation("software.amazon.awssdk:s3:2.32.2")
@@ -127,12 +118,6 @@ subprojects {
 		testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test")
 		testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
-	}
-
-	dependencyManagement {
-		imports {
-			mavenBom("org.springframework.cloud:spring-cloud-dependencies:${rootProject.extra["springCloudVersion"]}")
-		}
 	}
 
 	kotlin {
