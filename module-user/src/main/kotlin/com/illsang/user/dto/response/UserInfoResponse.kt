@@ -17,7 +17,7 @@ data class UserInfoResponse(
     val statusUpdatedAt: LocalDateTime?,
     val profileImageId: String?,
     val commercialAreaCode: String?,
-    val title: Long?,
+    val title: UserTitleResponse?,
 ) {
     companion object {
         fun from(user: UserModel): UserInfoResponse {
@@ -30,7 +30,7 @@ data class UserInfoResponse(
                 statusUpdatedAt = user.updatedAt,
                 profileImageId = user.profileImageId,
                 commercialAreaCode = user.commercialAreaCode,
-                title = user.currentTitle,
+                title = user.title?.let { UserTitleResponse.from(it) },
             )
         }
     }
@@ -40,7 +40,6 @@ data class UserTitleResponse(
     val name: String,
     val grade: TitleGrade,
     val type: TitleType,
-    val readYn: Boolean,
 ) {
     companion object {
         fun from(title: UserTitleModel): UserTitleResponse {
@@ -48,7 +47,6 @@ data class UserTitleResponse(
                 name = title.titleName,
                 grade = title.titleGrade,
                 type = title.titleType,
-                readYn = title.readYn,
             )
         }
     }

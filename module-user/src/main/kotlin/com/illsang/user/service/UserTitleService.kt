@@ -4,6 +4,7 @@ import com.illsang.common.enums.TitleId
 import com.illsang.common.event.user.title.GetTitleInfoEvent
 import com.illsang.user.domain.entity.UserTitleEntity
 import com.illsang.user.domain.model.UserTitleModel
+import com.illsang.user.repository.UserRepository
 import com.illsang.user.repository.UserTitleRepository
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.repository.findByIdOrNull
@@ -15,7 +16,7 @@ import org.springframework.transaction.annotation.Transactional
 class UserTitleService(
     private val userTitleRepository: UserTitleRepository,
     private val eventPublisher: ApplicationEventPublisher,
-    private val userService : UserService,
+    private val userRepository: UserRepository,
 ) {
 
     fun findById(id: Long): UserTitleEntity {
@@ -57,6 +58,8 @@ class UserTitleService(
         val titleGrade = titleEvent.response.titleGrade
         val titleType = titleEvent.response.titleType
 
+        val user = userRepository.findByIdOrNull(userId)
+            ?: throw IllegalArgumentException("User not found with id: $userId")
         val existingTitles = userTitleRepository.existsByUserIdAndTitleId(userId, titleId)
         if (!existingTitles) {
             val newTitle = UserTitleEntity(
@@ -64,10 +67,10 @@ class UserTitleService(
                 titleName = titleName,
                 titleGrade = titleGrade,
                 titleType = titleType,
-                userId = userId,
+                user = user,
             )
             userTitleRepository.save(newTitle)
-            userService.updateTitle(userId, newTitle.id!!)
+            user.updateTitle(newTitle)
         }
     }
 

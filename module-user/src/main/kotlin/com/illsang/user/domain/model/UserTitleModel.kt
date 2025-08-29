@@ -23,7 +23,7 @@ data class UserTitleModel(
         fun from(currentTitle: UserTitleEntity): UserTitleModel {
             return UserTitleModel(
                 id = currentTitle.id,
-                userId = currentTitle.userId,
+                userId = currentTitle.user.id!!,
                 titleId = currentTitle.titleId,
                 titleName = currentTitle.titleName,
                 titleGrade = currentTitle.titleGrade,
