@@ -2,7 +2,7 @@ package com.illsang.quest.service.user
 
 import com.illsang.common.event.management.area.MetroAreaGetByCommercialAreaEvent
 import com.illsang.common.event.management.season.SeasonGetCurrentEvent
-import com.illsang.common.event.quest.TitleQuestCompleteEvent
+import com.illsang.common.event.quest.UserTitleQuestCompleteEvent
 import com.illsang.common.event.user.point.UserPointCreateEvent
 import com.illsang.common.event.user.point.UserPointCreateRequest
 import com.illsang.quest.domain.entity.quest.QuestEntity
@@ -72,7 +72,7 @@ class QuestHistoryService(
 
             val maxStreakDay = userQuestHistoryRepository.findMaxConsecutiveDays(questHistory.userId)
             this.eventPublisher.publishEvent(
-                TitleQuestCompleteEvent(
+                UserTitleQuestCompleteEvent(
                     userId = questHistory.userId,
                     maxStreak = maxStreakDay
                 )

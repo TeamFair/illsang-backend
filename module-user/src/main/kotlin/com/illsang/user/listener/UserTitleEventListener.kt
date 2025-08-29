@@ -15,14 +15,13 @@ class UserTitleEventListener(
     @Async
     @EventListener
     fun evaluateUserTitleByQuest(event: UserTitleQuestCompleteEvent){
-        userTitleService.createUserTitle(event.userId,event.titleId,event.titleName
-            ,event.titleGrade,event.titleType)
+        val titleId = userTitleService.getTitleIdForQuestComplete(event.maxStreak)
+        userTitleService.createUserTitle(event.userId , titleId!!)
     }
 
     @Async
     @EventListener
     fun createUserTitle(event: UserTitleUserCreateEvent){
-        userTitleService.createUserTitle(event.userId,event.titleId,event.titleName
-            ,event.titleGrade,event.titleType)
+        userTitleService.createUserTitle(event.userId,event.titleId)
     }
 }

@@ -1,8 +1,10 @@
 package com.illsang.user.service
 
+import com.illsang.common.enums.TitleId
 import com.illsang.common.event.management.area.CommercialAreaExistOrThrowEvent
 import com.illsang.common.event.management.image.ImageDeleteEvent
 import com.illsang.common.event.management.season.SeasonGetCurrentEvent
+import com.illsang.common.event.quest.UserTitleUserCreateEvent
 import com.illsang.user.domain.entity.UserEntity
 import com.illsang.user.domain.model.UserModel
 import com.illsang.user.dto.request.CreateUserRequest
@@ -57,6 +59,16 @@ class UserService(
         }
 
         val user = this.userRepository.save(userRequest.toEntity())
+
+        user.id?.let {
+            eventPublisher.publishEvent(
+                UserTitleUserCreateEvent(
+                    userId = it,
+                    TitleId.TITLE_DAILY_PIONEER.titleId
+                )
+            )
+        }
+
         return UserModel.from(user)
     }
 
@@ -82,9 +94,11 @@ class UserService(
 
         user.updateProfileImage(request.imageId)
         if (request.imageId == null && prevProfileImage != null) {
-            this.eventPublisher.publishEvent(ImageDeleteEvent(
-                imageId =  prevProfileImage
-            ))
+            this.eventPublisher.publishEvent(
+                ImageDeleteEvent(
+                    imageId = prevProfileImage
+                )
+            )
         }
 
         return UserModel.from(user)
@@ -105,9 +119,11 @@ class UserService(
     fun updateAreaZone(userId: String, commercialAreaCode: String): UserModel {
         val user = this.findById(userId)
 
-        this.eventPublisher.publishEvent(CommercialAreaExistOrThrowEvent(
-            commercialAreaCode = commercialAreaCode,
-        ))
+        this.eventPublisher.publishEvent(
+            CommercialAreaExistOrThrowEvent(
+                commercialAreaCode = commercialAreaCode,
+            )
+        )
 
         val currentSeasonEvent = SeasonGetCurrentEvent(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
         this.eventPublisher.publishEvent(currentSeasonEvent)

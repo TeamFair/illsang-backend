@@ -1,12 +1,12 @@
 package com.illsang.user.service
 
-import com.illsang.common.enums.TitleGrade
-import com.illsang.common.enums.TitleType
-import com.illsang.user.domain.entity.UserEntity
+import com.illsang.common.enums.TitleId
+import com.illsang.common.event.quest.GetTitleInfoEvent
 import com.illsang.user.domain.entity.UserTitleEntity
 import com.illsang.user.domain.model.UserTitleModel
 import com.illsang.user.repository.UserRepository
 import com.illsang.user.repository.UserTitleRepository
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional(readOnly = true)
 class UserTitleService(
     private val userTitleRepository: UserTitleRepository,
+    private val eventPublisher: ApplicationEventPublisher,
     private val userRepository: UserRepository,
 ) {
 
@@ -28,7 +29,7 @@ class UserTitleService(
         return userTitles.map { UserTitleModel.from(it) }
     }
 
-    fun getTitle(id: Long): UserTitleModel{
+    fun getTitle(id: Long): UserTitleModel {
         val userTitle = this.findById(id)
         return UserTitleModel.from(userTitle)
     }
@@ -49,16 +50,19 @@ class UserTitleService(
     fun createUserTitle(
         userId: String,
         titleId: String,
-        titleName: String,
-        titleGrade: TitleGrade,
-        titleType: TitleType,
     ) {
+        val titleEvent = GetTitleInfoEvent(titleId)
+        this.eventPublisher.publishEvent(titleEvent)
+        
+        val titleName = titleEvent.response.titleName
+        val titleGrade = titleEvent.response.titleGrade
+        val titleType = titleEvent.response.titleType
 
         val user = userRepository.findByIdOrNull(userId)
             ?: throw IllegalArgumentException("User not found with id: $userId")
 
         val existingTitles = userTitleRepository.existsByUserIdAndTitleId(userId, titleId)
-        if(!existingTitles) {
+        if (!existingTitles) {
             val newTitle = UserTitleEntity(
                 user = user,
                 titleId = titleId,
@@ -71,5 +75,21 @@ class UserTitleService(
         }
     }
 
+    fun getTitleIdForQuestComplete(maxStreak: Int): String? {
+        val titleId = when {
+            maxStreak >= 360 -> TitleId.TITLE_360_DAYS.titleId
+            maxStreak >= 240 -> TitleId.TITLE_TWO_FORTY_DAYS.titleId
+            maxStreak >= 120 -> TitleId.TITLE_ONE_TWENTY_DAYS.titleId
+            maxStreak >= 60 -> TitleId.TITLE_SIXTY_DAYS.titleId
+            maxStreak >= 30 -> TitleId.TITLE_THIRTY_DAYS.titleId
+            maxStreak >= 14 -> TitleId.TITLE_FOURTEEN_DAYS.titleId
+            maxStreak >= 7 -> TitleId.TITLE_SEVEN_DAYS.titleId
+            maxStreak >= 4 -> TitleId.TITLE_FOUR_DAYS.titleId
+            maxStreak >= 2 -> TitleId.TITLE_ONE_DAY.titleId
+            maxStreak >= 1 -> TitleId.TITLE_FIRST_STEP.titleId
+            else -> null
+        }
+        return titleId
+    }
 
 }

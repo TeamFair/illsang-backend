@@ -20,7 +20,7 @@ class UserTitleController (
 ){
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @PreAuthorize("hasAnyRole('USER')")
     @Operation(operationId="UST001", summary="사용자 칭호 조회")
     fun getUserTitle(
         @AuthenticationPrincipal auth: AuthenticationModel
@@ -30,7 +30,7 @@ class UserTitleController (
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @PreAuthorize("hasAnyRole('USER')")
     @Operation(operationId="UST002", summary="사용자 칭호 상세 조회")
     fun getUserTitleDetail(
         @PathVariable id: Long,
@@ -40,21 +40,18 @@ class UserTitleController (
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('USER')")
     @Operation(operationId = "UST003", summary = "사용자 칭호 부여")
     fun assignUserTitle(
         @RequestParam userId: String,
         @RequestParam titleId: String,
-        @RequestParam titleName: String,
-        @RequestParam titleGrade: TitleGrade,
-        @RequestParam titleType: TitleType
     ): ResponseEntity<Void> {
-        userTitleService.createUserTitle(userId, titleId, titleName, titleGrade, titleType)
+        userTitleService.createUserTitle(userId, titleId)
         return ResponseEntity.ok().build()
     }
 
     @PutMapping("/{id}/read")
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @PreAuthorize("hasAnyRole('USER')")
     @Operation(operationId = "UST004", summary = "사용자 칭호 읽음 처리")
     fun updateTitleReadStatus(
         @PathVariable id: Long
@@ -64,7 +61,7 @@ class UserTitleController (
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('USER')")
     @Operation(operationId = "UST005", summary = "사용자 칭호 삭제")
     fun deleteUserTitle(
         @PathVariable id: Long

@@ -28,7 +28,7 @@ class UserCouponController(
 ) {
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @PreAuthorize("hasAnyRole('USER')")
     @Operation(operationId = "USC001", summary = "사용자 쿠폰 상세 조회")
     fun getById(@PathVariable id: Long): ResponseEntity<UserCouponResponse> {
         val model = userCouponService.getById(id)
@@ -36,7 +36,7 @@ class UserCouponController(
     }
 
     @GetMapping("/by-user/{userId}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @PreAuthorize("hasAnyRole('USER')")
     @Operation(operationId = "USC002", summary = "사용자 쿠폰 사용자ID 별 리스트 조회")
     fun listByUser(
         @PathVariable userId: String,
@@ -48,7 +48,7 @@ class UserCouponController(
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @PreAuthorize("hasAnyRole('USER')")
     @Operation(operationId = "USC003", summary = "사용자 쿠폰 생성")
     fun create(@RequestBody request: UserCouponCreateRequest): ResponseEntity<UserCouponResponse> {
         val model = userCouponService.create(request)
@@ -56,7 +56,7 @@ class UserCouponController(
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @PreAuthorize("hasAnyRole('USER')")
     @Operation(operationId = "USC004", summary = "사용자 쿠폰 수정")
     fun update(
         @PathVariable id: Long,
@@ -67,7 +67,7 @@ class UserCouponController(
     }
 
     @PostMapping("/{id}/verify-password")
-    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    @PreAuthorize("hasAnyRole('USER')")
     @Operation(operationId = "USC005", summary = "사용자 쿠폰 비밀번호 검증")
     fun verifyPassword(
         @PathVariable id: Long,
