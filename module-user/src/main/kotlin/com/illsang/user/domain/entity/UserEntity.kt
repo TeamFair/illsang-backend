@@ -36,9 +36,8 @@ class UserEntity(
     @Column(name = "profile_image_id")
     var profileImageId: String? = null,
 
-    @OneToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "current_title_id")
-    var currentTitle: UserTitleEntity? = null,
+    @Column(name = "current_title_id")
+    var currentTitle: Long? = null,
 
     @Column(name = "commercial_area_code")
     var commercialAreaCode: String? = null,
@@ -52,9 +51,6 @@ class UserEntity(
 
     @OneToMany(mappedBy = "id.user", cascade = [CascadeType.ALL], orphanRemoval = true)
     val userPoints: MutableSet<UserPointEntity> = mutableSetOf(),
-
-    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val userTitles: MutableSet<UserTitleEntity> = mutableSetOf(),
 ) : BaseEntity() {
 
     init {
@@ -73,8 +69,8 @@ class UserEntity(
         this.profileImageId = imageId
     }
 
-    fun updateTitle(userTitle: UserTitleEntity?) {
-        this.currentTitle = userTitle
+    fun updateTitle(currentTitleId: Long?) {
+        this.currentTitle = currentTitleId
     }
 
     fun updateAreaZone(commercialAreaCode: String, currentSeason: SeasonGetCurrentEvent.CurrentSeason) {

@@ -12,9 +12,8 @@ class UserTitleEntity(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    var user: UserEntity,
+    @Column(name = "user_id")
+    var userId: String,
 
     @Column(name = "title_id")
     var titleId: String,

@@ -8,7 +8,7 @@ data class UserRankResponse(
     val nickName: String?,
     val point: Long?,
     val rank: Long?,
-    val title: UserTitleResponse?,
+    val title: Long?,
 ) {
     companion object {
         fun from(model: UserRankModel): UserRankResponse {
@@ -18,7 +18,7 @@ data class UserRankResponse(
                 nickName = model.user.nickname,
                 point = model.point,
                 rank = model.rank,
-                title = model.user.title?.let { UserTitleResponse.from(it) },
+                title = model.user.currentTitle,
             )
         }
     }

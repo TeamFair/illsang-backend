@@ -1,4 +1,4 @@
-package com.illsang.common.event.quest
+package com.illsang.common.event.user.title
 
 import com.illsang.common.enums.TitleGrade
 import com.illsang.common.enums.TitleType

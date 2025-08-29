@@ -20,7 +20,7 @@ data class UserTitleRequest(
             titleName = titleName,
             titleGrade = titleGrade,
             readYn = readYn,
-            user = user
+            userId = user.id!!,
 
         )
     }

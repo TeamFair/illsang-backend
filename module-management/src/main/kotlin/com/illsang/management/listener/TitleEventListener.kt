@@ -1,6 +1,6 @@
 package com.illsang.management.listener
 
-import com.illsang.common.event.quest.GetTitleInfoEvent
+import com.illsang.common.event.user.title.GetTitleInfoEvent
 import com.illsang.management.domain.model.TitleModel
 import com.illsang.management.service.TitleService
 import org.springframework.context.event.EventListener
@@ -13,10 +13,13 @@ class TitleEventListener(
     @EventListener
     fun getTitleInfo(event: GetTitleInfoEvent) {
         val title = titleService.getTitle(event.titleId)
-        event.titleId = title.id
-        event.titleName = title.name
-        event.titleType = title.type
-        event.titleGrade = title.grade
+
+        event.response = GetTitleInfoEvent.TitleInfo(
+            titleId = title.id,
+            titleName = title.name,
+            titleGrade = title.grade,
+            titleType = title.type,
+        )
     }
 }
 

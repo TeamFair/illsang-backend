@@ -12,13 +12,14 @@ data class UserInfoGetEvent (
         val userId: String,
         val nickname: String,
         val profileImageId: String?,
-        val title: UserTitleInfo?,
+        val title: Long?,
     )
 
     class UserTitleInfo (
         val name: String,
         val grade: TitleGrade,
         val type: TitleType,
+        val readYn: Boolean,
     )
 }
 

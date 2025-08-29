@@ -1,10 +1,9 @@
 package com.illsang.user.service
 
 import com.illsang.common.enums.TitleId
-import com.illsang.common.event.quest.GetTitleInfoEvent
+import com.illsang.common.event.user.title.GetTitleInfoEvent
 import com.illsang.user.domain.entity.UserTitleEntity
 import com.illsang.user.domain.model.UserTitleModel
-import com.illsang.user.repository.UserRepository
 import com.illsang.user.repository.UserTitleRepository
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.repository.findByIdOrNull
@@ -16,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional
 class UserTitleService(
     private val userTitleRepository: UserTitleRepository,
     private val eventPublisher: ApplicationEventPublisher,
-    private val userRepository: UserRepository,
+    private val userService : UserService,
 ) {
 
     fun findById(id: Long): UserTitleEntity {
@@ -53,26 +52,27 @@ class UserTitleService(
     ) {
         val titleEvent = GetTitleInfoEvent(titleId)
         this.eventPublisher.publishEvent(titleEvent)
-        
+
         val titleName = titleEvent.response.titleName
         val titleGrade = titleEvent.response.titleGrade
         val titleType = titleEvent.response.titleType
 
-        val user = userRepository.findByIdOrNull(userId)
-            ?: throw IllegalArgumentException("User not found with id: $userId")
-
         val existingTitles = userTitleRepository.existsByUserIdAndTitleId(userId, titleId)
         if (!existingTitles) {
             val newTitle = UserTitleEntity(
-                user = user,
                 titleId = titleId,
                 titleName = titleName,
                 titleGrade = titleGrade,
-                titleType = titleType
+                titleType = titleType,
+                userId = userId,
             )
             userTitleRepository.save(newTitle)
-            user.updateTitle(newTitle)
+            userService.updateTitle(userId, newTitle.id!!)
         }
+    }
+
+    fun existOrThrowUserTitle(userTitleId : Long) {
+        this.findById(userTitleId)
     }
 
     fun getTitleIdForQuestComplete(maxStreak: Int): String? {
@@ -89,7 +89,8 @@ class UserTitleService(
             maxStreak >= 1 -> TitleId.TITLE_FIRST_STEP.titleId
             else -> null
         }
-        return titleId
+
+        return titleId ?: throw IllegalArgumentException("Title not found for streak: $maxStreak")
     }
 
 }

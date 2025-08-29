@@ -4,7 +4,8 @@ import com.illsang.common.enums.TitleId
 import com.illsang.common.event.management.area.CommercialAreaExistOrThrowEvent
 import com.illsang.common.event.management.image.ImageDeleteEvent
 import com.illsang.common.event.management.season.SeasonGetCurrentEvent
-import com.illsang.common.event.quest.UserTitleUserCreateEvent
+import com.illsang.common.event.user.title.UserTitleExistOrThrowEvent
+import com.illsang.common.event.user.title.UserTitleUserCreateEvent
 import com.illsang.user.domain.entity.UserEntity
 import com.illsang.user.domain.model.UserModel
 import com.illsang.user.dto.request.CreateUserRequest
@@ -23,7 +24,6 @@ import java.time.ZoneId
 class UserService(
     private val eventPublisher: ApplicationEventPublisher,
     private val userRepository: UserRepository,
-    private val userTitleService: UserTitleService,
 ) {
 
     fun getUser(userId: String): UserModel {
@@ -108,9 +108,9 @@ class UserService(
     fun updateTitle(userId: String, titleHistoryId: Long): UserModel {
         val user = this.findById(userId)
 
-        val userTitle = this.userTitleService.findById(titleHistoryId)
+        eventPublisher.publishEvent(UserTitleExistOrThrowEvent(titleHistoryId))
 
-        user.updateTitle(userTitle)
+        user.updateTitle(titleHistoryId)
 
         return UserModel.from(user)
     }

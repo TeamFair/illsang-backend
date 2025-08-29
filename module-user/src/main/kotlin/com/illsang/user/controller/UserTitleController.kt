@@ -1,8 +1,6 @@
 package com.illsang.user.controller
 
 import com.illsang.auth.domain.model.AuthenticationModel
-import com.illsang.common.enums.TitleGrade
-import com.illsang.common.enums.TitleType
 import com.illsang.user.dto.response.UserTitleResponse
 import com.illsang.user.service.UserTitleService
 import io.swagger.v3.oas.annotations.Operation

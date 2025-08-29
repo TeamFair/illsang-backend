@@ -9,7 +9,7 @@ data class UserResponse (
     val userId: String,
     val nickname: String,
     val profileImageId: String?,
-    val title: UserTitleResponse?,
+    val title: Long?,
 ) {
     companion object {
         fun from(userInfo: UserInfoGetEvent.UserInfo): UserResponse {
@@ -17,7 +17,7 @@ data class UserResponse (
                 userId = userInfo.userId,
                 nickname = userInfo.nickname,
                 profileImageId = userInfo.profileImageId,
-                title = userInfo.title?.let { UserTitleResponse.from(it) },
+                title = userInfo.title,
             )
         }
     }
@@ -27,6 +27,7 @@ data class UserTitleResponse (
     val name: String,
     val grade: TitleGrade,
     val type: TitleType,
+    val readYn: Boolean,
 ) {
     companion object {
         fun from(userTitleInfo: UserInfoGetEvent.UserTitleInfo): UserTitleResponse {
@@ -34,6 +35,7 @@ data class UserTitleResponse (
                 name = userTitleInfo.name,
                 grade = userTitleInfo.grade,
                 type = userTitleInfo.type,
+                readYn = userTitleInfo.readYn
             )
         }
     }

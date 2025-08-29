@@ -19,15 +19,15 @@ class UserInfoEventListener(
                 userId = it.id!!,
                 nickname = it.nickname,
                 profileImageId = it.profileImageId,
-                title = it.title?.let { title ->
-                    UserInfoGetEvent.UserTitleInfo(
-                        name = title.titleName,
-                        grade = title.titleGrade,
-                        type = title.titleType,
-                    )
-                }
+                title = it.currentTitle,
             )
         }
-    }
 
+    }
 }
+
+    @EventListener
+    fun findUserId(event: UserInfoGetEvent) {
+
+
+    }
