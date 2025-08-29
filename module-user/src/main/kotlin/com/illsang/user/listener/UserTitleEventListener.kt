@@ -1,6 +1,6 @@
 package com.illsang.user.listener
 
-import com.illsang.common.event.user.title.UserTitleExistOrThrowEvent
+import com.illsang.common.event.user.title.CreateUserTitleEvent
 import com.illsang.common.event.user.title.UserTitleQuestCompleteEvent
 import com.illsang.common.event.user.title.UserTitleUserCreateEvent
 import com.illsang.user.service.UserTitleService
@@ -25,7 +25,7 @@ class UserTitleEventListener(
     }
 
     @EventListener
-    fun existOrThrowUserTitle(event: UserTitleExistOrThrowEvent) {
-        userTitleService.existOrThrowUserTitle(event.userTitleId)
+    fun createUserTitle(event: CreateUserTitleEvent) {
+        userTitleService.updateUserTitle(event.userTitleId, event.userId)
     }
 }

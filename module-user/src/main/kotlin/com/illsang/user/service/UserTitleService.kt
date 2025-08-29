@@ -16,12 +16,17 @@ import org.springframework.transaction.annotation.Transactional
 class UserTitleService(
     private val userTitleRepository: UserTitleRepository,
     private val eventPublisher: ApplicationEventPublisher,
-    private val userRepository: UserRepository,
+    private val userService: UserService,
 ) {
 
     fun findById(id: Long): UserTitleEntity {
         return userTitleRepository.findByIdOrNull(id)
             ?: throw IllegalArgumentException("UserTitle not found with id: $id")
+    }
+
+    fun findByUserIdAndId(id: Long, userId: String): UserTitleEntity {
+        return userTitleRepository.findByUserIdAndId(userId, id)
+            ?: throw IllegalArgumentException("UserTitle not found with id and userId: $id , $userId")
     }
 
     fun getTitlesByUserId(userId: String): List<UserTitleModel> {
@@ -58,8 +63,7 @@ class UserTitleService(
         val titleGrade = titleEvent.response.titleGrade
         val titleType = titleEvent.response.titleType
 
-        val user = userRepository.findByIdOrNull(userId)
-            ?: throw IllegalArgumentException("User not found with id: $userId")
+        val user = userService.findById(userId)
         val existingTitles = userTitleRepository.existsByUserIdAndTitleId(userId, titleId)
         if (!existingTitles) {
             val newTitle = UserTitleEntity(
@@ -74,8 +78,11 @@ class UserTitleService(
         }
     }
 
-    fun existOrThrowUserTitle(userTitleId : Long) {
-        this.findById(userTitleId)
+    fun updateUserTitle(userTitleId: Long, userId: String) {
+        val userTitle = this.findByUserIdAndId(userTitleId, userId)
+        val user = userService.findById(userId)
+
+        user.updateTitle(userTitle)
     }
 
     fun getTitleIdForQuestComplete(maxStreak: Int): String? {
