@@ -4,7 +4,6 @@ import com.illsang.common.enums.TitleId
 import com.illsang.common.event.user.title.GetTitleInfoEvent
 import com.illsang.user.domain.entity.UserTitleEntity
 import com.illsang.user.domain.model.UserTitleModel
-import com.illsang.user.repository.UserRepository
 import com.illsang.user.repository.UserTitleRepository
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.repository.findByIdOrNull

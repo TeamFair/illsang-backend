@@ -59,11 +59,11 @@ class ImageController(
         return ResponseEntity.ok(images.map { ImageResponse.from(it) })
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping
     @PreAuthorize("hasAnyRole('ADMIN')")
     @Operation(operationId = "IMG004", summary= "이미지 삭제")
     fun deleteImage(
-        @PathVariable id: String,
+        @RequestParam id: String,
     ): ResponseEntity<ResponseMsg> {
         this.imageService.deleteImage(id)
 
