@@ -56,4 +56,6 @@ interface MissionHistoryRepository : JpaRepository<UserMissionHistoryEntity, Lon
             MissionHistoryStatus.APPROVED, MissionHistoryStatus.SUBMITTED
         ),
     ): Page<UserMissionHistoryEntity>
+
+    fun existsBySubmitImageId(submitImageId: String): Boolean
 }

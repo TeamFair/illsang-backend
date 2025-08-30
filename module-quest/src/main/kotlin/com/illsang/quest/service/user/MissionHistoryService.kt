@@ -188,4 +188,10 @@ class MissionHistoryService(
         this.missionHistoryRepository.findByIdOrNull(missionHistoryId)
             ?: throw IllegalArgumentException("Mission History not found")
 
+    fun existUserMissionImageId(id: String) {
+        val missionHistory = missionHistoryRepository.existsBySubmitImageId(id)
+        if(missionHistory) throw IllegalArgumentException("User mission image already exists")
+    }
+
+
 }

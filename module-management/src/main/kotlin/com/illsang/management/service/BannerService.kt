@@ -71,4 +71,12 @@ class BannerService(
     private fun findById(id: Long): BannerEntity = (this.bannerRepository.findByIdOrNull(id)
         ?: throw IllegalArgumentException("Banner not found with id: $id"))
 
+
+    fun existBannerImageId(imageId: String){
+        val banner = bannerRepository.existsByBannerImageId(imageId)
+        if(banner) {
+            throw IllegalArgumentException("This image is already registered in a banner.")
+        }
+    }
+
 }

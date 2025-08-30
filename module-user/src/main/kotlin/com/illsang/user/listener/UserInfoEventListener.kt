@@ -1,6 +1,7 @@
 package com.illsang.user.listener
 
 import com.illsang.common.event.user.info.UserInfoGetEvent
+import com.illsang.common.event.user.info.UserProfileImageExistOrThrowEvent
 import com.illsang.user.service.UserService
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
@@ -28,6 +29,11 @@ class UserInfoEventListener(
                 }
             )
         }
+    }
+
+    @EventListener
+    fun existImageId(event : UserProfileImageExistOrThrowEvent){
+        userService.existUserProfileImageId(event.imageId)
     }
 
 }

@@ -88,4 +88,10 @@ class QuestService(
     fun findById(id: Long): QuestEntity = this.questRepository.findByIdOrNull(id)
         ?: throw IllegalArgumentException("Quest not found with id: $id")
 
+    fun existQuestImageId(id : String){
+
+        if(questRepository.existsByMainImageId(id)) throw IllegalArgumentException("Quest main image already exists")
+        if(questRepository.existsByImageId(id)) throw IllegalArgumentException("Quest image already exists")
+    }
+
 }

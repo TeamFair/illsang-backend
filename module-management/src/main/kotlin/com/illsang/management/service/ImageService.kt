@@ -1,10 +1,16 @@
 package com.illsang.management.service
 
+import com.illsang.common.event.management.banner.BannerImageExistOrThrowEvent
+import com.illsang.common.event.management.quest.QuestImageExistOrThrowEvent
+import com.illsang.common.event.user.coupon.CouponImageExistOrThrowEvent
+import com.illsang.common.event.user.info.UserProfileImageExistOrThrowEvent
+import com.illsang.common.event.user.mission.UserMissionImageExistOrThrowEvent
 import com.illsang.management.domain.entity.ImageEntity
 import com.illsang.management.domain.model.ImageModel
 import com.illsang.management.dto.request.ImageCreateRequest
 import com.illsang.management.enums.ImageType
 import com.illsang.management.repository.ImageRepository
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -17,6 +23,7 @@ import kotlin.random.Random
 class ImageService(
     private val imageRepository: ImageRepository,
     private val s3Service: S3Service,
+    private val eventPublisher: ApplicationEventPublisher,
 ) {
 
     @Transactional
@@ -45,6 +52,12 @@ class ImageService(
     @Transactional
     fun deleteImage(id: String) {
         val image = this.findById(id)
+
+        this.eventPublisher.publishEvent(BannerImageExistOrThrowEvent(id))
+        this.eventPublisher.publishEvent(CouponImageExistOrThrowEvent(id))
+        this.eventPublisher.publishEvent(UserProfileImageExistOrThrowEvent(id))
+        this.eventPublisher.publishEvent(UserMissionImageExistOrThrowEvent(id))
+        this.eventPublisher.publishEvent(QuestImageExistOrThrowEvent(id))
 
         this.imageRepository.delete(image)
         this.s3Service.deleteImage(id)

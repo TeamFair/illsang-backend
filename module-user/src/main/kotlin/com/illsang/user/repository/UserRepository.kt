@@ -8,4 +8,5 @@ interface UserRepository : JpaRepository<UserEntity, String> {
     fun findByNickname(nickname: String): UserEntity?
     fun existsByEmail(email: String): Boolean
     fun existsByNickname(nickname: String): Boolean
+    fun existsByProfileImageId(profileImageId: String): Boolean
 }

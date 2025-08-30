@@ -93,4 +93,11 @@ class CouponService(
         }
     }
 
+    fun existCouponImageId(id: String){
+        val coupon = this.couponRepository.existsByImageId(id)
+        if(coupon){
+            throw IllegalArgumentException("This image is already registered in a coupon.")
+        }
+    }
+
 }

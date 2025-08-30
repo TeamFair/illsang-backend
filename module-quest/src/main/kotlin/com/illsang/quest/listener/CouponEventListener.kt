@@ -1,6 +1,7 @@
 package com.illsang.quest.listener
 
 import com.illsang.common.event.user.coupon.CouponExistOrThrowEvent
+import com.illsang.common.event.user.coupon.CouponImageExistOrThrowEvent
 import com.illsang.common.event.user.coupon.CouponPasswordVerificationOrThrowEvent
 import com.illsang.quest.service.quest.CouponService
 import org.springframework.context.event.EventListener
@@ -19,6 +20,11 @@ class CouponEventListener(
     @EventListener
     fun handleCouponPasswordVerificationOrThrow(event: CouponPasswordVerificationOrThrowEvent){
         couponService.verifyPassword(event.couponId, event.password)
+    }
+
+    @EventListener
+    fun existImageId(event: CouponImageExistOrThrowEvent){
+        couponService.existCouponImageId(event.imageId)
     }
 
 }

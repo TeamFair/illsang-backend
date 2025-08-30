@@ -150,4 +150,8 @@ class UserService(
         return users.map { UserModel.from(it) }
     }
 
+    fun existUserProfileImageId(id: String) {
+        val userProfile = this.userRepository.existsByProfileImageId(id)
+        if(userProfile) throw IllegalArgumentException("User profile image already exists")
+    }
 }

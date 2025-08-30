@@ -1,6 +1,7 @@
 package com.illsang.management.listener
 
 import com.illsang.common.event.management.banner.BannerExistOrThrowEvent
+import com.illsang.common.event.management.banner.BannerImageExistOrThrowEvent
 import com.illsang.management.service.BannerService
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
@@ -13,6 +14,11 @@ class BannerEventListener(
     @EventListener
     fun existOrThrowArea(event: BannerExistOrThrowEvent) {
         this.bannerService.existOrThrowBanner(event.bannerId)
+    }
+
+    @EventListener
+    fun imageIdExistOrThrow(event: BannerImageExistOrThrowEvent){
+        this.bannerService.existBannerImageId(event.imageId)
     }
 
 }
