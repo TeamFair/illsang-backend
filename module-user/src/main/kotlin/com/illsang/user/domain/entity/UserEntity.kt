@@ -65,7 +65,7 @@ class UserEntity(
     }
 
     fun updateNickname(nickName: String) {
-        validateNickName(nickname)
+        validateNickName(nickName)
         this.nickname = nickName
     }
 
