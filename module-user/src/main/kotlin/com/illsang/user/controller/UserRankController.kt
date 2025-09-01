@@ -2,6 +2,7 @@ package com.illsang.user.controller
 
 import com.illsang.auth.domain.model.AuthenticationModel
 import com.illsang.common.enums.PointType
+import com.illsang.user.dto.response.UserRankDetailResponse
 import com.illsang.user.dto.response.UserRankListResponse
 import com.illsang.user.dto.response.UserRankResponse
 import com.illsang.user.service.UserPointService
@@ -62,7 +63,7 @@ class UserRankController(
         return ResponseEntity.ok(
             UserRankListResponse(
                 ranks = userTotalRank.map { UserRankResponse.from(it) },
-                user = UserRankResponse.from(userRank),
+                user = UserRankDetailResponse.from(userRank.first, userRank.second),
             )
         )
     }
@@ -82,7 +83,7 @@ class UserRankController(
         return ResponseEntity.ok(
             UserRankListResponse(
                 ranks = userTotalRank.map { UserRankResponse.from(it) },
-                user = UserRankResponse.from(userRank),
+                user = UserRankDetailResponse.from(userRank.first, userRank.second),
             )
         )
     }

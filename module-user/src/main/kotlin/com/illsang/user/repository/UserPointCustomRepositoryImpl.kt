@@ -76,7 +76,7 @@ class UserPointCustomRepositoryImpl(
         seasonId: Long?,
         areaCode: String?,
         pointType: PointType,
-    ): UserRankModel {
+    ): Pair<UserRankModel, Long?> {
         val totalPoints = userPointEntity.point.sumLong().coalesce(0L)
         val lastPointTime = userPointEntity.createdAt.max()
 
@@ -103,16 +103,17 @@ class UserPointCustomRepositoryImpl(
         val userPoints = targetUserData.get(totalPoints)!!
 
         if (userPoints == 0L) {
-            return UserRankModel.from(
-                user = user,
+            return Pair(
+                UserRankModel.from(user = user),
+                null,
             )
         }
 
         val targetCreatedAt = targetUserData.get(lastPointTime)
             ?: throw IllegalStateException("lastPointTime is null for a user with points")
 
-        val higherRankedCount = queryFactory
-            .select(userEntity.id.countDistinct())
+        val higherRankedScores = queryFactory
+            .select(userPointEntity.point.sumLong())
             .from(userPointEntity)
             .innerJoin(userPointEntity.id.user, userEntity)
             .where(
@@ -128,12 +129,20 @@ class UserPointCustomRepositoryImpl(
                             .and(userPointEntity.createdAt.max().lt(targetCreatedAt))
                     )
             )
-            .fetchOne() ?: 0
+            .orderBy(userPointEntity.point.sumLong().asc())
+            .fetch()
 
-        return UserRankModel.from(
-            user = user,
-            point = userPoints,
-            rank = higherRankedCount + 1L,
+        val higherRankedCount = higherRankedScores.size.toLong()
+        val nextHigherPoints = higherRankedScores.firstOrNull()
+        val pointDifference = nextHigherPoints?.let { it - userPoints }
+
+        return Pair(
+            UserRankModel.from(
+                user = user,
+                point = userPoints,
+                rank = higherRankedCount + 1L,
+            ),
+            pointDifference,
         )
     }
 
@@ -238,6 +247,7 @@ class UserPointCustomRepositoryImpl(
             else -> null
         }
     }
+
     private fun metroCodeEq(metroCode: String?): BooleanExpression? {
         return metroCode?.let { userPointEntity.id.metroAreaCode.eq(it) }
     }

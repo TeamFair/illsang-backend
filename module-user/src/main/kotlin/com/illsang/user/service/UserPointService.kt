@@ -90,7 +90,7 @@ class UserPointService(
         ).content
     }
 
-    fun findRankByUser(seasonId: Long?, areaCode: String?, pointType: PointType, userId: String): UserRankModel {
+    fun findRankByUser(seasonId: Long?, areaCode: String?, pointType: PointType, userId: String): Pair<UserRankModel, Long?> {
         return this.userPointRepository.findUserRankPosition(
             userId = userId,
             seasonId = seasonId,
