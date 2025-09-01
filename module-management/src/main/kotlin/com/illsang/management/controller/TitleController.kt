@@ -17,7 +17,7 @@ class TitleController(
 ) {
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @Operation(operationId = "TTL001", summary = "칭호 단일 조회")
     fun getTitle(@PathVariable id: String): ResponseEntity<TitleResponse> {
 
@@ -27,7 +27,7 @@ class TitleController(
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @Operation(operationId = "TTL002", summary = "칭호 전체 조회")
     fun getAllTitles(): ResponseEntity<List<TitleResponse>> {
         val titles = titleService.getAllTitles()
