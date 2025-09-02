@@ -1,7 +1,9 @@
 package com.illsang.management.listener
 
+import com.illsang.common.event.management.area.CommercialAreaAllGetEvent
 import com.illsang.common.event.management.area.CommercialAreaExistOrThrowEvent
 import com.illsang.common.event.management.area.CommercialAreaGetEvent
+import com.illsang.common.event.management.area.MetroAreaAllGetEvent
 import com.illsang.common.event.management.area.MetroAreaGetByCommercialAreaEvent
 import com.illsang.common.event.management.area.MetroAreaGetEvent
 import com.illsang.management.service.AreaCommercialService
@@ -45,6 +47,30 @@ class AreaEventListener(
 
         event.response = commercials.map {
             CommercialAreaGetEvent.CommercialArea(
+                code = it.code,
+                areaName = it.areaName,
+                images = it.images,
+            )
+        }
+    }
+
+    @EventListener
+    fun getMetroAreaAllInfo(event: MetroAreaAllGetEvent){
+        val metros = this.metroService.findAllMetro()
+        event.response = metros.map {
+            MetroAreaAllGetEvent.MetroAllArea(
+                code = it.code,
+                areaName = it.areaName,
+                images = it.images,
+            )
+        }
+    }
+
+    @EventListener
+    fun getCommercialAreaAllInfo(event: CommercialAreaAllGetEvent){
+        val commercials = this.commercialService.findAllCommercial()
+        event.response = commercials.map {
+            CommercialAreaAllGetEvent.CommercialAllArea(
                 code = it.code,
                 areaName = it.areaName,
                 images = it.images,
