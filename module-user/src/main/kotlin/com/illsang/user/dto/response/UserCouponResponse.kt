@@ -9,7 +9,9 @@ data class UserCouponResponse(
     val couponId: Long,
     val couponUseYn: Boolean,
     val couponExpireYn: Boolean,
-    val usedAt: LocalDateTime?
+    val usedAt: LocalDateTime?,
+    val couponName: String?,
+    val couponStoreName: String?,
 ) {
     companion object {
         fun from(model: UserCouponModel) = UserCouponResponse(
@@ -18,7 +20,10 @@ data class UserCouponResponse(
             couponId = model.couponId,
             couponUseYn = model.couponUseYn,
             couponExpireYn = model.couponExpireYn,
-            usedAt = model.usedAt
+            usedAt = model.usedAt,
+            couponName = model.couponName,
+            couponStoreName = model.couponStoreName
+
         )
     }
 }

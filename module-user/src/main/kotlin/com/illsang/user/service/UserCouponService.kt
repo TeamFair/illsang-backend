@@ -1,8 +1,10 @@
 package com.illsang.user.service
 
 import com.illsang.common.event.user.coupon.CouponExistOrThrowEvent
+import com.illsang.common.event.user.coupon.CouponInfoGetEvent
 import com.illsang.common.event.user.coupon.CouponPasswordVerificationOrThrowEvent
 import com.illsang.user.domain.entity.UserCouponEntity
+import com.illsang.user.domain.model.CouponModel
 import com.illsang.user.domain.model.UserCouponModel
 import com.illsang.user.dto.request.UserCouponCreateRequest
 import com.illsang.user.dto.request.UserCouponUpdateRequest
@@ -17,48 +19,68 @@ import org.springframework.transaction.annotation.Transactional
 @Transactional(readOnly = true)
 class UserCouponService(
     private val userCouponRepository: UserCouponRepository,
-    private val eventPublisher: ApplicationEventPublisher
+    private val eventPublisher: ApplicationEventPublisher,
+    private val userService: UserService,
 ) {
-
     fun getById(id: Long): UserCouponModel {
-        val entity = this.findById(id)
-        return UserCouponModel.from(entity)
+        val entity = findById(id)
+        return toModelWithCoupon(entity)
     }
 
     fun listByUser(userId: String, page: Int, size: Int): List<UserCouponModel> {
         val pageable = PageRequest.of(page, size)
         return userCouponRepository.findAllByUserId(userId, pageable)
             .content
-            .map(UserCouponModel::from)
+            .map(::toModelWithCoupon)
     }
 
     @Transactional
     fun create(request: UserCouponCreateRequest): UserCouponModel {
-        // 쿠폰 검증(quest 모듈 리스너가 처리)
+        // 쿠폰 존재 검증
         eventPublisher.publishEvent(CouponExistOrThrowEvent(request.couponId))
 
-        // 도메인 정책: 발급은 엔티티 팩토리로만 생성(항상 미사용/미만료)
+        // 발급
         val entity = UserCouponEntity.issue(request.userId, request.couponId)
-
         val saved = userCouponRepository.save(entity)
-        return UserCouponModel.from(saved)
+
+        return toModelWithCoupon(saved)
     }
 
     @Transactional
     fun update(id: Long, request: UserCouponUpdateRequest): UserCouponModel {
-        // 쿠폰 검증(quest 모듈 리스너가 처리)
-        eventPublisher.publishEvent(CouponExistOrThrowEvent(id))
         val entity = findById(id)
+
+        // 쿠폰 존재 검증 (수정: couponId로 검증)
+        eventPublisher.publishEvent(CouponExistOrThrowEvent(entity.couponId))
+
         entity.update(request)
-        return UserCouponModel.from(entity)
+        return toModelWithCoupon(entity)
     }
 
     fun verifyPassword(id: Long, rawPassword: String) {
-        val userCoupon = this.findById(id)
-        eventPublisher.publishEvent(CouponPasswordVerificationOrThrowEvent(userCoupon.couponId, rawPassword))
-
+        val entity = findById(id)
+        eventPublisher.publishEvent(
+            CouponPasswordVerificationOrThrowEvent(entity.couponId, rawPassword)
+        )
     }
 
     private fun findById(id: Long): UserCouponEntity =
-        userCouponRepository.findByIdOrNull(id) ?: throw IllegalArgumentException("UserCoupon not found with id: $id")
+        userCouponRepository.findByIdOrNull(id)
+            ?: throw IllegalArgumentException("UserCoupon not found with id: $id")
+
+    /**
+     * 공통 변환 로직: UserCouponEntity -> UserCouponModel(with coupon info)
+     */
+    private fun toModelWithCoupon(entity: UserCouponEntity): UserCouponModel {
+        val coupon = getCouponInfo(entity.couponId)
+        val userCoupon = UserCouponModel.from(entity, coupon)
+        userCoupon.couponStoreName = userService.getUser(userCoupon.userId).nickname
+        return userCoupon
+    }
+
+    private fun getCouponInfo(couponId: Long): CouponModel {
+        val event = CouponInfoGetEvent(couponId)
+        eventPublisher.publishEvent(event)
+        return CouponModel.from(event.response)
+    }
 }
