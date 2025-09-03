@@ -1,5 +1,6 @@
 package com.illsang.user.controller
 
+import com.illsang.auth.domain.model.AuthenticationModel
 import com.illsang.user.dto.request.CouponPasswordVerifyRequest
 import com.illsang.user.dto.request.UserCouponCreateRequest
 import com.illsang.user.dto.request.UserCouponUpdateRequest
@@ -11,6 +12,7 @@ import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
@@ -29,21 +31,21 @@ class UserCouponController(
 
     @GetMapping("/{id}")
     @PreAuthorize("hasAnyRole('USER')")
-    @Operation(operationId = "USC001", summary = "사용자 쿠폰 상세 조회")
+    @Operation(operationId = "USC001", summary = "사용자 쿠폰 ID별 상세 조회")
     fun getById(@PathVariable id: Long): ResponseEntity<UserCouponResponse> {
         val model = userCouponService.getById(id)
         return ResponseEntity.ok(UserCouponResponse.from(model))
     }
 
-    @GetMapping("/by-user/{userId}")
+    @GetMapping
     @PreAuthorize("hasAnyRole('USER')")
-    @Operation(operationId = "USC002", summary = "사용자 쿠폰 사용자ID 별 리스트 조회")
+    @Operation(operationId = "USC002", summary = "사용자 쿠폰 리스트 조회")
     fun listByUser(
-        @PathVariable userId: String,
+        @AuthenticationPrincipal auth: AuthenticationModel,
         @RequestParam(defaultValue = "0") page: Int,
         @RequestParam(defaultValue = "20") size: Int
     ): ResponseEntity<List<UserCouponResponse>> {
-        val models = userCouponService.listByUser(userId, page, size)
+        val models = userCouponService.listByUser(auth.userId, page, size)
         return ResponseEntity.ok(models.map(UserCouponResponse::from))
     }
 
