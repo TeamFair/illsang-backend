@@ -1,7 +1,7 @@
 package com.illsang.quest.dto.response.quest
 
 import com.illsang.quest.domain.model.quset.CouponModel
-import com.illsang.quest.enums.CouponType
+import com.illsang.common.enums.CouponType
 import java.time.LocalDateTime
 
 data class CouponResponse(

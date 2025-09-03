@@ -2,7 +2,7 @@ package com.illsang.quest.dto.request.quest
 
 import com.illsang.common.util.PasswordUtil
 import com.illsang.quest.domain.entity.quest.CouponEntity
-import com.illsang.quest.enums.CouponType
+import com.illsang.common.enums.CouponType
 import jakarta.validation.constraints.NotBlank
 import software.amazon.awssdk.annotations.NotNull
 import java.time.LocalDateTime

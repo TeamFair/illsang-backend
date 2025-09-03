@@ -74,13 +74,23 @@ class UserCouponService(
     private fun toModelWithCoupon(entity: UserCouponEntity): UserCouponModel {
         val coupon = getCouponInfo(entity.couponId)
         val userCoupon = UserCouponModel.from(entity, coupon)
-        userCoupon.couponStoreName = userService.getUser(userCoupon.userId).nickname
         return userCoupon
     }
 
     private fun getCouponInfo(couponId: Long): CouponModel {
         val event = CouponInfoGetEvent(couponId)
         eventPublisher.publishEvent(event)
-        return CouponModel.from(event.response)
+        val coupon = event.response
+
+        val storeName = userService.getUser(event.response.storeId).nickname
+
+        return CouponModel(
+            id = coupon.id,
+            couponType = coupon.type,
+            name = coupon.name,
+            imageId = coupon.imageId,
+            storeName = storeName,
+            description = coupon.description,
+        )
     }
 }

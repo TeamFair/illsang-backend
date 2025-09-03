@@ -35,7 +35,12 @@ class CouponEventListener(
         coupon.storeId?.let {
             event.response = CouponInfoGetEvent.CouponInfo(
                 name = coupon.name,
-                storeId = it,
+                description = coupon.description,
+                imageId = coupon.imageId,
+                storeId = coupon.storeId,
+                type = coupon.type,
+                id = coupon.id!!,
+
             )
         }
     }

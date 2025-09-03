@@ -2,7 +2,7 @@ package com.illsang.quest.domain.model.quset
 
 import com.illsang.common.domain.model.BaseModel
 import com.illsang.quest.domain.entity.quest.CouponEntity
-import com.illsang.quest.enums.CouponType
+import com.illsang.common.enums.CouponType
 import java.time.LocalDateTime
 
 data class CouponModel(

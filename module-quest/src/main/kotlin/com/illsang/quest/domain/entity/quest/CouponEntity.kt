@@ -3,7 +3,7 @@ package com.illsang.quest.domain.entity.quest
 import com.illsang.common.entity.BaseEntity
 import com.illsang.common.util.PasswordUtil
 import com.illsang.quest.dto.request.quest.CouponUpdateRequest
-import com.illsang.quest.enums.CouponType
+import com.illsang.common.enums.CouponType
 import jakarta.persistence.CascadeType
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
