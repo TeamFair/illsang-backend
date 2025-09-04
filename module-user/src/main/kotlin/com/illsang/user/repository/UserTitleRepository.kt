@@ -7,4 +7,5 @@ interface UserTitleRepository : JpaRepository<UserTitleEntity, Long>{
     fun findAllByUserId(userId: String): List<UserTitleEntity>
     fun existsByUserIdAndTitleId(userId: String, titleId: String): Boolean
     fun findByUserIdAndId(userId: String, id: Long): UserTitleEntity?
+    fun findByUserIdIn(userIds: List<String>): List<UserTitleEntity>
 }

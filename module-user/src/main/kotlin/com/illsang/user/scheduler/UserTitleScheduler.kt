@@ -5,6 +5,8 @@ import com.illsang.common.event.management.area.CommercialAreaAllGetEvent
 import com.illsang.common.event.management.area.MetroAreaAllGetEvent
 import com.illsang.common.event.management.season.SeasonGetCurrentEvent
 import com.illsang.user.domain.model.UserRankModel
+import com.illsang.user.dto.request.CreateUserTitleRequest
+import com.illsang.user.dto.request.UserTitleRequest
 import com.illsang.user.service.UserPointService
 import com.illsang.user.service.UserTitleService
 import org.springframework.context.ApplicationEventPublisher
@@ -47,7 +49,7 @@ class UserTitleScheduler(
 
         metroAreaList.forEach { metroArea ->
             val metroRank = userPointService.findAllRankByUserMetro(currentSeason.seasonId, metroArea.code)
-            processRanks(metroRank, ::mapMetroTitleId)
+            processRanks(metroRank, userTitleService::mapMetroTitleId)
         }
 
         val commercialAreaEvent = CommercialAreaAllGetEvent()
@@ -57,11 +59,11 @@ class UserTitleScheduler(
         commercialAreaList.forEach { commercialArea ->
             val commercialRank =
                 userPointService.findAllRankByUserCommercial(currentSeason.seasonId, commercialArea.code)
-            processRanks(commercialRank, ::mapMetroTitleId)
+            processRanks(commercialRank, userTitleService::mapMetroTitleId)
         }
 
         val seasonRank = userPointService.findAllRankByUserContribution(currentSeason.seasonId)
-        processRanks(seasonRank, ::mapContribTitleId)
+        processRanks(seasonRank, userTitleService::mapContribTitleId)
     }
 
     private fun isNextDayAfterSeasonEnd(endDate: LocalDateTime): Boolean {
@@ -75,31 +77,15 @@ class UserTitleScheduler(
         ranks: List<UserRankModel>,
         titleMapper: (Long) -> String?
     ) {
-        ranks.forEach { rankData ->
-            val rank: Long = rankData.rank ?: return@forEach
-            val titleId: String = titleMapper(rank) ?: return@forEach
-            val userId: String = rankData.user.id ?: return@forEach
-            userTitleService.createUserTitle(userId, titleId)
+        val requests: List<CreateUserTitleRequest> = ranks.mapNotNull { rankData ->
+            val rank = rankData.rank ?: return@mapNotNull null
+            val titleId = titleMapper(rank) ?: return@mapNotNull null
+            val userId = rankData.user.id ?: return@mapNotNull null
+            CreateUserTitleRequest(titleId, userId)
+        }
+
+        if (requests.isNotEmpty()) {
+            userTitleService.createUserTitles(requests)
         }
     }
-
-    // 메트로/상권 랭킹 -> 타이틀 매핑
-    private fun mapMetroTitleId(rank: Long): String? = when {
-        rank == 1L -> TitleId.TITLE_METRO_1.titleId
-        rank == 2L -> TitleId.TITLE_METRO_2.titleId
-        rank == 3L -> TitleId.TITLE_METRO_3.titleId
-        rank in 4L..10L -> TitleId.TITLE_METRO_4_TO_10.titleId
-        else -> null
-    }
-
-    // 시즌 기여 랭킹 -> 타이틀 매핑
-    private fun mapContribTitleId(rank: Long): String? = when {
-        rank == 1L -> TitleId.TITLE_CONTRIB_1.titleId
-        rank == 2L -> TitleId.TITLE_CONTRIB_2.titleId
-        rank == 3L -> TitleId.TITLE_CONTRIB_3.titleId
-        rank in 4L..10L -> TitleId.TITLE_CONTRIB_4_TO_10.titleId
-        else -> null
-    }
-
-
 }

@@ -26,3 +26,8 @@ data class UserTitleRequest(
     }
 
 }
+
+data class CreateUserTitleRequest(
+    val titleId : String,
+    val userId : String,
+)

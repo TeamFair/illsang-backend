@@ -4,6 +4,7 @@ import com.illsang.common.enums.TitleId
 import com.illsang.common.event.user.title.GetTitleInfoEvent
 import com.illsang.user.domain.entity.UserTitleEntity
 import com.illsang.user.domain.model.UserTitleModel
+import com.illsang.user.dto.request.CreateUserTitleRequest
 import com.illsang.user.repository.UserTitleRepository
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.repository.findByIdOrNull
@@ -77,6 +78,53 @@ class UserTitleService(
         }
     }
 
+    @Transactional
+    fun createUserTitles(requests: List<CreateUserTitleRequest>) {
+        if (requests.isEmpty()) return
+
+        // 1. 요청 자체에서 중복 제거
+        val distinctRequests = requests.distinctBy { it.userId to it.titleId }
+
+        // 2. titleId별 이벤트 미리 발행
+        val titleMap: Map<String, GetTitleInfoEvent> = distinctRequests
+            .map { it.titleId }
+            .distinct()
+            .associateWith { titleId ->
+                val event = GetTitleInfoEvent(titleId)
+                eventPublisher.publishEvent(event)
+                event
+            }
+
+        // 3. 기존 데이터 조회
+        val userIds = distinctRequests.map { it.userId }.distinct()
+        val existing = userTitleRepository.findByUserIdIn(userIds)
+            .map { it.user.id to it.titleId }
+            .toSet()
+
+        // 4. 신규 UserTitleEntity 생성 (중복은 제외)
+        val newTitles = distinctRequests.mapNotNull { req ->
+            val user = userService.findById(req.userId)
+            val event = titleMap[req.titleId] ?: return@mapNotNull null
+            val titleResponse = event.response
+
+            // DB에 이미 있으면 skip
+            if (existing.contains(req.userId to req.titleId)) return@mapNotNull null
+
+            UserTitleEntity(
+                user = user,
+                titleId = req.titleId,
+                titleName = titleResponse.titleName,
+                titleGrade = titleResponse.titleGrade,
+                titleType = titleResponse.titleType
+            ).also { user.updateTitle(it) }
+        }
+
+        // 5. 일괄 저장
+        if (newTitles.isNotEmpty()) {
+            userTitleRepository.saveAll(newTitles)
+        }
+    }
+
     fun updateUserTitle(userTitleId: Long, userId: String) {
         val userTitle = this.findByUserIdAndId(userTitleId, userId)
         val user = userService.findById(userId)
@@ -100,6 +148,24 @@ class UserTitleService(
         }
 
         return titleId ?: throw IllegalArgumentException("Title not found for streak: $maxStreak")
+    }
+
+    // 메트로/상권 랭킹 -> 타이틀 매핑
+    fun mapMetroTitleId(rank: Long): String? = when {
+        rank == 1L -> TitleId.TITLE_METRO_1.titleId
+        rank == 2L -> TitleId.TITLE_METRO_2.titleId
+        rank == 3L -> TitleId.TITLE_METRO_3.titleId
+        rank in 4L..10L -> TitleId.TITLE_METRO_4_TO_10.titleId
+        else -> null
+    }
+
+    // 시즌 기여 랭킹 -> 타이틀 매핑
+    fun mapContribTitleId(rank: Long): String? = when {
+        rank == 1L -> TitleId.TITLE_CONTRIB_1.titleId
+        rank == 2L -> TitleId.TITLE_CONTRIB_2.titleId
+        rank == 3L -> TitleId.TITLE_CONTRIB_3.titleId
+        rank in 4L..10L -> TitleId.TITLE_CONTRIB_4_TO_10.titleId
+        else -> null
     }
 
 }
