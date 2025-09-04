@@ -26,7 +26,10 @@ data class UserCouponResponse(
                 name = model.coupon.name,
                 imageId = model.coupon.imageId,
                 storeName = model.coupon.storeName,
-                description = model.coupon.description
+                description = model.coupon.description,
+                validFrom = model.coupon.validFrom,
+                validTo = model.coupon.validTo,
+
             ),
         )
     }
@@ -43,4 +46,6 @@ data class CouponResponse(
     val imageId: String?,
     val storeName: String,
     val description: String?,
+    val validFrom: LocalDateTime,
+    val validTo: LocalDateTime,
 )

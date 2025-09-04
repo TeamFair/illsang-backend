@@ -1,6 +1,7 @@
 package com.illsang.common.event.user.coupon
 
 import com.illsang.common.enums.CouponType
+import java.time.LocalDateTime
 
 data class CouponInfoGetEvent(
     val couponId: Long
@@ -15,5 +16,7 @@ data class CouponInfoGetEvent(
         val imageId: String?,
         val storeId: String,
         val description: String?,
+        val validFrom: LocalDateTime,
+        val validTo: LocalDateTime,
     )
 }

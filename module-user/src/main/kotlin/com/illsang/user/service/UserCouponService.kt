@@ -91,6 +91,8 @@ class UserCouponService(
             imageId = coupon.imageId,
             storeName = storeName,
             description = coupon.description,
+            validFrom = coupon.validFrom,
+            validTo = coupon.validTo,
         )
     }
 }
