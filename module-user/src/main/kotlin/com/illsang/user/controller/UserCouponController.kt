@@ -9,6 +9,10 @@ import com.illsang.user.dto.response.UserCouponResponse
 import com.illsang.user.service.UserCouponService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springdoc.core.annotations.ParameterObject
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
@@ -42,10 +46,9 @@ class UserCouponController(
     @Operation(operationId = "USC002", summary = "사용자 쿠폰 리스트 조회")
     fun listByUser(
         @AuthenticationPrincipal auth: AuthenticationModel,
-        @RequestParam(defaultValue = "0") page: Int,
-        @RequestParam(defaultValue = "20") size: Int
-    ): ResponseEntity<List<UserCouponResponse>> {
-        val models = userCouponService.listByUser(auth.userId, page, size)
+        @ParameterObject @PageableDefault(size = 10) pageable: Pageable,
+    ): ResponseEntity<Page<UserCouponResponse>> {
+        val models = userCouponService.listByUser(auth.userId, pageable)
         return ResponseEntity.ok(models.map(UserCouponResponse::from))
     }
 

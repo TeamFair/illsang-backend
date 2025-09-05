@@ -39,6 +39,11 @@ class UserTitleService(
         return UserTitleModel.from(userTitle)
     }
 
+    fun getUnreadTitle(userId: String) : List<UserTitleModel>{
+        val userTitle = userTitleRepository.findAllByUserIdAndReadYnIsFalse(userId)
+        return userTitle.map { UserTitleModel.from(it) }
+    }
+
     @Transactional
     fun updateReadStatus(id: Long) {
         val userTitle = this.findById(id)

@@ -37,6 +37,8 @@ class UserTitleController (
         return ResponseEntity.ok(UserTitleResponse.from(userTitle))
     }
 
+
+
     @PostMapping
     @PreAuthorize("hasAnyRole('USER')")
     @Operation(operationId = "UST003", summary = "사용자 칭호 부여")
@@ -67,4 +69,16 @@ class UserTitleController (
         userTitleService.deleteUserTitle(id)
         return ResponseEntity.ok().build()
     }
+
+    @GetMapping("/unread")
+    @PreAuthorize("hasAnyRole('USER')")
+    @Operation(operationId = "UST006", summary = "읽지않은 사용자 칭호 조회")
+    fun getUnreadTitle(
+        @AuthenticationPrincipal auth: AuthenticationModel
+    ): ResponseEntity<List<UserTitleResponse>> {
+        val userTitles = userTitleService.getUnreadTitle(auth.userId)
+        return ResponseEntity.ok(userTitles.map { UserTitleResponse.from(it) })
+    }
+
+
 }

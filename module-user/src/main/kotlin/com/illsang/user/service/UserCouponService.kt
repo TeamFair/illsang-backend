@@ -10,7 +10,9 @@ import com.illsang.user.dto.request.UserCouponCreateRequest
 import com.illsang.user.dto.request.UserCouponUpdateRequest
 import com.illsang.user.repository.UserCouponRepository
 import org.springframework.context.ApplicationEventPublisher
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -27,10 +29,8 @@ class UserCouponService(
         return toModelWithCoupon(entity)
     }
 
-    fun listByUser(userId: String, page: Int, size: Int): List<UserCouponModel> {
-        val pageable = PageRequest.of(page, size)
+    fun listByUser(userId: String, pageable: Pageable): Page<UserCouponModel> {
         return userCouponRepository.findAllByUserId(userId, pageable)
-            .content
             .map(::toModelWithCoupon)
     }
 
