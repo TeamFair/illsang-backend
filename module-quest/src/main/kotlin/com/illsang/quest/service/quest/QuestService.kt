@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional
 class QuestService(
     private val eventPublisher: ApplicationEventPublisher,
     private val questRepository: QuestRepository,
+    private val storeService: StoreService,
 ) {
 
     @Transactional
@@ -34,7 +35,8 @@ class QuestService(
         }
         this.eventPublisher.publishEvent(CommercialAreaExistOrThrowEvent(request.commercialAreaCode))
 
-        val quest = request.toEntity()
+        val store = request.storeId?.let { storeService.findById(it) }
+        val quest = request.toEntity(store!!)
         this.questRepository.save(quest)
 
         return QuestModel.from(quest)
@@ -54,8 +56,9 @@ class QuestService(
             this.eventPublisher.publishEvent(BannerExistOrThrowEvent(it))
         }
         this.eventPublisher.publishEvent(CommercialAreaExistOrThrowEvent(request.commercialAreaCode))
+        val store = request.storeId?.let { storeService.findById(it) }
 
-        quest.update(request)
+        quest.update(request, store!!)
 
         return QuestModel.from(quest)
     }
@@ -88,10 +91,10 @@ class QuestService(
     fun findById(id: Long): QuestEntity = this.questRepository.findByIdOrNull(id)
         ?: throw IllegalArgumentException("Quest not found with id: $id")
 
-    fun existQuestImageId(id : String){
+    fun existQuestImageId(id: String) {
 
-        if(questRepository.existsByMainImageId(id)) throw IllegalArgumentException("Quest main image already exists")
-        if(questRepository.existsByImageId(id)) throw IllegalArgumentException("Quest image already exists")
+        if (questRepository.existsByMainImageId(id)) throw IllegalArgumentException("Quest main image already exists")
+        if (questRepository.existsByImageId(id)) throw IllegalArgumentException("Quest image already exists")
     }
 
 }

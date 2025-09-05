@@ -2,7 +2,6 @@ package com.illsang.quest.domain.entity.quest
 
 import com.illsang.common.entity.BaseEntity
 import jakarta.persistence.*
-import java.time.LocalDateTime
 
 @Entity
 @Table(name = "store")
@@ -55,5 +54,13 @@ class StoreEntity(
         activeYn?.let { this.activeYn = it }
         imageId?.let { this.imageId = it }
         managerId?.let { this.managerId = it }
+    }
+
+    fun addQuests(quests: List<QuestEntity>) {
+        this.quests.addAll(quests)
+    }
+
+    fun addCoupons(coupons: List<CouponEntity>) {
+        this.coupons.addAll(coupons)
     }
 }

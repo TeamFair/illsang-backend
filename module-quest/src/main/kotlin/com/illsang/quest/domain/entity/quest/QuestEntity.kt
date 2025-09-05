@@ -63,7 +63,7 @@ class QuestEntity(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "store_id")
-    val store: StoreEntity? = null,
+    var store: StoreEntity? = null,
 
 ) : BaseEntity() {
 
@@ -75,7 +75,7 @@ class QuestEntity(
         missions.add(mission)
     }
 
-    fun update(request: QuestUpdateRequest) {
+    fun update(request: QuestUpdateRequest, store: StoreEntity) {
         this.title = request.title
         this.type = request.type
         this.repeatFrequency = request.repeatFrequency
@@ -88,6 +88,7 @@ class QuestEntity(
         this.bannerId = request.bannerId
         this.commercialAreaCode = request.commercialAreaCode
         this.useYn = request.useYn
+        this.store = store
 
         this.validateQuestType()
     }

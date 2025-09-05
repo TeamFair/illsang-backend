@@ -14,12 +14,12 @@ data class CouponModel(
     val validTo: LocalDateTime?,
     val store: StoreModel? = null,
     val description: String?,
-    val createdBy: String?,
-    val createdAt: LocalDateTime?,
-    val updatedBy: String?,
-    val updatedAt: LocalDateTime?,
-    val deleteYn: Boolean
-) {
+    val deleteYn: Boolean,
+    override val createdBy: String?,
+    override val createdAt: LocalDateTime?,
+    override val updatedBy: String?,
+    override val updatedAt: LocalDateTime?,
+) : BaseModel(createdBy, createdAt, updatedBy, updatedAt)  {
     companion object {
         fun from(entity: CouponEntity) = CouponModel(
             id = entity.id,
@@ -30,11 +30,11 @@ data class CouponModel(
             validTo = entity.validTo,
             store = entity.store?.let { StoreModel.from(it) },
             description = entity.description,
+            deleteYn = entity.deleteYn,
             createdBy = entity.createdBy,
             createdAt = entity.createdAt,
             updatedBy = entity.updatedBy,
             updatedAt = entity.updatedAt,
-            deleteYn = entity.deleteYn,
         )
     }
 }

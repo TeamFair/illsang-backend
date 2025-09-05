@@ -25,7 +25,6 @@ class CouponEntity(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id", updatable = false)
     var id: Long? = null,
 
     @Column(name = "name")
@@ -57,7 +56,7 @@ class CouponEntity(
     val couponSettings: MutableList<CouponSettingEntity> = mutableListOf()
 
 ) : BaseEntity() {
-    fun update(request: CouponUpdateRequest) {
+    fun update(request: CouponUpdateRequest, store: StoreEntity) {
         request.name?.let { this.name = it }
         this.imageId = request.imageId
         this.password = request.password?.let { PasswordUtil.encode(it) } ?: this.password
@@ -65,7 +64,12 @@ class CouponEntity(
         this.validTo = request.validTo
         this.description = request.description
         this.deleteYn = request.deleteYn
+        this.store = store
 
+    }
+
+    fun addCouponSetting(couponSettings: List<CouponSettingEntity>) {
+        this.couponSettings.addAll(couponSettings)
     }
 
 }

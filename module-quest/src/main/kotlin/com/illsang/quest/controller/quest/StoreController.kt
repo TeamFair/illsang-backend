@@ -6,6 +6,10 @@ import com.illsang.quest.dto.response.quest.StoreResponse
 import com.illsang.quest.service.quest.StoreService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springdoc.core.annotations.ParameterObject
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 import org.springframework.http.HttpStatus
@@ -30,11 +34,10 @@ class StoreController(
     @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @Operation(operationId = "STO002", summary = "상점 리스트 조회")
     fun getAll(
-        @RequestParam(defaultValue = "0") page: Int,
-        @RequestParam(defaultValue = "20") size: Int
-    ): ResponseEntity<List<StoreResponse>> {
-        val stores = storeService.getStoreList(page, size)
-        return ResponseEntity.ok(stores.map { StoreResponse.from(it) })
+        @ParameterObject @PageableDefault(size = 10) pageable: Pageable,
+    ): ResponseEntity<Page<StoreResponse>> {
+        val stores = storeService.getStoreList(pageable)
+        return ResponseEntity.ok(stores.map(StoreResponse::from))
     }
 
 

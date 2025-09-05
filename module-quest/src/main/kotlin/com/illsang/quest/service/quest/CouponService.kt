@@ -17,7 +17,8 @@ import java.time.LocalDateTime
 @Transactional(readOnly = true)
 class CouponService(
     private val couponRepository: CouponRepository,
-    private val eventPublisher: ApplicationEventPublisher
+    private val eventPublisher: ApplicationEventPublisher,
+    private val storeService: StoreService,
 ) {
 
     @Transactional
@@ -26,7 +27,8 @@ class CouponService(
             this.eventPublisher.publishEvent(ImageExistOrThrowEvent(it))
         }
 
-        val saved = couponRepository.save(request.toEntity())
+        val store = storeService.findById(request.storeId)
+        val saved = couponRepository.save(request.toEntity(store))
         return CouponModel.from(saved)
     }
 
@@ -46,7 +48,9 @@ class CouponService(
         }
 
         val entity = findById(id)
-        entity.update(request)
+
+        val store = entity.store?.let { storeService.findById(it.id!!) }
+        entity.update(request, store!!)
         return CouponModel.from(entity)
     }
 
@@ -57,7 +61,7 @@ class CouponService(
         entity.deleteYn = true
     }
 
-    private fun findById(id: Long): CouponEntity {
+    fun findById(id: Long): CouponEntity {
         return couponRepository.findByIdOrNull(id) ?: throw IllegalArgumentException("존재하지 않는 쿠폰입니다. couponId=${id}")
     }
 
@@ -77,7 +81,7 @@ class CouponService(
             }
         }
 
-        if(coupon.deleteYn){
+        if (coupon.deleteYn) {
             throw IllegalArgumentException("삭제된 쿠폰입니다. couponId=${id}")
         }
     }
@@ -87,15 +91,15 @@ class CouponService(
         val entity = findById(id)
         val storedPassword = entity.password
         storedPassword?.let {
-            if(!PasswordUtil.matches(rawPassword, it)){
+            if (!PasswordUtil.matches(rawPassword, it)) {
                 throw IllegalArgumentException("비밀번호가 틀렸습니다.")
             }
         }
     }
 
-    fun existCouponImageId(id: String){
+    fun existCouponImageId(id: String) {
         val coupon = this.couponRepository.existsByImageId(id)
-        if(coupon){
+        if (coupon) {
             throw IllegalArgumentException("This image is already registered in a coupon.")
         }
     }

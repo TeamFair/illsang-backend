@@ -26,13 +26,10 @@ class StoreService(
         return StoreModel.from(store)
     }
 
-    fun getStoreList(page: Int,  size: Int): List<StoreModel> {
-        val pageable = PageRequest.of(page,size)
+    fun getStoreList(pageable: Pageable): Page<StoreModel> {
         val stores = storeRepository.findAll(pageable)
-        return stores.content.map { StoreModel.from(it) }
-
+        return stores.map { StoreModel.from(it) }
     }
-
 
     @Transactional
     fun create(store: StoreCreateRequest): StoreModel {

@@ -1,6 +1,7 @@
 package com.illsang.quest.dto.request.quest
 
 import com.illsang.quest.domain.entity.quest.QuestEntity
+import com.illsang.quest.domain.entity.quest.StoreEntity
 import com.illsang.quest.enums.QuestRepeatFrequency
 import com.illsang.quest.enums.QuestType
 import java.time.LocalDateTime
@@ -17,9 +18,10 @@ data class QuestCreateRequest(
     val expireDate: LocalDateTime? = null,
     val bannerId: Long? = null,
     val commercialAreaCode: String,
+    val storeId: Long? = null,
 ) {
 
-    fun toEntity(): QuestEntity {
+    fun toEntity(store: StoreEntity): QuestEntity {
         return QuestEntity(
             title = this.title,
             imageId = this.imageId,
@@ -32,6 +34,7 @@ data class QuestCreateRequest(
             expireDate = this.expireDate,
             bannerId = this.bannerId,
             commercialAreaCode = this.commercialAreaCode,
+            store = store,
         )
     }
 }
@@ -49,4 +52,5 @@ data class QuestUpdateRequest(
     val bannerId: Long? = null,
     val commercialAreaCode: String,
     val useYn: Boolean,
+    val storeId: Long? = null,
 )

@@ -12,7 +12,7 @@ data class StoreCreateRequest(
     val activeYn: Boolean? = null,
 ) {
     fun toEntity(): StoreEntity {
-        return StoreEntity(
+        val store = StoreEntity(
             imageId = imageId,
             name = name,
             managerId = managerId,
@@ -21,6 +21,7 @@ data class StoreCreateRequest(
             address = address,
             activeYn = activeYn ?: true,
         )
+        return store
     }
 }
 
@@ -34,7 +35,7 @@ data class StoreUpdateRequest(
     val imageId: String? = null,
 ) {
     fun toEntity(id: Long): StoreEntity {
-        return StoreEntity(
+        val store = StoreEntity(
             id = id,
             imageId = imageId,
             name = name,
@@ -44,5 +45,7 @@ data class StoreUpdateRequest(
             address = address,
             activeYn = activeYn ?: true,
         )
+
+        return store
     }
 }

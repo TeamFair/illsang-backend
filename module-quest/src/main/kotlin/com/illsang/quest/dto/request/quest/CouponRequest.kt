@@ -15,9 +15,10 @@ data class CouponCreateRequest(
     val validFrom: LocalDateTime? = null,
     val validTo: LocalDateTime? = null,
     val description: String? = null,
-    val deleteYn: Boolean = false
+    val deleteYn: Boolean = false,
+    val storeId: Long,
 ) {
-    fun toEntity(): CouponEntity = CouponEntity(
+    fun toEntity(store: StoreEntity): CouponEntity = CouponEntity(
         name = name,
         imageId = imageId,
         password = password?.let { PasswordUtil.encode(it) },
@@ -25,6 +26,7 @@ data class CouponCreateRequest(
         validTo = validTo,
         description = description,
         deleteYn = deleteYn,
+        store = store,
     )
 }
 
@@ -35,7 +37,8 @@ data class CouponUpdateRequest(
     val validFrom: LocalDateTime? = null,
     val validTo: LocalDateTime? = null,
     val description: String? = null,
-    val deleteYn : Boolean = false
+    val deleteYn : Boolean = false,
+    val storeId: Long? = null,
 )
 
 
