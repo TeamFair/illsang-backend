@@ -60,6 +60,11 @@ class QuestEntity(
 
     @OneToMany(mappedBy = "quest", cascade = [CascadeType.ALL], orphanRemoval = true)
     val rewards: MutableList<QuestRewardEntity> = mutableListOf(),
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "store_id")
+    val store: StoreEntity? = null,
+
 ) : BaseEntity() {
 
     init {

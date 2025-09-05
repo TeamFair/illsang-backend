@@ -22,7 +22,6 @@ data class UserCouponResponse(
             usedAt = model.usedAt,
             coupon = CouponResponse(
                 couponId = model.coupon!!.id,
-                couponType = model.coupon.couponType,
                 name = model.coupon.name,
                 imageId = model.coupon.imageId,
                 storeName = model.coupon.storeName,
@@ -41,7 +40,6 @@ data class CouponPasswordVerifyResponse(
 
 data class CouponResponse(
     val couponId: Long,
-    val couponType: CouponType,
     val name: String,
     val imageId: String?,
     val storeName: String?,

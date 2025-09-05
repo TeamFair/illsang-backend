@@ -34,7 +34,6 @@ data class QuestCreateRequest(
             commercialAreaCode = this.commercialAreaCode,
         )
     }
-
 }
 
 data class QuestUpdateRequest(

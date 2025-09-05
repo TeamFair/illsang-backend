@@ -32,7 +32,6 @@ data class UserCouponModel(
 
 data class CouponModel(
     val id: Long,
-    val couponType: CouponType,
     val name: String,
     val imageId: String?,
     val storeName: String?,

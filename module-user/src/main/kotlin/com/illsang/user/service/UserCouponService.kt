@@ -1,5 +1,6 @@
 package com.illsang.user.service
 
+import com.illsang.common.event.management.quest.StoreInfoGetEvent
 import com.illsang.common.event.user.coupon.CouponExistOrThrowEvent
 import com.illsang.common.event.user.coupon.CouponInfoGetEvent
 import com.illsang.common.event.user.coupon.CouponPasswordVerificationOrThrowEvent
@@ -82,14 +83,16 @@ class UserCouponService(
         eventPublisher.publishEvent(event)
         val coupon = event.response
 
-        val storeName = event.response.storeId?.let { userService.getUser(it) }?.nickname
+        val storeEvent = StoreInfoGetEvent(coupon.storeId)
+        eventPublisher.publishEvent(storeEvent)
+        val store = storeEvent.response
+
 
         return CouponModel(
             id = coupon.id,
-            couponType = coupon.type,
             name = coupon.name,
             imageId = coupon.imageId,
-            storeName = storeName,
+            storeName = store.storeName,
             description = coupon.description,
             validFrom = coupon.validFrom,
             validTo = coupon.validTo,
