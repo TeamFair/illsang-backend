@@ -100,21 +100,24 @@ class UserPointService(
     }
 
     fun findPointByCommercial(userId: String): UserCommercialPointResponse {
+        val user = this.userService.findById(userId)
         val ownerPoints = this.userPointRepository.findOwnerPoint(PointType.COMMERCIAL, userId)
         var topCommercialContributionResponse: UserTopCommercialPointResponse? = null
-        if (ownerPoints.isNotEmpty()) {
+
+        user.commercialAreaCode?.let {
             val commercialTotalPoint =
-                this.userPointRepository.sumPointByCommercialArea(PointType.COMMERCIAL, ownerPoints[0].first)
+                this.userPointRepository.sumPointByCommercialArea(PointType.COMMERCIAL, it) ?: 0
+            val currentCommercialPoint = ownerPoints.find { v -> v.first == it }?.second ?: 0
 
             val contributionPercent = if (commercialTotalPoint > 0L) {
-                (ownerPoints[0].second.toDouble() / commercialTotalPoint) * 100.0
+                (currentCommercialPoint.toDouble() / commercialTotalPoint) * 100.0
             } else {
                 0.0
             }
 
             topCommercialContributionResponse = UserTopCommercialPointResponse.from(
-                code = ownerPoints[0].first,
-                point = ownerPoints[0].second,
+                code = it,
+                point = currentCommercialPoint,
                 contributionPercent = contributionPercent,
             )
         }

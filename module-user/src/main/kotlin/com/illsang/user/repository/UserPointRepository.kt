@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.Query
 
 interface UserPointRepository : JpaRepository<UserPointEntity, UserPointKey>, UserPointCustomRepository {
     @Query("select sum(t.point) from UserPointEntity t where t.id.pointType = :pointType AND t.id.commercialAreaCode = :commercialAreaCode")
-    fun sumPointByCommercialArea(pointType: PointType, commercialAreaCode: String): Long
+    fun sumPointByCommercialArea(pointType: PointType, commercialAreaCode: String): Long?
     fun findById_User_IdAndId_SeasonId(userId: String, seasonId: Long): List<UserPointEntity>
 }
