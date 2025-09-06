@@ -36,7 +36,7 @@ class QuestService(
         this.eventPublisher.publishEvent(CommercialAreaExistOrThrowEvent(request.commercialAreaCode))
 
         val store = request.storeId?.let { storeService.findById(it) }
-        val quest = request.toEntity(store!!)
+        val quest = request.toEntity(store)
         this.questRepository.save(quest)
 
         return QuestModel.from(quest)
@@ -58,7 +58,7 @@ class QuestService(
         this.eventPublisher.publishEvent(CommercialAreaExistOrThrowEvent(request.commercialAreaCode))
         val store = request.storeId?.let { storeService.findById(it) }
 
-        quest.update(request, store!!)
+        store?.let { quest.update(request, it) }
 
         return QuestModel.from(quest)
     }

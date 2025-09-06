@@ -21,7 +21,7 @@ data class QuestCreateRequest(
     val storeId: Long? = null,
 ) {
 
-    fun toEntity(store: StoreEntity): QuestEntity {
+    fun toEntity(store: StoreEntity?): QuestEntity {
         return QuestEntity(
             title = this.title,
             imageId = this.imageId,
