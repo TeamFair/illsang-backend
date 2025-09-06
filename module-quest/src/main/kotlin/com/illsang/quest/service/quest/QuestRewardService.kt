@@ -21,8 +21,8 @@ class QuestRewardService(
         val quest = this.questService.findById(request.questId)
 
         val questReward = request.toEntity(quest)
-        this.questService.refreshTotalPoint(quest.id!!)
         this.questRewardRepository.save(questReward)
+        this.questService.refreshTotalPoint(quest.id!!)
 
         return QuestRewardModel.from(questReward)
     }
