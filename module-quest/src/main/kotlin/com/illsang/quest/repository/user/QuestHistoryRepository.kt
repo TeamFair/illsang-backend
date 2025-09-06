@@ -29,4 +29,5 @@ interface QuestHistoryRepository : JpaRepository<UserQuestHistoryEntity, Long>, 
 
     fun countBySeasonIdAndUserId(seasonId: Long, userId: String): Long
     fun countByUserId(userId: String): Long
+    fun deleteByUserId(userId: String)
 }

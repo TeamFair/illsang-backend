@@ -2,9 +2,9 @@ package com.illsang.quest.service.user
 
 import com.illsang.common.event.management.area.MetroAreaGetByCommercialAreaEvent
 import com.illsang.common.event.management.season.SeasonGetCurrentEvent
-import com.illsang.common.event.user.title.UserTitleQuestCompleteEvent
 import com.illsang.common.event.user.point.UserPointCreateEvent
 import com.illsang.common.event.user.point.UserPointCreateRequest
+import com.illsang.common.event.user.title.UserTitleQuestCompleteEvent
 import com.illsang.quest.domain.entity.quest.QuestEntity
 import com.illsang.quest.domain.entity.user.UserQuestHistoryEntity
 import com.illsang.quest.enums.QuestHistoryStatus
@@ -87,6 +87,11 @@ class QuestHistoryService(
         return seasonId?.let {
             this.userQuestHistoryRepository.countBySeasonIdAndUserId(it, userId)
         } ?: this.userQuestHistoryRepository.countByUserId(userId)
+    }
+
+    @Transactional
+    fun deleteByUserId(userId: String) {
+        this.userQuestHistoryRepository.deleteByUserId(userId)
     }
 
 }

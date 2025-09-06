@@ -4,6 +4,7 @@ import com.illsang.common.enums.TitleId
 import com.illsang.common.event.management.area.CommercialAreaExistOrThrowEvent
 import com.illsang.common.event.management.image.ImageDeleteEvent
 import com.illsang.common.event.management.season.SeasonGetCurrentEvent
+import com.illsang.common.event.user.quest.UserQuestHistoryDeleteEvent
 import com.illsang.common.event.user.title.CreateUserTitleEvent
 import com.illsang.common.event.user.title.UserTitleUserCreateEvent
 import com.illsang.user.domain.entity.UserEntity
@@ -136,6 +137,7 @@ class UserService(
     fun delete(userId: String) {
         val user = this.findById(userId)
 
+        this.eventPublisher.publishEvent(UserQuestHistoryDeleteEvent(user.id!!))
         this.userRepository.delete(user)
     }
 
