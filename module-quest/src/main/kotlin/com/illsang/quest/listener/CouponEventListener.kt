@@ -31,19 +31,16 @@ class CouponEventListener(
     @EventListener
     fun getCouponInfo(event: CouponInfoGetEvent) {
         val coupon = couponService.getById(event.couponId)
-        coupon.storeId?.let {
-            event.response = CouponInfoGetEvent.CouponInfo(
-                name = coupon.name,
-                description = coupon.description,
-                imageId = coupon.imageId,
-                storeId = coupon.storeId,
-                type = coupon.type,
-                id = coupon.id!!,
-                validFrom = coupon.validFrom!!,
-                validTo = coupon.validTo!!,
-
-            )
-        }
+        event.response = CouponInfoGetEvent.CouponInfo(
+            name = coupon.name,
+            description = coupon.description,
+            imageId = coupon.imageId,
+            storeId = coupon.storeId,
+            type = coupon.type,
+            id = coupon.id!!,
+            validFrom = coupon.validFrom!!,
+            validTo = coupon.validTo!!,
+        )
     }
 
 }

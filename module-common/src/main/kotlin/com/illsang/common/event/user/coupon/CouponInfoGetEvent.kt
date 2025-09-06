@@ -14,7 +14,7 @@ data class CouponInfoGetEvent(
         val type: CouponType,
         val name: String,
         val imageId: String?,
-        val storeId: String,
+        val storeId: String?,
         val description: String?,
         val validFrom: LocalDateTime,
         val validTo: LocalDateTime,

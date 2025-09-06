@@ -82,7 +82,7 @@ class UserCouponService(
         eventPublisher.publishEvent(event)
         val coupon = event.response
 
-        val storeName = userService.getUser(event.response.storeId).nickname
+        val storeName = event.response.storeId?.let { userService.getUser(it) }?.nickname
 
         return CouponModel(
             id = coupon.id,

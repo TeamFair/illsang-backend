@@ -35,7 +35,7 @@ data class CouponModel(
     val couponType: CouponType,
     val name: String,
     val imageId: String?,
-    val storeName: String,
+    val storeName: String?,
     val description: String?,
     val validFrom: LocalDateTime,
     val validTo: LocalDateTime,
