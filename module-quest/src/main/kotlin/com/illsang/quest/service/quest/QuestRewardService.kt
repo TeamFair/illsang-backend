@@ -48,6 +48,7 @@ class QuestRewardService(
         val questReward = this.findById(id)
 
         this.questRewardRepository.delete(questReward)
+        this.questRewardRepository.flush()
         this.questService.refreshTotalPoint(questReward.quest.id!!)
     }
 
