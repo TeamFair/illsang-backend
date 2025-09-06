@@ -6,10 +6,10 @@ data class StoreInfoGetEvent(
     lateinit var response: StoreInfo
 
     class StoreInfo(
-        val storeName: String,
-        val imageId: String,
-        val address: String,
-        val phoneNumber: String,
+        val storeName: String?,
+        val imageId: String?,
+        val address: String?,
+        val phoneNumber: String?,
         val description: String?
     )
 }

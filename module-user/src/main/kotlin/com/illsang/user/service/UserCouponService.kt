@@ -12,7 +12,6 @@ import com.illsang.user.dto.request.UserCouponUpdateRequest
 import com.illsang.user.repository.UserCouponRepository
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.domain.Page
-import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service

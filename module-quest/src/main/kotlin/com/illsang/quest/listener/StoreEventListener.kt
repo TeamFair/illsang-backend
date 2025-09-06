@@ -12,14 +12,14 @@ class StoreEventListener(
 
     @EventListener
     fun getStoreInfo(event: StoreInfoGetEvent){
-        val store = storeService.getStore(event.storeId!!)
+        val store = event.storeId?.let { storeService.getStore(it) }
 
         event.response = StoreInfoGetEvent.StoreInfo(
-            storeName = store.name,
-            imageId =  store.imageId!!,
-            address = store.address!!,
-            phoneNumber = store.phoneNumber!!,
-            description = store.description,
+            storeName = store?.name,
+            imageId =  store?.imageId,
+            address = store?.address,
+            phoneNumber = store?.phoneNumber,
+            description = store?.description,
         )
     }
 }
