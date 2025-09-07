@@ -131,10 +131,15 @@ class UserTitleService(
     }
 
     fun updateUserTitle(userTitleId: Long, userId: String) {
-        val userTitle = this.findByUserIdAndId(userTitleId, userId)
         val user = userService.findById(userId)
 
-        user.updateTitle(userTitle)
+        when (userTitleId) {
+            0L -> user.updateTitle(null)
+            else -> {
+                val userTitle = findByUserIdAndId(userTitleId, userId)
+                user.updateTitle(userTitle)
+            }
+        }
     }
 
     fun getTitleIdForQuestComplete(maxStreak: Int): String? {

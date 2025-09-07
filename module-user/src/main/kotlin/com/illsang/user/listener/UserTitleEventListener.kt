@@ -5,7 +5,6 @@ import com.illsang.common.event.user.title.UserTitleQuestCompleteEvent
 import com.illsang.common.event.user.title.UserTitleUserCreateEvent
 import com.illsang.user.service.UserTitleService
 import org.springframework.context.event.EventListener
-import org.springframework.scheduling.annotation.Async
 import org.springframework.stereotype.Component
 
 @Component
