@@ -26,7 +26,6 @@ import java.time.LocalDateTime
 import java.time.ZoneId
 
 @Service
-@Transactional(readOnly = true)
 class UserCouponService(
     private val userCouponRepository: UserCouponRepository,
     private val eventPublisher: ApplicationEventPublisher,
