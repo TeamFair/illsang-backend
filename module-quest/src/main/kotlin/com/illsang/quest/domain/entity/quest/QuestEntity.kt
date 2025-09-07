@@ -55,15 +55,14 @@ class QuestEntity(
     @Column(name = "total_point")
     var totalPoint: Int = 0,
 
+    @Column(name = "store_id")
+    var storeId: Long? = null,
+
     @OneToMany(mappedBy = "quest", cascade = [CascadeType.ALL], orphanRemoval = true)
     val missions: MutableList<MissionEntity> = mutableListOf(),
 
     @OneToMany(mappedBy = "quest", cascade = [CascadeType.ALL], orphanRemoval = true)
     val rewards: MutableList<QuestRewardEntity> = mutableListOf(),
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "store_id")
-    var store: StoreEntity? = null,
 
 ) : BaseEntity() {
 
@@ -75,7 +74,7 @@ class QuestEntity(
         missions.add(mission)
     }
 
-    fun update(request: QuestUpdateRequest, store: StoreEntity?) {
+    fun update(request: QuestUpdateRequest) {
         this.title = request.title
         this.type = request.type
         this.repeatFrequency = request.repeatFrequency
@@ -88,7 +87,7 @@ class QuestEntity(
         this.bannerId = request.bannerId
         this.commercialAreaCode = request.commercialAreaCode
         this.useYn = request.useYn
-        this.store = store
+        this.storeId = request.storeId
 
         this.validateQuestType()
     }

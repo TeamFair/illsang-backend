@@ -3,6 +3,7 @@ package com.illsang.quest.service.quest
 import com.illsang.common.event.management.area.CommercialAreaExistOrThrowEvent
 import com.illsang.common.event.management.banner.BannerExistOrThrowEvent
 import com.illsang.common.event.management.image.ImageExistOrThrowEvent
+import com.illsang.common.event.management.store.StoreExistOrThrowEvent
 import com.illsang.quest.domain.entity.quest.QuestEntity
 import com.illsang.quest.domain.model.quset.QuestDetailModel
 import com.illsang.quest.domain.model.quset.QuestModel
@@ -19,7 +20,6 @@ import org.springframework.transaction.annotation.Transactional
 class QuestService(
     private val eventPublisher: ApplicationEventPublisher,
     private val questRepository: QuestRepository,
-    private val storeService: StoreService,
 ) {
 
     @Transactional
@@ -35,8 +35,11 @@ class QuestService(
         }
         this.eventPublisher.publishEvent(CommercialAreaExistOrThrowEvent(request.commercialAreaCode))
 
-        val store = request.storeId?.let { storeService.findById(it) }
-        val quest = request.toEntity(store)
+        request.storeId?.let {
+            this.eventPublisher.publishEvent(StoreExistOrThrowEvent(it))
+        }
+
+        val quest = request.toEntity()
         this.questRepository.save(quest)
 
         return QuestModel.from(quest)
@@ -56,9 +59,11 @@ class QuestService(
             this.eventPublisher.publishEvent(BannerExistOrThrowEvent(it))
         }
         this.eventPublisher.publishEvent(CommercialAreaExistOrThrowEvent(request.commercialAreaCode))
-        val store = request.storeId?.let { storeService.findById(it) }
 
-        quest.update(request, store)
+        request.storeId?.let {
+            this.eventPublisher.publishEvent(StoreExistOrThrowEvent(it))
+        }
+        quest.update(request)
 
         return QuestModel.from(quest)
     }

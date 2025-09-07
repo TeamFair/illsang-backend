@@ -1,12 +1,11 @@
-package com.illsang.quest.service.quest
+package com.illsang.management.service
 
-import com.illsang.quest.domain.entity.quest.StoreEntity
-import com.illsang.quest.domain.model.quset.StoreModel
-import com.illsang.quest.dto.request.quest.StoreCreateRequest
-import com.illsang.quest.dto.request.quest.StoreUpdateRequest
-import com.illsang.quest.repository.quest.StoreRepository
+import com.illsang.management.domain.entity.StoreEntity
+import com.illsang.management.domain.model.StoreModel
+import com.illsang.management.dto.request.StoreCreateRequest
+import com.illsang.management.dto.request.StoreUpdateRequest
+import com.illsang.management.repository.StoreRepository
 import org.springframework.data.domain.Page
-import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -21,7 +20,7 @@ class StoreService(
         storeRepository.findByIdOrNull(id) ?: throw IllegalArgumentException("Store not found with id: $id")
 
 
-    fun getStore(id: Long): StoreModel{
+    fun getStore(id: Long): StoreModel {
         val store = this.findById(id)
         return StoreModel.from(store)
     }

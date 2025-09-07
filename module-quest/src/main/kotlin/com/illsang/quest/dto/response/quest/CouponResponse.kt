@@ -1,7 +1,6 @@
 package com.illsang.quest.dto.response.quest
 
 import com.illsang.quest.domain.model.quset.CouponModel
-import com.illsang.common.enums.CouponType
 import java.time.LocalDateTime
 
 data class CouponResponse(
@@ -10,7 +9,7 @@ data class CouponResponse(
     val imageId: String?,
     val validFrom: LocalDateTime?,
     val validTo: LocalDateTime?,
-    val store: StoreResponse?,
+    val storeId: Long?,
     val description: String?,
     val deleteYn: Boolean
 ) {
@@ -21,7 +20,7 @@ data class CouponResponse(
             imageId = model.imageId,
             validFrom = model.validFrom,
             validTo = model.validTo,
-            store = model.store?.let { StoreResponse.from(it) },
+            storeId = model.storeId,
             description = model.description,
             deleteYn = model.deleteYn
         )

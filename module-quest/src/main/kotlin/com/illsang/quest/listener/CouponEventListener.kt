@@ -35,7 +35,7 @@ class CouponEventListener(
             name = coupon.name,
             description = coupon.description,
             imageId = coupon.imageId,
-            storeId = coupon.store?.id,
+            storeId = coupon.storeId,
             id = coupon.id!!,
             validFrom = coupon.validFrom!!,
             validTo = coupon.validTo!!,

@@ -1,19 +1,26 @@
-package com.illsang.quest.controller.quest
+package com.illsang.management.controller
 
-import com.illsang.quest.dto.request.quest.StoreCreateRequest
-import com.illsang.quest.dto.request.quest.StoreUpdateRequest
-import com.illsang.quest.dto.response.quest.StoreResponse
-import com.illsang.quest.service.quest.StoreService
+import com.illsang.management.dto.request.StoreCreateRequest
+import com.illsang.management.dto.request.StoreUpdateRequest
+import com.illsang.management.dto.response.StoreResponse
+import com.illsang.management.service.StoreService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springdoc.core.annotations.ParameterObject
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
 import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/v1/store")

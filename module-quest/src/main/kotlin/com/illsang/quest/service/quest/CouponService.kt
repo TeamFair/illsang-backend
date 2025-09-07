@@ -1,6 +1,7 @@
 package com.illsang.quest.service.quest
 
 import com.illsang.common.event.management.image.ImageExistOrThrowEvent
+import com.illsang.common.event.management.store.StoreExistOrThrowEvent
 import com.illsang.common.util.PasswordUtil
 import com.illsang.quest.domain.entity.quest.CouponEntity
 import com.illsang.quest.domain.model.quset.CouponModel
@@ -18,7 +19,6 @@ import java.time.LocalDateTime
 class CouponService(
     private val couponRepository: CouponRepository,
     private val eventPublisher: ApplicationEventPublisher,
-    private val storeService: StoreService,
 ) {
 
     @Transactional
@@ -26,9 +26,10 @@ class CouponService(
         request.imageId?.let {
             this.eventPublisher.publishEvent(ImageExistOrThrowEvent(it))
         }
-
-        val store = storeService.findById(request.storeId)
-        val saved = couponRepository.save(request.toEntity(store))
+        request.storeId?.let {
+            this.eventPublisher.publishEvent(StoreExistOrThrowEvent(it))
+        }
+        val saved = couponRepository.save(request.toEntity())
         return CouponModel.from(saved)
     }
 
@@ -46,11 +47,12 @@ class CouponService(
         request.imageId?.let {
             this.eventPublisher.publishEvent(ImageExistOrThrowEvent(it))
         }
-
+        request.storeId?.let {
+            this.eventPublisher.publishEvent(StoreExistOrThrowEvent(it))
+        }
         val entity = findById(id)
 
-        val store = entity.store?.let { storeService.findById(it.id!!) }
-        entity.update(request, store!!)
+        entity.update(request)
         return CouponModel.from(entity)
     }
 

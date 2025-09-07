@@ -1,6 +1,6 @@
-package com.illsang.quest.dto.request.quest
+package com.illsang.management.dto.request
 
-import com.illsang.quest.domain.entity.quest.StoreEntity
+import com.illsang.management.domain.entity.StoreEntity
 
 data class StoreCreateRequest(
     val imageId: String,

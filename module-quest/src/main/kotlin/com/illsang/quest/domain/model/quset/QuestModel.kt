@@ -45,7 +45,7 @@ data class QuestModel(
                 commercialAreaCode = quest.commercialAreaCode,
                 useYn = quest.useYn,
                 rewards = quest.rewards.map { QuestRewardModel.from(it) },
-                storeId = quest.store?.id,
+                storeId = quest.storeId,
                 createdBy = quest.createdBy,
                 createdAt = quest.createdAt,
                 updatedBy = quest.updatedBy,

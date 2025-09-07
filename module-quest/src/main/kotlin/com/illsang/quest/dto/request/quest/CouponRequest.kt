@@ -2,10 +2,6 @@ package com.illsang.quest.dto.request.quest
 
 import com.illsang.common.util.PasswordUtil
 import com.illsang.quest.domain.entity.quest.CouponEntity
-import com.illsang.common.enums.CouponType
-import com.illsang.quest.domain.entity.quest.StoreEntity
-import jakarta.validation.constraints.NotBlank
-import software.amazon.awssdk.annotations.NotNull
 import java.time.LocalDateTime
 
 data class CouponCreateRequest(
@@ -16,9 +12,9 @@ data class CouponCreateRequest(
     val validTo: LocalDateTime? = null,
     val description: String? = null,
     val deleteYn: Boolean = false,
-    val storeId: Long,
+    val storeId: Long? = null,
 ) {
-    fun toEntity(store: StoreEntity): CouponEntity = CouponEntity(
+    fun toEntity(): CouponEntity = CouponEntity(
         name = name,
         imageId = imageId,
         password = password?.let { PasswordUtil.encode(it) },
@@ -26,7 +22,7 @@ data class CouponCreateRequest(
         validTo = validTo,
         description = description,
         deleteYn = deleteYn,
-        store = store,
+        storeId = storeId,
     )
 }
 

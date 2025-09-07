@@ -1,4 +1,4 @@
-package com.illsang.common.event.management.quest
+package com.illsang.common.event.management.store
 
 data class StoreInfoGetEvent(
     val storeId: Long?

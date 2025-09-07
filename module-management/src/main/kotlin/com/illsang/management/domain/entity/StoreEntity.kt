@@ -1,4 +1,4 @@
-package com.illsang.quest.domain.entity.quest
+package com.illsang.management.domain.entity
 
 import com.illsang.common.entity.BaseEntity
 import jakarta.persistence.*
@@ -31,13 +31,8 @@ class StoreEntity(
     @Column(name="image_id")
     var imageId: String? = null,
 
-    @OneToMany(mappedBy = "store" , cascade = [CascadeType.ALL], orphanRemoval = true)
-    val quests: MutableList<QuestEntity> = mutableListOf(),
 
-    @OneToMany(mappedBy = "store", cascade = [CascadeType.ALL], orphanRemoval = true)
-    val coupons: MutableList<CouponEntity> = mutableListOf(),
-
-) : BaseEntity() {
+    ) : BaseEntity() {
     fun update(
         name: String? = null,
         address: String? = null,
@@ -56,11 +51,4 @@ class StoreEntity(
         managerId?.let { this.managerId = it }
     }
 
-    fun addQuests(quests: List<QuestEntity>) {
-        this.quests.addAll(quests)
-    }
-
-    fun addCoupons(coupons: List<CouponEntity>) {
-        this.coupons.addAll(coupons)
-    }
 }

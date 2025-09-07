@@ -1,7 +1,7 @@
-package com.illsang.quest.domain.model.quset
+package com.illsang.management.domain.model
 
 import com.illsang.common.domain.model.BaseModel
-import com.illsang.quest.domain.entity.quest.StoreEntity
+import com.illsang.management.domain.entity.StoreEntity
 import java.time.LocalDateTime
 
 data class StoreModel(

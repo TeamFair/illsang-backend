@@ -1,6 +1,6 @@
 package com.illsang.user.service
 
-import com.illsang.common.event.management.quest.StoreInfoGetEvent
+import com.illsang.common.event.management.store.StoreInfoGetEvent
 import com.illsang.common.event.user.coupon.CouponExistOrThrowEvent
 import com.illsang.common.event.user.coupon.CouponInfoGetEvent
 import com.illsang.common.event.user.coupon.CouponPasswordVerificationOrThrowEvent

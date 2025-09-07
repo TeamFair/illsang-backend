@@ -1,7 +1,8 @@
-package com.illsang.quest.listener
+package com.illsang.management.listener
 
-import com.illsang.common.event.management.quest.StoreInfoGetEvent
-import com.illsang.quest.service.quest.StoreService
+import com.illsang.common.event.management.store.StoreExistOrThrowEvent
+import com.illsang.common.event.management.store.StoreInfoGetEvent
+import com.illsang.management.service.StoreService
 import org.springframework.context.event.EventListener
 import org.springframework.stereotype.Component
 
@@ -21,5 +22,10 @@ class StoreEventListener(
             phoneNumber = store?.phoneNumber,
             description = store?.description,
         )
+    }
+
+    @EventListener
+    fun existOrThrowStore(event: StoreExistOrThrowEvent){
+        storeService.findById(event.storeId)
     }
 }

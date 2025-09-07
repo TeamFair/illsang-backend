@@ -1,6 +1,6 @@
-package com.illsang.quest.dto.response.quest
+package com.illsang.management.dto.response
 
-import com.illsang.quest.domain.model.quset.StoreModel
+import com.illsang.management.domain.model.StoreModel
 
 data class StoreResponse(
     val id: Long,
