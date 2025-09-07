@@ -75,7 +75,7 @@ class QuestEntity(
         missions.add(mission)
     }
 
-    fun update(request: QuestUpdateRequest, store: StoreEntity) {
+    fun update(request: QuestUpdateRequest, store: StoreEntity?) {
         this.title = request.title
         this.type = request.type
         this.repeatFrequency = request.repeatFrequency

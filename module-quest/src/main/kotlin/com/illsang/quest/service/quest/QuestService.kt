@@ -58,7 +58,7 @@ class QuestService(
         this.eventPublisher.publishEvent(CommercialAreaExistOrThrowEvent(request.commercialAreaCode))
         val store = request.storeId?.let { storeService.findById(it) }
 
-        store?.let { quest.update(request, it) }
+        quest.update(request, store)
 
         return QuestModel.from(quest)
     }
