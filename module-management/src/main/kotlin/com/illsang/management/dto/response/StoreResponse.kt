@@ -10,7 +10,9 @@ data class StoreResponse(
     val description: String?,
     val phoneNumber: String?,
     val address: String?,
-    val activeYn: Boolean?
+    val activeYn: Boolean?,
+    val commercialAreaCode: String?,
+    val metroAreaCode: String?,
 ) {
     companion object {
         fun from(model: StoreModel) = StoreResponse(
@@ -21,7 +23,9 @@ data class StoreResponse(
             description = model.description,
             phoneNumber = model.phoneNumber,
             address = model.address,
-            activeYn = model.activeYn
+            activeYn = model.activeYn,
+            commercialAreaCode = model.commercialAreaCode,
+            metroAreaCode = model.metroAreaCode,
         )
     }
 }

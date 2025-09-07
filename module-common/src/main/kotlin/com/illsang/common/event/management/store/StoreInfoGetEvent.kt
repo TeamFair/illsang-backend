@@ -10,6 +10,8 @@ data class StoreInfoGetEvent(
         val imageId: String?,
         val address: String?,
         val phoneNumber: String?,
-        val description: String?
+        val description: String?,
+        val metroAreaCode: String?,
+        val commercialAreaCode: String?,
     )
 }

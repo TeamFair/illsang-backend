@@ -36,6 +36,11 @@ class AreaCommercialService(
         return commercials.map(CommercialAreaModel::from)
     }
 
+    fun findCommercialByMetro(metroAreaCode: String?): List<CommercialAreaModel> {
+        val commercials = this.commercialAreaRepository.findAllByMetroAreaCode(metroAreaCode)
+        return commercials.map(CommercialAreaModel::from)
+    }
+
     @Transactional
     fun createCommercial(request: CommercialCreateRequest): CommercialAreaModel {
         val metro = this.metroService.findMetroAreaById(request.metroAreaCode)

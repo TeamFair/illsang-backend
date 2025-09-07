@@ -10,6 +10,8 @@ data class StoreCreateRequest(
     val phoneNumber: String? = null,
     val address: String? = null,
     val activeYn: Boolean? = null,
+    val commercialAreaCode: String? = null,
+    val metroAreaCode: String? = null,
 ) {
     fun toEntity(): StoreEntity {
         val store = StoreEntity(
@@ -20,6 +22,8 @@ data class StoreCreateRequest(
             phoneNumber = phoneNumber,
             address = address,
             activeYn = activeYn ?: true,
+            commercialAreaCode = commercialAreaCode,
+            metroAreaCode = metroAreaCode,
         )
         return store
     }
