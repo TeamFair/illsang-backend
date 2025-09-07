@@ -41,6 +41,8 @@ data class UserTitleResponse(
     val name: String,
     val grade: TitleGrade,
     val type: TitleType,
+    val userId: String,
+
 ) {
     companion object {
         fun from(title: UserTitleModel): UserTitleResponse {
@@ -49,6 +51,7 @@ data class UserTitleResponse(
                 name = title.titleName,
                 grade = title.titleGrade,
                 type = title.titleType,
+                userId = title.userId,
             )
         }
     }
