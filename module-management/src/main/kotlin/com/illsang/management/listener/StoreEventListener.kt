@@ -21,6 +21,8 @@ class StoreEventListener(
             address = store?.address,
             phoneNumber = store?.phoneNumber,
             description = store?.description,
+            commercialAreaCode = store?.commercialAreaCode,
+            metroAreaCode = store?.metroAreaCode,
         )
     }
 

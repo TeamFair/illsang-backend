@@ -13,6 +13,8 @@ data class StoreModel(
     val phoneNumber: String?,
     val address: String?,
     val activeYn: Boolean?,
+    val commercialAreaCode: String?,
+    val metroAreaCode: String?,
     override val createdBy: String? = null,
     override val createdAt: LocalDateTime? = null,
     override val updatedBy: String? = null,
@@ -28,10 +30,12 @@ data class StoreModel(
             phoneNumber = entity.phoneNumber,
             address = entity.address,
             activeYn = entity.activeYn,
+            commercialAreaCode = entity.commercialAreaCode,
+            metroAreaCode = entity.metroAreaCode,
             createdBy = entity.createdBy,
             createdAt = entity.createdAt,
             updatedBy = entity.updatedBy,
-            updatedAt = entity.updatedAt
+            updatedAt = entity.updatedAt,
         )
     }
 }

@@ -10,7 +10,7 @@ data class UserCouponResponse(
     val couponUseYn: Boolean,
     val couponExpireYn: Boolean,
     val usedAt: LocalDateTime?,
-    val coupon: CouponResponse,
+    val coupon: CouponResponse?,
 
     ) {
     companion object {
@@ -21,13 +21,13 @@ data class UserCouponResponse(
             couponExpireYn = model.couponExpireYn,
             usedAt = model.usedAt,
             coupon = CouponResponse(
-                couponId = model.coupon.id,
-                name = model.coupon.name,
-                imageId = model.coupon.imageId,
-                storeName = model.coupon.storeName,
-                description = model.coupon.description,
-                validFrom = model.coupon.validFrom,
-                validTo = model.coupon.validTo,
+                couponId = model.coupon?.id,
+                name = model.coupon?.name,
+                imageId = model.coupon?.imageId,
+                storeName = model.coupon?.storeName,
+                description = model.coupon?.description,
+                validFrom = model.coupon?.validFrom,
+                validTo = model.coupon?.validTo,
 
             ),
         )
@@ -39,11 +39,11 @@ data class CouponPasswordVerifyResponse(
 )
 
 data class CouponResponse(
-    val couponId: Long,
-    val name: String,
+    val couponId: Long?,
+    val name: String?,
     val imageId: String?,
     val storeName: String?,
     val description: String?,
-    val validFrom: LocalDateTime,
-    val validTo: LocalDateTime,
+    val validFrom: LocalDateTime?,
+    val validTo: LocalDateTime?,
 )
