@@ -1,5 +1,6 @@
 package com.illsang.user.service
 
+import com.illsang.common.enums.TitleGrade
 import com.illsang.common.enums.TitleId
 import com.illsang.common.event.user.title.GetTitleInfoEvent
 import com.illsang.user.domain.entity.UserTitleEntity
@@ -7,6 +8,8 @@ import com.illsang.user.domain.model.UserTitleModel
 import com.illsang.user.dto.request.CreateUserTitleRequest
 import com.illsang.user.repository.UserTitleRepository
 import org.springframework.context.ApplicationEventPublisher
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -41,6 +44,11 @@ class UserTitleService(
 
     fun getUnreadTitle(userId: String) : List<UserTitleModel>{
         val userTitle = userTitleRepository.findAllByUserIdAndReadYnIsFalse(userId)
+        return userTitle.map { UserTitleModel.from(it) }
+    }
+
+    fun getAllLegendTitle(pageable: Pageable) : Page<UserTitleModel> {
+        val userTitle = userTitleRepository.findAllByTitleGrade(pageable, TitleGrade.LEGEND)
         return userTitle.map { UserTitleModel.from(it) }
     }
 

@@ -5,6 +5,10 @@ import com.illsang.user.dto.response.UserTitleResponse
 import com.illsang.user.service.UserTitleService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springdoc.core.annotations.ParameterObject
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.security.core.annotation.AuthenticationPrincipal
@@ -36,8 +40,6 @@ class UserTitleController (
         val userTitle = userTitleService.getTitle(id)
         return ResponseEntity.ok(UserTitleResponse.from(userTitle))
     }
-
-
 
     @PostMapping
     @PreAuthorize("hasAnyRole('USER')")
@@ -77,6 +79,16 @@ class UserTitleController (
         @AuthenticationPrincipal auth: AuthenticationModel
     ): ResponseEntity<List<UserTitleResponse>> {
         val userTitles = userTitleService.getUnreadTitle(auth.userId)
+        return ResponseEntity.ok(userTitles.map { UserTitleResponse.from(it) })
+    }
+
+    @GetMapping("/legend")
+    @PreAuthorize("hasAnyRole('USER')")
+    @Operation(operationId = "UST007", summary = "전설칭호 조회")
+    fun getLegendTitleList(
+        @ParameterObject @PageableDefault(size = 10) pageable: Pageable,
+    ): ResponseEntity<Page<UserTitleResponse>> {
+        val userTitles = userTitleService.getAllLegendTitle(pageable)
         return ResponseEntity.ok(userTitles.map { UserTitleResponse.from(it) })
     }
 
