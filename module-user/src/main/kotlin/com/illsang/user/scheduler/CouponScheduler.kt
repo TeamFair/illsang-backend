@@ -10,7 +10,7 @@ class CouponScheduler(
 ) {
 
     @Scheduled(cron = "0 0 0 * * ?")
-    fun issueUserCoupon(){
+    fun weeklyIssue(){
 
     }
 }

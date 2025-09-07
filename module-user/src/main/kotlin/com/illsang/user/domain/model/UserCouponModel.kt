@@ -31,11 +31,11 @@ data class UserCouponModel(
 }
 
 data class CouponModel(
-    val id: Long,
-    val name: String,
+    val id: Long?,
+    val name: String?,
     val imageId: String?,
     val storeName: String?,
     val description: String?,
-    val validFrom: LocalDateTime,
-    val validTo: LocalDateTime,
+    val validFrom: LocalDateTime?,
+    val validTo: LocalDateTime?,
 )

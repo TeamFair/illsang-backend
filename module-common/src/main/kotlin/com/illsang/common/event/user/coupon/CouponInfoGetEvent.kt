@@ -9,12 +9,12 @@ data class CouponInfoGetEvent(
     lateinit var response: CouponInfo
 
     class CouponInfo(
-        val id: Long,
-        val name: String,
+        val id: Long?,
+        val name: String?,
         val imageId: String?,
         val storeId: Long?,
         val description: String?,
-        val validFrom: LocalDateTime,
-        val validTo: LocalDateTime,
+        val validFrom: LocalDateTime?,
+        val validTo: LocalDateTime?,
     )
 }

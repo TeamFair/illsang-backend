@@ -18,6 +18,7 @@ class CouponSettingEntity(
     var coupon: CouponEntity?= null,
 
     @Column(name = "type")
+    @Enumerated(EnumType.STRING)
     var type: CouponType,
 
     @Column(name = "amount")

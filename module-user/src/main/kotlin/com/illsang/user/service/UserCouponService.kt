@@ -1,9 +1,11 @@
 package com.illsang.user.service
 
+import com.illsang.common.enums.CouponType
 import com.illsang.common.event.management.store.StoreInfoGetEvent
 import com.illsang.common.event.user.coupon.CouponExistOrThrowEvent
 import com.illsang.common.event.user.coupon.CouponInfoGetEvent
 import com.illsang.common.event.user.coupon.CouponPasswordVerificationOrThrowEvent
+import com.illsang.common.event.user.coupon.CouponSettingInfoGetEvent
 import com.illsang.user.domain.entity.UserCouponEntity
 import com.illsang.user.domain.model.CouponModel
 import com.illsang.user.domain.model.UserCouponModel
@@ -97,4 +99,74 @@ class UserCouponService(
             validTo = coupon.validTo,
         )
     }
+
+    fun issueCoupons(type: CouponType) {
+        val settingEvent = CouponSettingInfoGetEvent()
+        eventPublisher.publishEvent(settingEvent)
+
+        settingEvent.response
+            .filter { it.type == type }
+            .forEach { issueForStore(it) }
+    }
+
+    private fun issueForStore(setting: CouponSettingInfoGetEvent.CouponSettingInfo) {
+        val coupon = setting.coupons ?: return
+        val storeId = coupon.storeId ?: return
+
+        // 1. 스토어 조회
+        val storeEvent = StoreInfoGetEvent(storeId)
+        eventPublisher.publishEvent(storeEvent)
+        val store = storeEvent.response
+
+        val totalAmount = setting.amount ?: return
+        val issuedCoupons = mutableListOf<UserCouponEntity>()
+
+//        // 2. 발급 우선순위별 처리
+//        issueByRanking(
+//            issuedCoupons,
+//            totalAmount
+//        ) { remaining -> questRepository.findUserRankingByStore(store.id, remaining) }
+//
+//        issueByRanking(
+//            issuedCoupons,
+//            totalAmount
+//        ) { remaining -> .findUserRankingByRegion(store.commercialAreaCode, remaining) }
+//
+//        issueByRanking(
+//            issuedCoupons,
+//            totalAmount,
+//            handleTies = true
+//        ) { remaining -> questRepository.findUserRankingByUpperRegion(store.commercialAreaCode, remaining) }
+
+        // 3. 결과 로깅
+//        logIssueResult(store, issuedCoupons)
+    }
+
+
+    /**
+     * 공통 발급 로직
+     */
+//    private fun issueByRanking(
+//        issuedCoupons: MutableList<UserCouponEntity>,
+//        totalAmount: Int,
+//        handleTies: Boolean = false,
+//        rankingProvider: (remaining: Int) -> List<UserRanking>
+//    ) {
+//        val remaining = totalAmount - issuedCoupons.size
+//        if (remaining <= 0) return
+//
+//        val ranking = rankingProvider(remaining)
+//            .filter { user -> issuedCoupons.none { it.userId == user.id } }
+//            .take(remaining)
+//
+//        val toIssue = if (handleTies) {
+//            val lastScore = ranking.lastOrNull()?.score
+//            val tiedUsers = ranking.filter { it.score == lastScore }
+//            if (tiedUsers.size > 1) ranking - tiedUsers.toSet() else ranking
+//        } else {
+//            ranking
+//        }
+//
+//        issuedCoupons.addAll(toIssue.map { user -> issueCouponToUser(ranking.first().coupon, user.id) })
+//    }
 }

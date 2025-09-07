@@ -21,7 +21,7 @@ data class UserCouponResponse(
             couponExpireYn = model.couponExpireYn,
             usedAt = model.usedAt,
             coupon = CouponResponse(
-                couponId = model.coupon!!.id,
+                couponId = model.coupon.id,
                 name = model.coupon.name,
                 imageId = model.coupon.imageId,
                 storeName = model.coupon.storeName,
