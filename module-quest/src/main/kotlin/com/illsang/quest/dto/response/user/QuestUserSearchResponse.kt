@@ -1,6 +1,7 @@
 package com.illsang.quest.dto.response.user
 
 import com.illsang.common.enums.PointType
+import com.illsang.common.event.user.info.UserInfoGetEvent
 import com.illsang.quest.domain.entity.quest.QuestEntity
 import com.illsang.quest.domain.entity.quest.QuestRewardEntity
 import com.illsang.quest.domain.entity.user.UserQuestFavoriteEntity
@@ -64,7 +65,7 @@ data class QuestUserRewardResponse(
     var rewards: List<QuestUserReward>,
 ) {
     companion object {
-        fun from(quest: QuestEntity): QuestUserRewardResponse {
+        fun from(quest: QuestEntity, user: UserInfoGetEvent.UserInfo): QuestUserRewardResponse {
             return QuestUserRewardResponse(
                 questId = quest.id,
                 title = quest.title,
@@ -72,7 +73,7 @@ data class QuestUserRewardResponse(
                 mainImageId = quest.mainImageId,
                 imageId = quest.imageId,
                 expireDate = quest.expireDate,
-                rewards = quest.rewards.map { QuestUserReward.from(it) }
+                rewards = quest.rewards.map { QuestUserReward.from(it, quest.commercialAreaCode == user.commercialAreaCode) },
             )
         }
     }
@@ -91,7 +92,7 @@ data class QuestUserTypeResponse(
     val repeatFrequency: QuestRepeatFrequency?,
 ) {
     companion object {
-        fun from(quest: QuestEntity, favorite: UserQuestFavoriteEntity?): QuestUserTypeResponse {
+        fun from(quest: QuestEntity, favorite: UserQuestFavoriteEntity?, user: UserInfoGetEvent.UserInfo): QuestUserTypeResponse {
             return QuestUserTypeResponse(
                 questId = quest.id,
                 title = quest.title,
@@ -99,7 +100,10 @@ data class QuestUserTypeResponse(
                 mainImageId = quest.mainImageId,
                 imageId = quest.imageId,
                 expireDate = quest.expireDate,
-                rewards = quest.rewards.map { QuestUserReward.from(it) },
+                rewards = quest.rewards.map { QuestUserReward.from(
+                    it,
+                    quest.commercialAreaCode == user.commercialAreaCode,
+                ) },
                 favoriteYn = favorite?.let { true } ?: false,
                 questType = quest.type,
                 repeatFrequency = quest.repeatFrequency,
@@ -120,7 +124,7 @@ data class QuestUserBannerResponse(
     val repeatFrequency: QuestRepeatFrequency?,
 ) {
     companion object {
-        fun from(quest: QuestEntity): QuestUserBannerResponse {
+        fun from(quest: QuestEntity, user: UserInfoGetEvent.UserInfo): QuestUserBannerResponse {
             return QuestUserBannerResponse(
                 questId = quest.id,
                 title = quest.title,
@@ -128,7 +132,10 @@ data class QuestUserBannerResponse(
                 mainImageId = quest.mainImageId,
                 imageId = quest.imageId,
                 expireDate = quest.expireDate,
-                rewards = quest.rewards.map { QuestUserReward.from(it) },
+                rewards = quest.rewards.map { QuestUserReward.from(
+                    it,
+                    quest.commercialAreaCode == user.commercialAreaCode,
+                ) },
                 questType = quest.type,
                 repeatFrequency = quest.repeatFrequency,
             )
@@ -141,10 +148,10 @@ data class QuestUserReward(
     val point: Int,
 ) {
     companion object {
-        fun from(reward: QuestRewardEntity): QuestUserReward {
+        fun from(reward: QuestRewardEntity, doublePointYn: Boolean): QuestUserReward {
             return QuestUserReward(
                 pointType = reward.pointType,
-                point = reward.point,
+                point = reward.getPoint(doublePointYn),
             )
         }
     }

@@ -1,5 +1,6 @@
 package com.illsang.quest.dto.response.user
 
+import com.illsang.common.event.user.info.UserInfoGetEvent
 import com.illsang.quest.domain.entity.quest.MissionEntity
 import com.illsang.quest.domain.entity.quest.QuestEntity
 import com.illsang.quest.domain.entity.user.UserMissionHistoryEntity
@@ -23,7 +24,13 @@ data class QuestUserDetailResponse(
     val missions: List<MissionUserDetailResponse>,
 ) {
     companion object {
-        fun from(quest: QuestEntity, userRank: Int?, favoriteYn: Boolean, missionExampleImages: List<UserMissionHistoryEntity>): QuestUserDetailResponse {
+        fun from(
+            quest: QuestEntity,
+            userRank: Int?,
+            favoriteYn: Boolean,
+            missionExampleImages: List<UserMissionHistoryEntity>,
+            user: UserInfoGetEvent.UserInfo,
+        ): QuestUserDetailResponse {
             return QuestUserDetailResponse(
                 id = quest.id,
                 questType = quest.type,
@@ -35,7 +42,10 @@ data class QuestUserDetailResponse(
                 expireDate = quest.expireDate,
                 favoriteYn = favoriteYn,
                 userRank = userRank,
-                rewards = quest.rewards.map { QuestUserReward.from(it) },
+                rewards = quest.rewards.map { QuestUserReward.from(
+                    it,
+                    quest.commercialAreaCode == user.commercialAreaCode,
+                ) },
                 missions = quest.missions.map {
                     MissionUserDetailResponse.from(
                         mission = it,

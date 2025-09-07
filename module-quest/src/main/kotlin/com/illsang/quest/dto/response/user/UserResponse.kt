@@ -2,7 +2,7 @@ package com.illsang.quest.dto.response.user
 
 import com.illsang.common.enums.TitleGrade
 import com.illsang.common.enums.TitleType
-import com.illsang.common.event.user.info.UserInfoGetEvent
+import com.illsang.common.event.user.info.UserInfoBatchGetEvent
 
 
 data class UserResponse (
@@ -12,7 +12,7 @@ data class UserResponse (
     val title: UserTitleResponse?,
 ) {
     companion object {
-        fun from(userInfo: UserInfoGetEvent.UserInfo): UserResponse {
+        fun from(userInfo: UserInfoBatchGetEvent.UserInfo): UserResponse {
             return UserResponse(
                 userId = userInfo.userId,
                 nickname = userInfo.nickname,
@@ -29,7 +29,7 @@ data class UserTitleResponse (
     val type: TitleType,
 ) {
     companion object {
-        fun from(userTitleInfo: UserInfoGetEvent.UserTitleInfo): UserTitleResponse {
+        fun from(userTitleInfo: UserInfoBatchGetEvent.UserTitleInfo): UserTitleResponse {
             return UserTitleResponse(
                 name = userTitleInfo.name,
                 grade = userTitleInfo.grade,

@@ -1,5 +1,6 @@
 package com.illsang.quest.service.quest
 
+import com.illsang.common.event.user.info.UserInfoGetEvent
 import com.illsang.quest.dto.request.quest.QuestUserBannerRequest
 import com.illsang.quest.dto.request.quest.QuestUserRequest
 import com.illsang.quest.dto.request.quest.QuestUserTypeRequest
@@ -10,6 +11,7 @@ import com.illsang.quest.repository.quest.QuestRepository
 import com.illsang.quest.service.user.MissionHistoryService
 import com.illsang.quest.service.user.QuestHistoryService
 import com.illsang.quest.service.user.UserQuestFavoriteService
+import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
@@ -23,6 +25,7 @@ class QuestUserService(
     private val questHistoryService: QuestHistoryService,
     private val missionHistoryService: MissionHistoryService,
     private val userQuestFavoriteService: UserQuestFavoriteService,
+    private val eventPublisher: ApplicationEventPublisher,
 ) {
 
     fun findAllPopular(userId: String, commercialAreaCode: String, pageable: Pageable): Page<QuestUserPopularResponse> {
@@ -48,7 +51,11 @@ class QuestUserService(
             QuestUserRequest(userId = userId, commercialAreaCode = commercialAreaCode, orderRewardDesc = true)
         val quests = this.findUserQuest(questRequest, pageable)
 
-        return quests.map { QuestUserRewardResponse.from(it) }
+        val userEvent = UserInfoGetEvent(userId = userId)
+        this.eventPublisher.publishEvent(userEvent)
+        val user = userEvent.response
+
+        return quests.map { QuestUserRewardResponse.from(it, user) }
     }
 
     fun findAllType(
@@ -72,10 +79,15 @@ class QuestUserService(
         val questFavorites =
             this.userQuestFavoriteService.findAllByQuestIdAndUserId(userId, quests.mapNotNull { it.id })
 
+        val userEvent = UserInfoGetEvent(userId = userId)
+        this.eventPublisher.publishEvent(userEvent)
+        val user = userEvent.response
+
         return quests.map {
             QuestUserTypeResponse.from(
                 quest = it,
-                favorite = questFavorites.find { favorite -> favorite.questId == it.id }
+                favorite = questFavorites.find { favorite -> favorite.questId == it.id },
+                user = user,
             )
         }
     }
@@ -91,7 +103,11 @@ class QuestUserService(
 
         val quests = this.findUserQuest(questRequest, pageable)
 
-        return quests.map { QuestUserBannerResponse.from(it) }
+        val userEvent = UserInfoGetEvent(userId = userId)
+        this.eventPublisher.publishEvent(userEvent)
+        val user = userEvent.response
+
+        return quests.map { QuestUserBannerResponse.from(it, user) }
     }
 
     fun findQuestDetail(userId: String, questId: Long): QuestUserDetailResponse {
@@ -110,11 +126,16 @@ class QuestUserService(
 
         val questFavorite = this.userQuestFavoriteService.findAllByQuestIdAndUserId(userId, listOf(questId))
 
+        val userEvent = UserInfoGetEvent(userId = userId)
+        this.eventPublisher.publishEvent(userEvent)
+        val user = userEvent.response
+
         return QuestUserDetailResponse.from(
             quest = quest,
             userRank = userRank,
             favoriteYn = questFavorite.isNotEmpty(),
             missionExampleImages = missionExampleImages,
+            user = user,
         )
     }
 

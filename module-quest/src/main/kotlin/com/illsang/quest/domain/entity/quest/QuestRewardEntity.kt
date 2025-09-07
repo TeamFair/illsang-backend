@@ -35,4 +35,12 @@ class QuestRewardEntity(
         this.point = request.point
     }
 
+    fun getPoint(doublePointYn: Boolean = false): Int {
+        if (this.pointType ==  PointType.CONTRIBUTION && doublePointYn) {
+            return this.point * 2
+        }
+
+        return this.point
+    }
+
 }
