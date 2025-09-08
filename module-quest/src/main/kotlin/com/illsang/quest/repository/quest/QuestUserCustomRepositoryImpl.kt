@@ -59,6 +59,7 @@ class QuestUserCustomRepositoryImpl(
             .orderBy(
                 *orderCondition(request)
             )
+            .groupBy(questEntity.id)
             .offset(pageable.offset)
             .limit(pageable.pageSize.toLong())
             .fetch()
