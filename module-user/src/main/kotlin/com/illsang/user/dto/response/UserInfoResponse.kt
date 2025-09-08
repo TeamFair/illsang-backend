@@ -4,6 +4,7 @@ import com.illsang.auth.enums.OAuthProvider
 import com.illsang.common.enums.TitleGrade
 import com.illsang.common.enums.TitleType
 import com.illsang.user.domain.model.UserModel
+import com.illsang.user.domain.model.UserTitleForPointModel
 import com.illsang.user.domain.model.UserTitleModel
 import com.illsang.user.enums.UserStatus
 import java.time.LocalDateTime
@@ -56,6 +57,33 @@ data class UserTitleResponse(
         }
     }
 }
+
+data class UserTitleForLegendResponse(
+    val titleHistoryId: Long,
+    val name: String,
+    val grade: TitleGrade,
+    val type: TitleType,
+    val userId: String,
+    val userProfile: String?,
+    val point: Long?,
+    val createdAt: LocalDateTime? = null,
+){
+    companion object{
+        fun from(title: UserTitleForPointModel): UserTitleForLegendResponse {
+            return UserTitleForLegendResponse(
+                titleHistoryId = title.id!!,
+                name = title.titleName,
+                grade = title.titleGrade,
+                type = title.titleType,
+                userId = title.userId,
+                userProfile = title.userProfile,
+                point = title.point,
+                createdAt = title.createdAt
+            )
+        }
+    }
+}
+
 
 data class UserCommercialPointResponse(
     val topCommercialArea: UserTopCommercialPointResponse?,

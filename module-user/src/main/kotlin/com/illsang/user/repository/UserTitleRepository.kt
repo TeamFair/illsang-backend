@@ -12,6 +12,6 @@ interface UserTitleRepository : JpaRepository<UserTitleEntity, Long>{
     fun findByUserIdAndId(userId: String, id: Long): UserTitleEntity?
     fun findByUserIdIn(userIds: List<String>): List<UserTitleEntity>
     fun findAllByUserIdAndReadYnIsFalse(userId: String): List<UserTitleEntity>
-    fun findAllByTitleGrade(pageable: Pageable, titleGrade: TitleGrade): Page<UserTitleEntity>
+    fun findAllByTitleGradeAndTitleId(pageable: Pageable, titleGrade: TitleGrade, titleId: String?): Page<UserTitleEntity>
 
 }

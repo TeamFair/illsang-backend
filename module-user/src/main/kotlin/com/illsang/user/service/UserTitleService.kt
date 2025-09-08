@@ -4,6 +4,7 @@ import com.illsang.common.enums.TitleGrade
 import com.illsang.common.enums.TitleId
 import com.illsang.common.event.user.title.GetTitleInfoEvent
 import com.illsang.user.domain.entity.UserTitleEntity
+import com.illsang.user.domain.model.UserTitleForPointModel
 import com.illsang.user.domain.model.UserTitleModel
 import com.illsang.user.dto.request.CreateUserTitleRequest
 import com.illsang.user.repository.UserTitleRepository
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
 
 @Service
 @Transactional(readOnly = true)
@@ -20,6 +22,7 @@ class UserTitleService(
     private val userTitleRepository: UserTitleRepository,
     private val eventPublisher: ApplicationEventPublisher,
     private val userService: UserService,
+    private val userPointService: UserPointService,
 ) {
 
     fun findById(id: Long): UserTitleEntity {
@@ -47,9 +50,13 @@ class UserTitleService(
         return userTitle.map { UserTitleModel.from(it) }
     }
 
-    fun getAllLegendTitle(pageable: Pageable) : Page<UserTitleModel> {
-        val userTitle = userTitleRepository.findAllByTitleGrade(pageable, TitleGrade.LEGEND)
-        return userTitle.map { UserTitleModel.from(it) }
+    fun getAllLegendTitle(pageable: Pageable, titleId: String?) : Page<UserTitleForPointModel> {
+        val userTitles = userTitleRepository.findAllByTitleGradeAndTitleId(pageable, TitleGrade.LEGEND, titleId)
+        return userTitles.map { userTitle ->
+            val point = userPointService.findUserTotalPoint(userTitle.user.id!!)
+            val userProfile = userTitle.user.profileImageId
+            UserTitleForPointModel.from(userTitle, userProfile, point)
+        }
     }
 
     @Transactional

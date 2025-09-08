@@ -1,6 +1,7 @@
 package com.illsang.user.controller
 
 import com.illsang.auth.domain.model.AuthenticationModel
+import com.illsang.user.dto.response.UserTitleForLegendResponse
 import com.illsang.user.dto.response.UserTitleResponse
 import com.illsang.user.service.UserTitleService
 import io.swagger.v3.oas.annotations.Operation
@@ -87,9 +88,11 @@ class UserTitleController (
     @Operation(operationId = "UST007", summary = "전설칭호 조회")
     fun getLegendTitleList(
         @ParameterObject @PageableDefault(size = 10) pageable: Pageable,
-    ): ResponseEntity<Page<UserTitleResponse>> {
-        val userTitles = userTitleService.getAllLegendTitle(pageable)
-        return ResponseEntity.ok(userTitles.map { UserTitleResponse.from(it) })
+        @RequestParam titleId: String?,
+    ): ResponseEntity<Page<UserTitleForLegendResponse>> {
+        val userTitles = userTitleService.getAllLegendTitle(pageable, titleId)
+        val userResponse = userTitles.map { UserTitleForLegendResponse.from(it) }
+        return ResponseEntity.ok(userResponse)
     }
 
 
