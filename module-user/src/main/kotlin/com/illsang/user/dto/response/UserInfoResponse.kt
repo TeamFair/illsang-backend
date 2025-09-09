@@ -3,6 +3,7 @@ package com.illsang.user.dto.response
 import com.illsang.auth.enums.OAuthProvider
 import com.illsang.common.enums.TitleGrade
 import com.illsang.common.enums.TitleType
+import com.illsang.user.domain.entity.UserEntity
 import com.illsang.user.domain.model.UserModel
 import com.illsang.user.domain.model.UserTitleForPointModel
 import com.illsang.user.domain.model.UserTitleModel
@@ -64,7 +65,7 @@ data class UserTitleForLegendResponse(
     val grade: TitleGrade,
     val type: TitleType,
     val userId: String,
-    val userProfile: String?,
+    val user: UserModel?,
     val point: Long?,
     val createdAt: LocalDateTime? = null,
 ){
@@ -76,7 +77,7 @@ data class UserTitleForLegendResponse(
                 grade = title.titleGrade,
                 type = title.titleType,
                 userId = title.userId,
-                userProfile = title.userProfile,
+                user = UserModel.from(title.user),
                 point = title.point,
                 createdAt = title.createdAt
             )

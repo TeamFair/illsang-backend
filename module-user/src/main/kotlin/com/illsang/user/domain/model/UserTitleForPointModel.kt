@@ -3,6 +3,7 @@ package com.illsang.user.domain.model
 import com.illsang.common.domain.model.BaseModel
 import com.illsang.common.enums.TitleGrade
 import com.illsang.common.enums.TitleType
+import com.illsang.user.domain.entity.UserEntity
 import com.illsang.user.domain.entity.UserTitleEntity
 import java.time.LocalDateTime
 
@@ -15,14 +16,14 @@ data class UserTitleForPointModel(
     var titleType: TitleType,
     var readYn: Boolean,
     var point: Long?,
-    val userProfile: String?,
+    val user: UserEntity,
     override val createdBy: String? = null,
     override val createdAt: LocalDateTime? = null,
     override val updatedBy: String? = null,
     override val updatedAt: LocalDateTime? = null
 ) : BaseModel(createdBy, createdAt, updatedBy, updatedAt) {
     companion object {
-        fun from(currentTitle: UserTitleEntity, userProfile: String?, point: Long?): UserTitleForPointModel {
+        fun from(currentTitle: UserTitleEntity, user: UserEntity, point: Long?): UserTitleForPointModel {
             return UserTitleForPointModel(
                 id = currentTitle.id,
                 userId = currentTitle.user.id!!,
@@ -35,7 +36,7 @@ data class UserTitleForPointModel(
                 createdAt = currentTitle.createdAt,
                 updatedBy = currentTitle.updatedBy,
                 updatedAt = currentTitle.updatedAt,
-                userProfile = userProfile,
+                user = user,
                 point = point,
             )
         }

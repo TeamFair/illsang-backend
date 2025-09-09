@@ -51,11 +51,11 @@ class UserTitleService(
     }
 
     fun getAllLegendTitle(pageable: Pageable, titleId: String?) : Page<UserTitleForPointModel> {
-        val userTitles = userTitleRepository.findAllByTitleGradeAndTitleId(pageable, TitleGrade.LEGEND, titleId)
+        val userTitles = userTitleRepository.findAllByTitleId(pageable, titleId)
         return userTitles.map { userTitle ->
             val point = userPointService.findUserTotalPoint(userTitle.user.id!!)
-            val userProfile = userTitle.user.profileImageId
-            UserTitleForPointModel.from(userTitle, userProfile, point)
+            val user = userService.findById(userTitle.user.id!!)
+            UserTitleForPointModel.from(userTitle, user, point)
         }
     }
 
