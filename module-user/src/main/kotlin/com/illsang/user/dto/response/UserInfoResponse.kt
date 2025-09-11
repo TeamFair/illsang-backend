@@ -60,25 +60,39 @@ data class UserTitleResponse(
     }
 }
 
-data class UserTitleForLegendResponse(
+data class UserTitleAddInfoResponse(
     val titleHistoryId: Long,
     val name: String,
     val grade: TitleGrade,
     val type: TitleType,
     val userId: String,
-    val userRank: UserRankModel?,
     val createdAt: LocalDateTime? = null,
+)
+
+data class UserTitleForLegendResponse(
+    val userId: String,
+    val profileImageId: String?,
+    val nickName: String?,
+    val point: Long?,
+    val rank: Long?,
+    val title: UserTitleAddInfoResponse?,
 ){
     companion object{
         fun from(title: UserTitleForPointModel): UserTitleForLegendResponse {
             return UserTitleForLegendResponse(
-                titleHistoryId = title.id!!,
-                name = title.titleName,
-                grade = title.titleGrade,
-                type = title.titleType,
                 userId = title.userId,
-                userRank = title.userRank,
-                createdAt = title.createdAt
+                profileImageId = title.user.profileImageId,
+                nickName = title.user.nickname,
+                point = title.point,
+                rank = title.rank,
+                title = UserTitleAddInfoResponse(
+                    titleHistoryId = title.id!!,
+                    name = title.titleName,
+                    grade = title.titleGrade,
+                    type = title.titleType,
+                    userId = title.userId,
+                    createdAt = title.createdAt,
+                )
             )
         }
     }

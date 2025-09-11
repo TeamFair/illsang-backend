@@ -4,6 +4,7 @@ import com.illsang.common.enums.TitleGrade
 import com.illsang.common.enums.TitleId
 import com.illsang.common.event.user.title.GetTitleInfoEvent
 import com.illsang.user.domain.entity.UserTitleEntity
+import com.illsang.user.domain.model.UserModel
 import com.illsang.user.domain.model.UserRankModel
 import com.illsang.user.domain.model.UserTitleForPointModel
 import com.illsang.user.domain.model.UserTitleModel
@@ -64,12 +65,14 @@ class UserTitleService(
             val rankInfo = userRankMap[userTitle.user.id!!]
             UserTitleForPointModel.from(
                 currentTitle = userTitle,
-                userRank = rankInfo,
+                point = rankInfo?.point,
+                rank = rankInfo?.rank,
+                user = UserModel.from(userTitle.user),
             )
         }
 
         // 2. point 기준 내림차순 정렬
-        val sorted = mapped.sortedByDescending { it.userRank?.point }
+        val sorted = mapped.sortedByDescending { it.point }
 
         // 3. Page 로 다시 래핑
         return PageImpl(sorted, pageable, userTitles.totalElements)

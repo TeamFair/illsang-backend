@@ -15,14 +15,16 @@ data class UserTitleForPointModel(
     var titleGrade: TitleGrade,
     var titleType: TitleType,
     var readYn: Boolean,
-    val userRank: UserRankModel?,
+    var point: Long?,
+    var rank: Long?,
+    val user: UserModel,
     override val createdBy: String? = null,
     override val createdAt: LocalDateTime? = null,
     override val updatedBy: String? = null,
     override val updatedAt: LocalDateTime? = null
 ) : BaseModel(createdBy, createdAt, updatedBy, updatedAt) {
     companion object {
-        fun from(currentTitle: UserTitleEntity, userRank: UserRankModel?): UserTitleForPointModel {
+        fun from(currentTitle: UserTitleEntity, user: UserModel, point: Long?, rank: Long?): UserTitleForPointModel {
             return UserTitleForPointModel(
                 id = currentTitle.id,
                 userId = currentTitle.user.id!!,
@@ -35,7 +37,9 @@ data class UserTitleForPointModel(
                 createdAt = currentTitle.createdAt,
                 updatedBy = currentTitle.updatedBy,
                 updatedAt = currentTitle.updatedAt,
-                userRank = userRank,
+                user = user,
+                point = point,
+                rank = rank,
             )
         }
     }
