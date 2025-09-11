@@ -11,6 +11,7 @@ import com.illsang.user.dto.request.CreateUserTitleRequest
 import com.illsang.user.repository.UserTitleRepository
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -51,20 +52,27 @@ class UserTitleService(
         return userTitle.map { UserTitleModel.from(it) }
     }
 
-    fun getAllLegendTitle(pageable: Pageable, titleId: String?) : Page<UserTitleForPointModel> {
+    fun getAllLegendTitle(pageable: Pageable, titleId: String?): Page<UserTitleForPointModel> {
         val userTitles = userTitleRepository.findAllByTitleId(pageable, titleId)
 
         val userIds = userTitles.content.map { it.user.id!! }
         val userRanks = userPointService.findUserTotalPoint(userIds)
         val userRankMap: Map<String, UserRankModel> = userRanks.associateBy { it.user.id!! }
 
-        return userTitles.map { userTitle ->
+        // 1. 매핑
+        val mapped = userTitles.content.map { userTitle ->
             val rankInfo = userRankMap[userTitle.user.id!!]
             UserTitleForPointModel.from(
                 currentTitle = userTitle,
                 userRank = rankInfo,
             )
         }
+
+        // 2. point 기준 내림차순 정렬
+        val sorted = mapped.sortedByDescending { it.userRank?.point }
+
+        // 3. Page 로 다시 래핑
+        return PageImpl(sorted, pageable, userTitles.totalElements)
     }
 
     @Transactional
