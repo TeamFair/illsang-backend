@@ -6,6 +6,7 @@ import com.illsang.user.domain.entity.QUserPointEntity.Companion.userPointEntity
 import com.illsang.user.domain.model.UserRankModel
 import com.querydsl.core.BooleanBuilder
 import com.querydsl.core.types.dsl.BooleanExpression
+import com.querydsl.core.types.dsl.Expressions
 import com.querydsl.core.types.dsl.StringPath
 import com.querydsl.jpa.impl.JPAQueryFactory
 import org.springframework.data.domain.Page
@@ -233,6 +234,37 @@ class UserPointCustomRepositoryImpl(
                 Pair(
                     tuple.get(userPointEntity.id.pointType)!!,
                     tuple.get(userPointEntity.point.sumLong().coalesce(0L))!!,
+                )
+            }
+    }
+
+    override fun findUserRankPositionByPoint(userIds: List<String>): List<UserRankModel> {
+        val pointSum = userPointEntity.point.sumLong()
+
+        // 윈도우 함수로 전체 랭킹 계산
+        val rankExpression = Expressions.numberTemplate(
+            Long::class.java,
+            "RANK() OVER (ORDER BY {0} DESC, {1} ASC)",
+            pointSum,
+            userPointEntity.createdAt.max()
+        )
+
+        return queryFactory
+            .select(
+                userEntity,
+                pointSum,
+                rankExpression
+            )
+            .from(userPointEntity)
+            .innerJoin(userPointEntity.id.user, userEntity)
+            .groupBy(userPointEntity.id.user)
+            .having(userPointEntity.id.user.id.`in`(userIds)) // 전체 랭킹 중 특정 userId 만
+            .fetch()
+            .map { tuple ->
+                UserRankModel.from(
+                    user = tuple.get(userEntity)!!,
+                    point = tuple.get(pointSum)!!,
+                    rank = tuple.get(rankExpression)!!
                 )
             }
     }

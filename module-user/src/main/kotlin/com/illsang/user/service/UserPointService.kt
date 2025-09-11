@@ -177,8 +177,8 @@ class UserPointService(
         )
     }
 
-    fun findUserTotalPoint(userId: String): Long?{
-        val userPoints = this.userPointRepository.sumPointByUser(userId)
+    fun findUserTotalPoint(userIds: List<String>): List<UserRankModel>{
+        val userPoints = this.userPointRepository.findUserRankPositionByPoint(userIds)
         return  userPoints
     }
 

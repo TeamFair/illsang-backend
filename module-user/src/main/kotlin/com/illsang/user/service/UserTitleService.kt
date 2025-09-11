@@ -4,6 +4,7 @@ import com.illsang.common.enums.TitleGrade
 import com.illsang.common.enums.TitleId
 import com.illsang.common.event.user.title.GetTitleInfoEvent
 import com.illsang.user.domain.entity.UserTitleEntity
+import com.illsang.user.domain.model.UserRankModel
 import com.illsang.user.domain.model.UserTitleForPointModel
 import com.illsang.user.domain.model.UserTitleModel
 import com.illsang.user.dto.request.CreateUserTitleRequest
@@ -52,10 +53,17 @@ class UserTitleService(
 
     fun getAllLegendTitle(pageable: Pageable, titleId: String?) : Page<UserTitleForPointModel> {
         val userTitles = userTitleRepository.findAllByTitleId(pageable, titleId)
+
+        val userIds = userTitles.content.map { it.user.id!! }
+        val userRanks = userPointService.findUserTotalPoint(userIds)
+        val userRankMap: Map<String, UserRankModel> = userRanks.associateBy { it.user.id!! }
+
         return userTitles.map { userTitle ->
-            val point = userPointService.findUserTotalPoint(userTitle.user.id!!)
-            val user = userService.findById(userTitle.user.id!!)
-            UserTitleForPointModel.from(userTitle, user, point)
+            val rankInfo = userRankMap[userTitle.user.id!!]
+            UserTitleForPointModel.from(
+                currentTitle = userTitle,
+                userRank = rankInfo,
+            )
         }
     }
 

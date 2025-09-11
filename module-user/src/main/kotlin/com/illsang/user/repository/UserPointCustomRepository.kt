@@ -24,4 +24,5 @@ interface UserPointCustomRepository {
     fun findAllAreaRank(seasonId: Long?, pointType: PointType, pageable: Pageable): Page<Pair<String, Long>>
     fun findOwnerPoint(pointType: PointType, userId: String): List<Pair<String, Long>>
     fun findOwnerPointStatistic(userId: String, seasonId: Long?): List<Pair<PointType, Long>>
+    fun findUserRankPositionByPoint(userIds: List<String>): List<UserRankModel>
 }
