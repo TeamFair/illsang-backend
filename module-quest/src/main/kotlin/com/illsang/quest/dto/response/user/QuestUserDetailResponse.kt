@@ -4,6 +4,9 @@ import com.illsang.common.event.user.info.UserInfoGetEvent
 import com.illsang.quest.domain.entity.quest.MissionEntity
 import com.illsang.quest.domain.entity.quest.QuestEntity
 import com.illsang.quest.domain.entity.user.UserMissionHistoryEntity
+import com.illsang.quest.domain.model.quset.CouponModel
+import com.illsang.quest.dto.response.quest.CouponResponse
+import com.illsang.quest.dto.response.quest.CouponRewardResponse
 import com.illsang.quest.enums.MissionType
 import com.illsang.quest.enums.QuestRepeatFrequency
 import com.illsang.quest.enums.QuestType
@@ -22,6 +25,7 @@ data class QuestUserDetailResponse(
     val favoriteYn: Boolean?,
     val rewards: List<QuestUserReward>,
     val missions: List<MissionUserDetailResponse>,
+    val coupons:List<CouponRewardResponse>,
 ) {
     companion object {
         fun from(
@@ -30,6 +34,8 @@ data class QuestUserDetailResponse(
             favoriteYn: Boolean,
             missionExampleImages: List<UserMissionHistoryEntity>,
             user: UserInfoGetEvent.UserInfo,
+            coupons: List<CouponModel>,
+            storeName: String?
         ): QuestUserDetailResponse {
             return QuestUserDetailResponse(
                 id = quest.id,
@@ -51,7 +57,10 @@ data class QuestUserDetailResponse(
                         mission = it,
                         exampleImages = missionExampleImages.filter { history -> it.id == history.mission.id },
                     )
-                }
+                },
+                coupons = coupons.map{
+                    CouponRewardResponse.from(it,storeName)
+                },
             )
         }
     }

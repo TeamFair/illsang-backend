@@ -38,7 +38,7 @@ class CouponService(
         return CouponModel.from(entity)
     }
 
-    fun listByStore(storeId: Long): List<CouponModel> {
+    fun listByStore(storeId: Long?): List<CouponModel> {
         return couponRepository.findAllByStoreId(storeId).map(CouponModel::from)
     }
 

@@ -27,5 +27,24 @@ data class CouponResponse(
     }
 }
 
+data class CouponRewardResponse(
+    val id: Long,
+    val name: String,
+    val imageId: String?,
+    val validTo: LocalDateTime?,
+    val storeName: String?,
+    val description: String?,
+){
+    companion object {
+        fun from(model: CouponModel, storeName: String?) = CouponRewardResponse(
+            id = model.id!!,
+            name = model.name,
+            imageId = model.imageId,
+            validTo = model.validTo,
+            storeName = storeName,
+            description = model.description
+        )
+    }
+}
 
 

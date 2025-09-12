@@ -1,9 +1,11 @@
 package com.illsang.quest.service.quest
 
+import com.illsang.common.event.management.store.StoreInfoGetEvent
 import com.illsang.common.event.user.info.UserInfoGetEvent
 import com.illsang.quest.dto.request.quest.QuestUserBannerRequest
 import com.illsang.quest.dto.request.quest.QuestUserRequest
 import com.illsang.quest.dto.request.quest.QuestUserTypeRequest
+import com.illsang.quest.dto.response.quest.CouponRewardResponse
 import com.illsang.quest.dto.response.user.*
 import com.illsang.quest.enums.MissionType
 import com.illsang.quest.enums.QuestType
@@ -26,6 +28,7 @@ class QuestUserService(
     private val missionHistoryService: MissionHistoryService,
     private val userQuestFavoriteService: UserQuestFavoriteService,
     private val eventPublisher: ApplicationEventPublisher,
+    private val couponService: CouponService,
 ) {
 
     fun findAllPopular(userId: String, commercialAreaCode: String, pageable: Pageable): Page<QuestUserPopularResponse> {
@@ -130,12 +133,20 @@ class QuestUserService(
         this.eventPublisher.publishEvent(userEvent)
         val user = userEvent.response
 
+        val storeEvent = StoreInfoGetEvent(quest.storeId)
+        this.eventPublisher.publishEvent(storeEvent)
+        val store = storeEvent.response
+
+        val coupons = couponService.listByStore(quest.storeId)
+
         return QuestUserDetailResponse.from(
             quest = quest,
             userRank = userRank,
             favoriteYn = questFavorite.isNotEmpty(),
             missionExampleImages = missionExampleImages,
             user = user,
+            coupons = coupons,
+            storeName = store.storeName,
         )
     }
 
