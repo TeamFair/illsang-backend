@@ -46,7 +46,7 @@ class CouponController(
     @GetMapping("/store/{storeId}")
     @PreAuthorize("hasRole('ADMIN')")
     @Operation(operationId = "COP003", summary = "소상공인 ID 별 리스트조회")
-    fun listByStore(@PathVariable storeId: String): ResponseEntity<List<CouponResponse>> {
+    fun listByStore(@PathVariable storeId: Long): ResponseEntity<List<CouponResponse>> {
         val models = couponService.listByStore(storeId)
         return ResponseEntity.ok(models.map(CouponResponse::from))
     }

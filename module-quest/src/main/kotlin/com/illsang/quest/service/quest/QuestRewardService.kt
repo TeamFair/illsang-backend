@@ -1,9 +1,11 @@
 package com.illsang.quest.service.quest
 
 import com.illsang.quest.domain.entity.quest.QuestRewardEntity
+import com.illsang.quest.domain.model.quset.CouponModel
 import com.illsang.quest.domain.model.quset.QuestRewardModel
 import com.illsang.quest.dto.request.quest.QuestRewardCreateRequest
 import com.illsang.quest.dto.request.quest.QuestRewardUpdateRequest
+import com.illsang.quest.dto.response.quest.QuestCouponRewardResponse
 import com.illsang.quest.repository.quest.QuestRewardRepository
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -14,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional
 class QuestRewardService(
     private val questRewardRepository: QuestRewardRepository,
     private val questService: QuestService,
+    private val couponService: CouponService,
 ) {
 
     @Transactional
@@ -31,6 +34,15 @@ class QuestRewardService(
         val questReward = this.findById(id)
 
         return QuestRewardModel.from(questReward)
+    }
+
+    fun getCouponReward(id: Long): QuestCouponRewardResponse{
+        val questReward = this.findById(id)
+
+        val storeId = questReward.quest.storeId
+        val coupons = storeId?.let { couponService.listByStore(it) }
+
+        return QuestCouponRewardResponse.from(QuestRewardModel.from(questReward), coupons)
     }
 
     @Transactional

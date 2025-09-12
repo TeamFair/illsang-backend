@@ -1,6 +1,7 @@
 package com.illsang.quest.dto.response.quest
 
 import com.illsang.common.enums.PointType
+import com.illsang.quest.domain.model.quset.CouponModel
 import com.illsang.quest.domain.model.quset.QuestRewardModel
 import com.illsang.quest.enums.RewardType
 import java.time.LocalDateTime
@@ -28,6 +29,29 @@ data class QuestRewardResponse(
                 createdAt = questRewardModel.createdAt,
                 updatedBy = questRewardModel.updatedBy,
                 updatedAt = questRewardModel.updatedAt,
+            )
+        }
+    }
+}
+
+
+data class QuestCouponRewardResponse(
+    val id: Long?,
+    val createdBy: String?,
+    val createdAt: LocalDateTime?,
+    val updatedBy: String?,
+    val updatedAt: LocalDateTime?,
+    val coupons: List<CouponResponse>?,
+){
+    companion object{
+        fun from(questRewardModel: QuestRewardModel, couponModels: List<CouponModel>?): QuestCouponRewardResponse{
+            return QuestCouponRewardResponse(
+                id = questRewardModel.id,
+                createdBy = questRewardModel.createdBy,
+                createdAt = questRewardModel.createdAt,
+                updatedBy = questRewardModel.updatedBy,
+                updatedAt = questRewardModel.updatedAt,
+                coupons = couponModels?.map{ CouponResponse.from(it)}
             )
         }
     }

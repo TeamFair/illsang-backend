@@ -2,7 +2,9 @@ package com.illsang.quest.controller.quest
 
 import com.illsang.quest.dto.request.quest.QuestRewardCreateRequest
 import com.illsang.quest.dto.request.quest.QuestRewardUpdateRequest
+import com.illsang.quest.dto.response.quest.QuestCouponRewardResponse
 import com.illsang.quest.dto.response.quest.QuestRewardResponse
+import com.illsang.quest.service.quest.CouponService
 import com.illsang.quest.service.quest.QuestRewardService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -67,6 +69,17 @@ class QuestRewardController(
         this.questRewardService.deleteQuestReward(id)
 
         return ResponseEntity.ok().build()
+    }
+
+    @GetMapping("/coupon/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(operationId = "REW005", summary= "퀘스트 쿠폰 보상")
+    fun getQuestCouponReward(
+        @PathVariable id: Long,
+    ): ResponseEntity<QuestCouponRewardResponse>{
+
+        val questCouponReward = questRewardService.getCouponReward(id)
+        return ResponseEntity.ok(questCouponReward)
     }
 
 }
