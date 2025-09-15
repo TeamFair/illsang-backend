@@ -1,5 +1,6 @@
 package com.illsang.management.service
 
+import com.illsang.common.enums.TitleType
 import com.illsang.management.domain.entity.TitleEntity
 import com.illsang.management.domain.model.TitleModel
 import com.illsang.management.dto.request.TitleRequest
@@ -24,6 +25,11 @@ class TitleService(
     fun getAllTitles(): List<TitleModel> {
         return titleRepository.findAll()
             .map { TitleModel.from(it) }
+    }
+
+    fun getSeasonTitles(type: TitleType): List<TitleModel> {
+        return titleRepository.findAllByTypeOrderById(type)
+            .map{TitleModel.from(it)}
     }
 
     @Transactional

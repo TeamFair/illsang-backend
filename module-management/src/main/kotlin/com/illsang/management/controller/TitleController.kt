@@ -1,5 +1,6 @@
 package com.illsang.management.controller
 
+import com.illsang.common.enums.TitleType
 import com.illsang.management.dto.response.TitleResponse
 import com.illsang.management.service.TitleService
 import com.illsang.management.dto.request.TitleRequest
@@ -60,5 +61,13 @@ class TitleController(
         val title = titleService.createTitle(request)
 
         return ResponseEntity.ok(TitleResponse.from(title))
+    }
+
+    @GetMapping("/season/title/{type}")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(operationId = "TTL006", summary = "시즌  보상 조회")
+    fun getSeasonTitle(@PathVariable type: TitleType) : ResponseEntity<List<TitleResponse>>{
+        val titles = titleService.getSeasonTitles(type)
+        return ResponseEntity.ok(titles.map { TitleResponse.from(it) })
     }
 }
