@@ -64,7 +64,7 @@ class TitleController(
     }
 
     @GetMapping("/season/title/{type}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN','USER')")
     @Operation(operationId = "TTL006", summary = "시즌  보상 조회")
     fun getSeasonTitle(@PathVariable type: TitleType) : ResponseEntity<List<TitleResponse>>{
         val titles = titleService.getSeasonTitles(type)
