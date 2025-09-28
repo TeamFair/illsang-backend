@@ -2,6 +2,10 @@ package com.illsang.user.service
 
 import com.illsang.common.enums.TitleGrade
 import com.illsang.common.enums.TitleId
+import com.illsang.common.enums.TitleType
+import com.illsang.common.event.management.area.CommercialAreaGetEvent
+import com.illsang.common.event.management.area.MetroAreaGetByCommercialAreaEvent
+import com.illsang.common.event.management.area.MetroAreaGetEvent
 import com.illsang.common.event.user.title.GetTitleInfoEvent
 import com.illsang.user.domain.entity.UserTitleEntity
 import com.illsang.user.domain.model.UserModel
@@ -48,7 +52,7 @@ class UserTitleService(
         return UserTitleModel.from(userTitle)
     }
 
-    fun getUnreadTitle(userId: String) : List<UserTitleModel>{
+    fun getUnreadTitle(userId: String): List<UserTitleModel> {
         val userTitle = userTitleRepository.findAllByUserIdAndReadYnIsFalse(userId)
         return userTitle.map { UserTitleModel.from(it) }
     }
@@ -145,14 +149,36 @@ class UserTitleService(
             val user = userService.findById(req.userId)
             val event = titleMap[req.titleId] ?: return@mapNotNull null
             val titleResponse = event.response
+            var titleName = titleResponse.titleName
 
             // DB에 이미 있으면 skip
             if (existing.contains(req.userId to req.titleId)) return@mapNotNull null
 
+            if (titleResponse.titleType == TitleType.COMMERCIAL) {
+                val commercialEvent = CommercialAreaGetEvent(listOf(user.commercialAreaCode!!))
+                this.eventPublisher.publishEvent(commercialEvent)
+                val commercialAreaName = commercialEvent.response.first().areaName
+
+                titleName = titleResponse.titleName.replace("(상권)", commercialAreaName)
+            }
+
+            if (titleResponse.titleType == TitleType.METRO) {
+                val event = MetroAreaGetByCommercialAreaEvent(commercialAreaCode = user.commercialAreaCode!!)
+                this.eventPublisher.publishEvent(event)
+                val metroAreaCode = event.response.metroAreaCode
+
+                val metroEvent = MetroAreaGetEvent(listOf(metroAreaCode))
+                this.eventPublisher.publishEvent(metroEvent)
+                val metroAreaName = metroEvent.response.first().areaName
+
+                titleName = titleName.replace("(광역시)", metroAreaName)
+
+            }
+
             UserTitleEntity(
                 user = user,
                 titleId = req.titleId,
-                titleName = titleResponse.titleName,
+                titleName = titleName,
                 titleGrade = titleResponse.titleGrade,
                 titleType = titleResponse.titleType
             ).also { user.updateTitle(it) }
@@ -163,6 +189,7 @@ class UserTitleService(
             userTitleRepository.saveAll(newTitles)
         }
     }
+
 
     fun updateUserTitle(userTitleId: Long, userId: String) {
         val user = userService.findById(userId)
