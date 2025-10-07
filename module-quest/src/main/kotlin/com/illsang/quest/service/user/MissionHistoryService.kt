@@ -3,7 +3,7 @@ package com.illsang.quest.service.user
 import com.illsang.auth.domain.model.AuthenticationModel
 import com.illsang.common.enums.ResultCode
 import com.illsang.common.event.management.image.ImageExistOrThrowEvent
-import com.illsang.common.event.user.info.UserInfoBatchGetEvent
+import com.illsang.common.event.user.info.UserInfoGetEvent
 import com.illsang.quest.domain.entity.user.UserMissionHistoryEmojiEntity
 import com.illsang.quest.domain.entity.user.UserMissionHistoryEntity
 import com.illsang.quest.domain.entity.user.UserQuizHistoryEntity
@@ -93,7 +93,7 @@ class MissionHistoryService(
     fun findAllRandom(userId: String, pageable: Pageable): Page<MissionHistoryRandomResponse> {
         val missionHistory = this.missionHistoryRepository.findAllRandom(MissionType.PHOTO, pageable)
 
-        val usersEvent = UserInfoBatchGetEvent(missionHistory.content.map { it.userId })
+        val usersEvent = UserInfoGetEvent(missionHistory.content.map { it.userId })
         this.eventPublisher.publishEvent(usersEvent)
 
         val userEmojiHistory =
@@ -116,7 +116,7 @@ class MissionHistoryService(
         val missionHistory =
             this.missionHistoryRepository.findAllRandomByMissionId(MissionType.PHOTO, missionId, pageable)
 
-        val usersEvent = UserInfoBatchGetEvent(missionHistory.content.map { it.userId })
+        val usersEvent = UserInfoGetEvent(missionHistory.content.map { it.userId })
         this.eventPublisher.publishEvent(usersEvent)
 
         val userEmojiHistory =

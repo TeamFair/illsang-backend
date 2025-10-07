@@ -54,11 +54,7 @@ class QuestUserService(
             QuestUserRequest(userId = userId, commercialAreaCode = commercialAreaCode, orderRewardDesc = true)
         val quests = this.findUserQuest(questRequest, pageable)
 
-        val userEvent = UserInfoGetEvent(userId = userId)
-        this.eventPublisher.publishEvent(userEvent)
-        val user = userEvent.response
-
-        return quests.map { QuestUserRewardResponse.from(it, user) }
+        return quests.map { QuestUserRewardResponse.from(it) }
     }
 
     fun findAllType(
@@ -82,15 +78,10 @@ class QuestUserService(
         val questFavorites =
             this.userQuestFavoriteService.findAllByQuestIdAndUserId(userId, quests.mapNotNull { it.id })
 
-        val userEvent = UserInfoGetEvent(userId = userId)
-        this.eventPublisher.publishEvent(userEvent)
-        val user = userEvent.response
-
         return quests.map {
             QuestUserTypeResponse.from(
                 quest = it,
-                favorite = questFavorites.find { favorite -> favorite.questId == it.id },
-                user = user,
+                favorite = questFavorites.find { favorite -> favorite.questId == it.id }
             )
         }
     }
@@ -106,11 +97,7 @@ class QuestUserService(
 
         val quests = this.findUserQuest(questRequest, pageable)
 
-        val userEvent = UserInfoGetEvent(userId = userId)
-        this.eventPublisher.publishEvent(userEvent)
-        val user = userEvent.response
-
-        return quests.map { QuestUserBannerResponse.from(it, user) }
+        return quests.map { QuestUserBannerResponse.from(it) }
     }
 
     fun findQuestDetail(userId: String, questId: Long): QuestUserDetailResponse {
@@ -129,10 +116,6 @@ class QuestUserService(
 
         val questFavorite = this.userQuestFavoriteService.findAllByQuestIdAndUserId(userId, listOf(questId))
 
-        val userEvent = UserInfoGetEvent(userId = userId)
-        this.eventPublisher.publishEvent(userEvent)
-        val user = userEvent.response
-
         val storeEvent = StoreInfoGetEvent(quest.storeId)
         this.eventPublisher.publishEvent(storeEvent)
         val store = storeEvent.response
@@ -144,7 +127,6 @@ class QuestUserService(
             userRank = userRank,
             favoriteYn = questFavorite.isNotEmpty(),
             missionExampleImages = missionExampleImages,
-            user = user,
             coupons = coupons,
             storeName = store.storeName,
         )

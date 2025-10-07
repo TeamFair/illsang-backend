@@ -1,6 +1,5 @@
 package com.illsang.quest.dto.response.user
 
-import com.illsang.common.event.user.info.UserInfoGetEvent
 import com.illsang.quest.domain.entity.quest.MissionEntity
 import com.illsang.quest.domain.entity.quest.QuestEntity
 import com.illsang.quest.domain.entity.user.UserMissionHistoryEntity
@@ -33,7 +32,6 @@ data class QuestUserDetailResponse(
             userRank: Int?,
             favoriteYn: Boolean,
             missionExampleImages: List<UserMissionHistoryEntity>,
-            user: UserInfoGetEvent.UserInfo,
             coupons: List<CouponModel>,
             storeName: String?
         ): QuestUserDetailResponse {
@@ -48,10 +46,7 @@ data class QuestUserDetailResponse(
                 expireDate = quest.expireDate,
                 favoriteYn = favoriteYn,
                 userRank = userRank,
-                rewards = quest.rewards.map { QuestUserReward.from(
-                    it,
-                    quest.commercialAreaCode == user.commercialAreaCode,
-                ) },
+                rewards = quest.rewards.map { QuestUserReward.from(it) },
                 missions = quest.missions.map {
                     MissionUserDetailResponse.from(
                         mission = it,

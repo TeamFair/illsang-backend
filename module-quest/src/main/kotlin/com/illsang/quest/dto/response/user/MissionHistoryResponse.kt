@@ -1,6 +1,6 @@
 package com.illsang.quest.dto.response.user
 
-import com.illsang.common.event.user.info.UserInfoBatchGetEvent
+import com.illsang.common.event.user.info.UserInfoGetEvent
 import com.illsang.quest.domain.entity.user.UserMissionHistoryEmojiEntity
 import com.illsang.quest.domain.entity.user.UserMissionHistoryEntity
 import com.illsang.quest.enums.EmojiType
@@ -21,7 +21,7 @@ data class MissionHistoryRandomResponse(
     companion object {
         fun from(
             missionHistory: UserMissionHistoryEntity,
-            userInfo: UserInfoBatchGetEvent.UserInfo,
+            userInfo: UserInfoGetEvent.UserInfo,
             userEmojiHistory: List<UserMissionHistoryEmojiEntity>,
         ): MissionHistoryRandomResponse {
             return MissionHistoryRandomResponse(
@@ -55,7 +55,7 @@ data class MissionHistoryExampleResponse(
     companion object {
         fun from(
             missionHistory: UserMissionHistoryEntity,
-            userInfo: UserInfoBatchGetEvent.UserInfo,
+            userInfo: UserInfoGetEvent.UserInfo,
             userEmojiHistory: List<UserMissionHistoryEmojiEntity>,
         ): MissionHistoryExampleResponse {
             return MissionHistoryExampleResponse(
