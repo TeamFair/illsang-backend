@@ -2,7 +2,8 @@ package com.illsang.auth.enums
 
 enum class OAuthProvider {
     GOOGLE,
-    APPLE;
+    APPLE,
+    ;
 
     companion object {
         fun fromString(value: String): OAuthProvider {

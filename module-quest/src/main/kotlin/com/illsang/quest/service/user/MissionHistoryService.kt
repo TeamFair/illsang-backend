@@ -12,6 +12,7 @@ import com.illsang.quest.dto.request.user.ChallengeCreateRequest
 import com.illsang.quest.dto.response.user.MissionHistoryExampleResponse
 import com.illsang.quest.dto.response.user.MissionHistoryOwnerResponse
 import com.illsang.quest.dto.response.user.MissionHistoryRandomResponse
+import com.illsang.quest.dto.response.user.MissionHistoryReportedResponse
 import com.illsang.quest.enums.EmojiType
 import com.illsang.quest.enums.MissionType
 import com.illsang.quest.repository.user.MissionHistoryEmojiRepository
@@ -184,14 +185,36 @@ class MissionHistoryService(
         this.missionHistoryRepository.delete(missionHistoryEntity)
     }
 
-    private fun findById(missionHistoryId: Long): UserMissionHistoryEntity =
-        this.missionHistoryRepository.findByIdOrNull(missionHistoryId)
-            ?: throw IllegalArgumentException("Mission History not found")
-
     fun existUserMissionImageId(id: String) {
         val missionHistory = missionHistoryRepository.existsBySubmitImageId(id)
         if(missionHistory) throw IllegalArgumentException("User mission image already exists")
     }
 
+    fun reportedMissionHistory(pageable: Pageable): Page<MissionHistoryReportedResponse> {
+        val reported = this.missionHistoryRepository.findAllByReported(pageable)
+
+        val userEvent = UserInfoGetEvent(reported.content.map { it.userId })
+        this.eventPublisher.publishEvent(userEvent)
+
+        return reported.map { MissionHistoryReportedResponse.from(it, userEvent.response) }
+    }
+
+    @Transactional
+    fun rejectMissionHistory(missionHistoryId: Long){
+        val missionHistoryEntity = this.findById(missionHistoryId)
+
+        missionHistoryEntity.reject()
+    }
+
+    @Transactional
+    fun approveMissionHistory(missionHistoryId: Long) {
+        val missionHistoryEntity = this.findById(missionHistoryId)
+
+        missionHistoryEntity.approve()
+    }
+
+    private fun findById(missionHistoryId: Long): UserMissionHistoryEntity =
+        this.missionHistoryRepository.findByIdOrNull(missionHistoryId)
+            ?: throw IllegalArgumentException("Mission History not found")
 
 }

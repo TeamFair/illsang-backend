@@ -3,6 +3,7 @@ package com.illsang.auth.enums
 enum class OSType {
     IOS,
     AOS,
+    WEB,
     ;
 
     companion object {

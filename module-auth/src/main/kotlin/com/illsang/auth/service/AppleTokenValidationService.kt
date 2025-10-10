@@ -44,6 +44,7 @@ class AppleTokenValidationService {
         val clientId = when (osType) {
             OSType.IOS -> appleIosClientId
             OSType.AOS -> appleAosClientId
+            else -> throw IllegalArgumentException("Unsupported OS type: $osType")
         }
 
         return try {

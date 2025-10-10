@@ -5,6 +5,7 @@ import com.illsang.quest.dto.request.user.MissionHistoryEmojiCreateRequest
 import com.illsang.quest.dto.response.user.MissionHistoryExampleResponse
 import com.illsang.quest.dto.response.user.MissionHistoryOwnerResponse
 import com.illsang.quest.dto.response.user.MissionHistoryRandomResponse
+import com.illsang.quest.dto.response.user.MissionHistoryReportedResponse
 import com.illsang.quest.enums.EmojiType
 import com.illsang.quest.service.user.MissionHistoryService
 import io.swagger.v3.oas.annotations.Operation
@@ -123,6 +124,39 @@ class MissionUserHistoryController(
         return ResponseEntity.ok(
             this.missionHistoryService.exampleMissionHistory(missionId, authenticationModel.userId, pageable)
         )
+    }
+
+    @GetMapping("/reported")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(operationId = "MIU009", summary = "신고된 미션 이력")
+    fun reportedMissionHistory(
+        @ParameterObject @PageableDefault(size = 10) pageable: Pageable,
+    ): ResponseEntity<Page<MissionHistoryReportedResponse>> {
+        return ResponseEntity.ok(
+            this.missionHistoryService.reportedMissionHistory(pageable)
+        )
+    }
+
+    @DeleteMapping("/{missionHistoryId}/reject")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(operationId = "MIU010", summary = "신고된 미션 삭제")
+    fun rejectMissionHistory(
+        @PathVariable missionHistoryId: Long,
+    ): ResponseEntity<Void> {
+        this.missionHistoryService.rejectMissionHistory(missionHistoryId)
+
+        return ResponseEntity.ok().build()
+    }
+
+    @PutMapping("/{missionHistoryId}/approval")
+    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(operationId = "MIU011", summary = "신고된 미션 철회")
+    fun approveMissionHistory(
+        @PathVariable missionHistoryId: Long,
+    ): ResponseEntity<Void> {
+        this.missionHistoryService.approveMissionHistory(missionHistoryId)
+
+        return ResponseEntity.ok().build()
     }
 
 }

@@ -21,6 +21,9 @@ class GoogleTokenValidationService {
     @Value("\${oauth.client.google.aos}")
     private lateinit var googleAosClientId: String
 
+    @Value("\${oauth.client.google.web}")
+    private lateinit var googleWebClientId: String
+
     private val transport = NetHttpTransport()
     private val jsonFactory = GsonFactory.getDefaultInstance()
 
@@ -28,6 +31,7 @@ class GoogleTokenValidationService {
         val clientId = when (osType) {
             OSType.IOS -> googleIosClientId
             OSType.AOS -> googleAosClientId
+            OSType.WEB -> googleWebClientId
         }
 
         val verifier = GoogleIdTokenVerifier.Builder(transport, jsonFactory)

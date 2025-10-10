@@ -72,4 +72,12 @@ class UserMissionHistoryEntity(
         this.status = MissionHistoryStatus.REPORTED
     }
 
+    fun reject() {
+        this.status = MissionHistoryStatus.REJECTED
+    }
+
+    fun approve() {
+        this.status = MissionHistoryStatus.APPROVED
+    }
+
 }

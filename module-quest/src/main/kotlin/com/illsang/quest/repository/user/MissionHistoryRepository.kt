@@ -58,4 +58,7 @@ interface MissionHistoryRepository : JpaRepository<UserMissionHistoryEntity, Lon
     ): Page<UserMissionHistoryEntity>
 
     fun existsBySubmitImageId(submitImageId: String): Boolean
+
+    @Query("SELECT umh FROM UserMissionHistoryEntity umh LEFT JOIN FETCH umh.mission  m LEFT JOIN FETCH m.quest q WHERE umh.status = 'REPORTED'")
+    fun findAllByReported(pageable: Pageable): Page<UserMissionHistoryEntity>
 }

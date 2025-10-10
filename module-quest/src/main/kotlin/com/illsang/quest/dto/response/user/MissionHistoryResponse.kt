@@ -97,3 +97,23 @@ data class MissionHistoryOwnerResponse(
         }
     }
 }
+
+data class MissionHistoryReportedResponse(
+    val missionHistoryId: Long,
+    val title: String,
+    val submitImageId: String?,
+    val nickname: String?,
+    val createdAt: LocalDateTime,
+) {
+    companion object {
+        fun from(entity: UserMissionHistoryEntity, users: List<UserInfoGetEvent.UserInfo>): MissionHistoryReportedResponse {
+            return MissionHistoryReportedResponse(
+                missionHistoryId = entity.id!!,
+                title = entity.mission.quest.title,
+                submitImageId = entity.submitImageId,
+                nickname = users.find { it.userId == entity.userId }?.nickname,
+                createdAt = entity.createdAt!!,
+            )
+        }
+    }
+}

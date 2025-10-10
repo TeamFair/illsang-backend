@@ -34,6 +34,7 @@ oauth:
 
   client:
     google:
+      web: "702150906844-ctskrornrkbus27hc7q1gfn3kus3mfdr.apps.googleusercontent.com"
       ios: "702150906844-g5jvs1fm6u1j1rfnvptkoe4eraak2uk9.apps.googleusercontent.com"
       aos: "702150906844-sspv7ls7t1pfonhde25gcuno5uattped.apps.googleusercontent.com"
     apple:
