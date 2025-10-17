@@ -35,6 +35,8 @@ class UserQuestHistoryEntity(
 ) : BaseEntity() {
 
     fun addMissionHistory(missionHistory: UserMissionHistoryEntity) {
+        this.missionHistory.removeIf { it.mission == missionHistory.mission }
+
         this.missionHistory.add(missionHistory)
     }
 
@@ -49,6 +51,10 @@ class UserQuestHistoryEntity(
             status = QuestHistoryStatus.COMPLETE
             completedAt = LocalDateTime.now()
         }
+    }
+
+    fun isCompleted(): Boolean {
+        return this.status == QuestHistoryStatus.COMPLETE
     }
 
 }
