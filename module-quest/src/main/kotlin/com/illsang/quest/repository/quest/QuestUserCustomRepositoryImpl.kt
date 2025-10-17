@@ -180,11 +180,11 @@ class QuestUserCustomRepositoryImpl(
 
     private fun repeatQuestCondition(today: LocalDateTime): Predicate? {
         val dailyCondition = questEntity.repeatFrequency.eq(QuestRepeatFrequency.DAILY)
-            .and(userQuestHistoryEntity.createdAt.goe(today.truncatedTo(ChronoUnit.DAYS)))
+            .and(userQuestHistoryEntity.completedAt.goe(today.truncatedTo(ChronoUnit.DAYS)))
         val weeklyCondition = questEntity.repeatFrequency.eq(QuestRepeatFrequency.WEEKLY)
-            .and(userQuestHistoryEntity.createdAt.goe(today.minusDays(6).truncatedTo(ChronoUnit.DAYS)))
+            .and(userQuestHistoryEntity.completedAt.goe(today.minusDays(6).truncatedTo(ChronoUnit.DAYS)))
         val monthlyCondition = questEntity.repeatFrequency.eq(QuestRepeatFrequency.MONTHLY)
-            .and(userQuestHistoryEntity.createdAt.goe(today.minusDays(29).truncatedTo(ChronoUnit.DAYS)))
+            .and(userQuestHistoryEntity.completedAt.goe(today.minusDays(29).truncatedTo(ChronoUnit.DAYS)))
 
         val targetTimeCondition = ExpressionUtils.or(
             dailyCondition,

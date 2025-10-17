@@ -60,8 +60,6 @@ class MissionHistoryService(
             null
         }
 
-        // TODO 반복퀘스트 이미 처리된 이력 있는지
-
         val questHistory = this.questHistoryService.findOrCreate(authenticationModel.userId, mission.quest)
         val missionHistory = UserMissionHistoryEntity(
             userId = authenticationModel.userId,

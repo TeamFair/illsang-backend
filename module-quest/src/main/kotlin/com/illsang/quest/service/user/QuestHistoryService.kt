@@ -31,21 +31,20 @@ class QuestHistoryService(
 
     @Transactional
     fun findOrCreate(userId: String, quest: QuestEntity): UserQuestHistoryEntity {
-        val currentSeasonEvent = SeasonGetCurrentEvent(LocalDateTime.now(ZoneId.of("Asia/Seoul")))
+        val currentSeasonEvent = SeasonGetCurrentEvent(LocalDateTime.now())
         this.eventPublisher.publishEvent(currentSeasonEvent)
         val currentSeason = currentSeasonEvent.response
 
-        val userQuestHistory = this.userQuestHistoryRepository.findByUserIdAndQuest(userId, quest)
-        return userQuestHistoryRepository.findByUserIdAndQuest(userId, quest)
-            ?: run {
-                // 없으면 새로 생성 후 저장
-                val newHistory = UserQuestHistoryEntity(
-                    userId = userId,
-                    quest = quest,
-                    seasonId = currentSeason.seasonId,
-                )
-                userQuestHistoryRepository.save(newHistory)
-            }
+        var userQuestHistory = userQuestHistoryRepository.findByUserIdAndQuest(userId, quest)
+        if (userQuestHistory == null || userQuestHistory.isCompleted()) {
+            userQuestHistory = UserQuestHistoryEntity(
+                userId = userId,
+                quest = quest,
+                seasonId = currentSeason.seasonId,
+            )
+        }
+
+        return userQuestHistoryRepository.save(userQuestHistory)
     }
 
     @Transactional
@@ -154,7 +153,7 @@ class QuestHistoryService(
 
         return this.userQuestHistoryRepository.findAllUserRankByArea(startDate, endDate, commercialAreaCodes)
     }
-    
+
     fun getUserQuestHistoryRankingCommercial(type: CouponType?, storeId: Long?): List<String> {
         val (startDate, endDate) = getDateRange(type)
 

@@ -57,12 +57,21 @@ if [ "$(sudo docker ps -aq -f name="^/${TARGET_CONTAINER_NAME}$")" ]; then
     sudo docker rm -f "$TARGET_CONTAINER_NAME"
 fi
 
+DOCKER_RUN_OPTIONS=(
+  -d
+  --name "$TARGET_CONTAINER_NAME"
+  -p "${TARGET_PORT}:8080"
+  -e "SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}"
+  -e "JAVA_OPTS=-XX:MaxRAMPercentage=75.0 -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:MaxMetaspaceSize=200m"
+  --memory="${DOCKER_MEMORY_LIMIT}"
+)
+
+if [[ -n "${DOCKER_MEMORY_SWAP_LIMIT}" ]]; then
+  echo "> --memory-swap 옵션을 추가합니다: ${DOCKER_MEMORY_SWAP_LIMIT}"
+  DOCKER_RUN_OPTIONS+=(--memory-swap "${DOCKER_MEMORY_SWAP_LIMIT}")
+else
+  echo "> --memory-swap 옵션을 사용하지 않습니다. (운영 환경)"
+fi
+
 echo "> 새 버전의 컨테이너를 실행합니다. (Port: ${TARGET_PORT})"
-sudo docker run -d \
-  --name "$TARGET_CONTAINER_NAME" \
-  -p "${TARGET_PORT}:8080" \
-  -e "SPRING_PROFILES_ACTIVE=${SPRING_PROFILES_ACTIVE}" \
-  -e "JAVA_OPTS=-XX:MaxRAMPercentage=75.0 -XX:+UseG1GC -XX:MaxGCPauseMillis=100 -XX:MaxMetaspaceSize=200m" \
-  --memory="${DOCKER_MEMORY_LIMIT}" \
-  --memory-swap="${DOCKER_MEMORY_SWAP_LIMIT}" \
-  "$IMAGE_NAME"
+sudo docker run "${DOCKER_RUN_OPTIONS[@]}" "$IMAGE_NAME"
