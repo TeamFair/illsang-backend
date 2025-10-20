@@ -4,6 +4,7 @@ import com.illsang.common.event.user.info.UserInfoGetEvent
 import com.illsang.quest.domain.entity.user.UserMissionHistoryEmojiEntity
 import com.illsang.quest.domain.entity.user.UserMissionHistoryEntity
 import com.illsang.quest.enums.EmojiType
+import com.illsang.quest.enums.MissionType
 import java.time.LocalDateTime
 
 data class MissionHistoryRandomResponse(
@@ -82,6 +83,8 @@ data class MissionHistoryOwnerResponse(
     val viewCount: Int = 0,
     val likeCount: Int = 0,
     val createdAt: LocalDateTime,
+    val commercialAreaCode: String,
+    val missionType: MissionType,
 ) {
     companion object {
         fun from(missionHistory: UserMissionHistoryEntity): MissionHistoryOwnerResponse {
@@ -93,6 +96,8 @@ data class MissionHistoryOwnerResponse(
                 viewCount = missionHistory.viewCount,
                 likeCount = missionHistory.likeCount,
                 createdAt = missionHistory.createdAt!!,
+                commercialAreaCode = missionHistory.mission.quest.commercialAreaCode,
+                missionType = missionHistory.mission.type,
             )
         }
     }

@@ -167,6 +167,17 @@ class MissionHistoryService(
         return missionHistories.map { MissionHistoryOwnerResponse.from(it) }
     }
 
+    fun findByUserIdAndMissionType(userId: String, missionType: MissionType?, pageable: Pageable): Page<MissionHistoryOwnerResponse> {
+
+        val missionHistories = this.missionHistoryRepository.findAllByMissionTypeAndUserIdAndStatusIn(
+            missionType ?: MissionType.PHOTO,
+            userId,
+            pageable
+        )
+
+        return missionHistories.map { MissionHistoryOwnerResponse.from(it) }
+    }
+
     @Transactional
     fun reportMissionHistory(missionHistoryId: Long) {
         val missionHistoryEntity = this.findById(missionHistoryId)

@@ -118,6 +118,7 @@ data class QuestUserBannerResponse(
     var rewards: List<QuestUserReward>,
     val questType: QuestType?,
     val repeatFrequency: QuestRepeatFrequency?,
+    val commercialAreaCode: String,
 ) {
     companion object {
         fun from(quest: QuestEntity): QuestUserBannerResponse {
@@ -131,6 +132,7 @@ data class QuestUserBannerResponse(
                 rewards = quest.rewards.map { QuestUserReward.from(it) },
                 questType = quest.type,
                 repeatFrequency = quest.repeatFrequency,
+                commercialAreaCode = quest.commercialAreaCode,
             )
         }
     }

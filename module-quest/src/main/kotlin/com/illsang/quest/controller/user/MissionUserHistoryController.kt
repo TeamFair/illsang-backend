@@ -7,6 +7,7 @@ import com.illsang.quest.dto.response.user.MissionHistoryOwnerResponse
 import com.illsang.quest.dto.response.user.MissionHistoryRandomResponse
 import com.illsang.quest.dto.response.user.MissionHistoryReportedResponse
 import com.illsang.quest.enums.EmojiType
+import com.illsang.quest.enums.MissionType
 import com.illsang.quest.service.user.MissionHistoryService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -82,10 +83,12 @@ class MissionUserHistoryController(
     fun selectAllOwner(
         @ParameterObject @PageableDefault(size = 10) pageable: Pageable,
         @RequestParam(required = false) userId: String?,
+        @RequestParam(required = false) missionType: MissionType?,
         @AuthenticationPrincipal authenticationModel: AuthenticationModel,
     ): ResponseEntity<Page<MissionHistoryOwnerResponse>> {
+        
         val userId = userId ?: authenticationModel.userId
-        val missionHistories = this.missionHistoryService.findByUserId(userId, pageable)
+        val missionHistories = this.missionHistoryService.findByUserIdAndMissionType(userId, missionType, pageable)
 
         return ResponseEntity.ok(missionHistories)
     }
@@ -158,5 +161,6 @@ class MissionUserHistoryController(
 
         return ResponseEntity.ok().build()
     }
+
 
 }
