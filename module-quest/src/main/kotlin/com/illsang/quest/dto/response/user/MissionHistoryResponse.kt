@@ -1,10 +1,18 @@
 package com.illsang.quest.dto.response.user
 
 import com.illsang.common.event.user.info.UserInfoGetEvent
+import com.illsang.quest.domain.entity.user.QUserMissionHistoryEntity.Companion.userMissionHistoryEntity
 import com.illsang.quest.domain.entity.user.UserMissionHistoryEmojiEntity
 import com.illsang.quest.domain.entity.user.UserMissionHistoryEntity
+import com.illsang.quest.domain.entity.user.UserQuizHistoryEntity
+import com.illsang.quest.domain.model.quset.QuizHistoryModel
+import com.illsang.quest.dto.response.quest.QuestDetailResponse
+import com.illsang.quest.dto.response.quest.QuizHistoryResponse
+import com.illsang.quest.dto.response.quest.QuizResponse
 import com.illsang.quest.enums.EmojiType
 import com.illsang.quest.enums.MissionType
+import com.illsang.quest.enums.QuestRepeatFrequency
+import com.querydsl.core.types.dsl.NumberPath
 import java.time.LocalDateTime
 
 data class MissionHistoryRandomResponse(
@@ -85,6 +93,7 @@ data class MissionHistoryOwnerResponse(
     val createdAt: LocalDateTime,
     val commercialAreaCode: String,
     val missionType: MissionType,
+    val repeatFrequency: QuestRepeatFrequency? = null,
 ) {
     companion object {
         fun from(missionHistory: UserMissionHistoryEntity): MissionHistoryOwnerResponse {
@@ -98,6 +107,7 @@ data class MissionHistoryOwnerResponse(
                 createdAt = missionHistory.createdAt!!,
                 commercialAreaCode = missionHistory.mission.quest.commercialAreaCode,
                 missionType = missionHistory.mission.type,
+                repeatFrequency = missionHistory.mission.quest.repeatFrequency,
             )
         }
     }
@@ -118,6 +128,44 @@ data class MissionHistoryReportedResponse(
                 submitImageId = entity.submitImageId,
                 nickname = users.find { it.userId == entity.userId }?.nickname,
                 createdAt = entity.createdAt!!,
+            )
+        }
+    }
+}
+
+data class MissionHistoryDetailResponse(
+    val missionHistoryId: Long?,
+    val title: String,
+    val submitImageId: String?,
+    val questImageId: String?,
+    val viewCount: Int = 0,
+    val likeCount: Int = 0,
+    val createdAt: LocalDateTime,
+    val commercialAreaCode: String,
+    val missionType: MissionType,
+    val writerName: String?,
+    val commercialGainPoint: Int,
+    val metroGainPoint: Int,
+    val contributionGainPoint: Int,
+    val quizList: List<QuizHistoryResponse> = emptyList(),
+) {
+    companion object {
+        fun from(missionHistory: UserMissionHistoryEntity, quizHistory : QuizHistoryModel): MissionHistoryDetailResponse {
+            return MissionHistoryDetailResponse(
+                missionHistoryId = missionHistory.id,
+                title = missionHistory.mission.quest.title,
+                submitImageId = missionHistory.submitImageId,
+                questImageId = missionHistory.mission.quest.imageId,
+                viewCount = missionHistory.viewCount,
+                likeCount = missionHistory.likeCount,
+                createdAt = missionHistory.createdAt!!,
+                commercialAreaCode = missionHistory.mission.quest.commercialAreaCode,
+                missionType = missionHistory.mission.type,
+                writerName = missionHistory.mission.quest.writerName,
+                commercialGainPoint = missionHistory.mission.quest.totalPoint,
+                metroGainPoint = missionHistory.mission.quest.totalPoint,
+                contributionGainPoint = missionHistory.mission.quest.totalPoint,
+                quizList = listOf(QuizHistoryResponse.from(quizHistory))
             )
         }
     }

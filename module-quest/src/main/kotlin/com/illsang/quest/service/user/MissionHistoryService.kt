@@ -7,8 +7,11 @@ import com.illsang.common.event.user.info.UserInfoGetEvent
 import com.illsang.quest.domain.entity.user.UserMissionHistoryEmojiEntity
 import com.illsang.quest.domain.entity.user.UserMissionHistoryEntity
 import com.illsang.quest.domain.entity.user.UserQuizHistoryEntity
+import com.illsang.quest.domain.model.quset.QuizHistoryModel
 import com.illsang.quest.domain.model.user.ChallengeModel
 import com.illsang.quest.dto.request.user.ChallengeCreateRequest
+import com.illsang.quest.dto.request.user.MissionHistoryRequest
+import com.illsang.quest.dto.response.user.MissionHistoryDetailResponse
 import com.illsang.quest.dto.response.user.MissionHistoryExampleResponse
 import com.illsang.quest.dto.response.user.MissionHistoryOwnerResponse
 import com.illsang.quest.dto.response.user.MissionHistoryRandomResponse
@@ -161,20 +164,12 @@ class MissionHistoryService(
         this.missionHistoryEmojiRepository.delete(emoji)
     }
 
-    fun findByUserId(userId: String, pageable: Pageable): Page<MissionHistoryOwnerResponse> {
-        val missionHistories = this.missionHistoryRepository.findAllByMissionTypeAndUserIdAndStatusIn(MissionType.PHOTO, userId, pageable)
+    fun findByUserIdAndMissionType(
+        request: MissionHistoryRequest,
+        pageable: Pageable
+    ): Page<MissionHistoryOwnerResponse> {
 
-        return missionHistories.map { MissionHistoryOwnerResponse.from(it) }
-    }
-
-    fun findByUserIdAndMissionType(userId: String, missionType: MissionType?, pageable: Pageable): Page<MissionHistoryOwnerResponse> {
-
-        val missionHistories = this.missionHistoryRepository.findAllByMissionTypeAndUserIdAndStatusIn(
-            missionType ?: MissionType.PHOTO,
-            userId,
-            pageable
-        )
-
+        val missionHistories = this.missionHistoryRepository.findSubmitUserMissionHistory(request, pageable)
         return missionHistories.map { MissionHistoryOwnerResponse.from(it) }
     }
 
@@ -222,8 +217,17 @@ class MissionHistoryService(
         missionHistoryEntity.approve()
     }
 
+    fun findMissionHistoryDetail(missionHistoryId: Long): MissionHistoryDetailResponse {
+        val missionHistory = this.findById(missionHistoryId)
+        val quizHistory = missionHistory.quizHistory
+        val quiz = quizHistory?.quiz
+        return MissionHistoryDetailResponse.from(missionHistory, QuizHistoryModel.from(quiz,quizHistory))
+    }
+
     private fun findById(missionHistoryId: Long): UserMissionHistoryEntity =
         this.missionHistoryRepository.findByIdOrNull(missionHistoryId)
             ?: throw IllegalArgumentException("Mission History not found")
+
+
 
 }

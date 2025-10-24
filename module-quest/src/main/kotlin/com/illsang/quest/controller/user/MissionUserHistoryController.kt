@@ -2,6 +2,8 @@ package com.illsang.quest.controller.user
 
 import com.illsang.auth.domain.model.AuthenticationModel
 import com.illsang.quest.dto.request.user.MissionHistoryEmojiCreateRequest
+import com.illsang.quest.dto.request.user.MissionHistoryRequest
+import com.illsang.quest.dto.response.user.MissionHistoryDetailResponse
 import com.illsang.quest.dto.response.user.MissionHistoryExampleResponse
 import com.illsang.quest.dto.response.user.MissionHistoryOwnerResponse
 import com.illsang.quest.dto.response.user.MissionHistoryRandomResponse
@@ -82,13 +84,13 @@ class MissionUserHistoryController(
     @Operation(operationId = "MIU005", summary = "수행한 퀘스트 이력")
     fun selectAllOwner(
         @ParameterObject @PageableDefault(size = 10) pageable: Pageable,
-        @RequestParam(required = false) userId: String?,
-        @RequestParam(required = false) missionType: MissionType?,
+        @ParameterObject request: MissionHistoryRequest,
         @AuthenticationPrincipal authenticationModel: AuthenticationModel,
     ): ResponseEntity<Page<MissionHistoryOwnerResponse>> {
-        
-        val userId = userId ?: authenticationModel.userId
-        val missionHistories = this.missionHistoryService.findByUserIdAndMissionType(userId, missionType, pageable)
+        if (request.userId == null) {
+            request.userId = authenticationModel.userId
+        }
+        val missionHistories = this.missionHistoryService.findByUserIdAndMissionType(request, pageable)
 
         return ResponseEntity.ok(missionHistories)
     }
@@ -160,6 +162,18 @@ class MissionUserHistoryController(
         this.missionHistoryService.approveMissionHistory(missionHistoryId)
 
         return ResponseEntity.ok().build()
+    }
+
+    @GetMapping("/detail")
+    @PreAuthorize("hasRole('USER')")
+    @Operation(operationId = "MIU012", summary = "수행한 퀘스트 상세 이력")
+    fun selectMissionDetail(
+        @RequestParam missionHistoryId: Long,
+
+        ): ResponseEntity<MissionHistoryDetailResponse> {
+        val missionHistories = this.missionHistoryService.findMissionHistoryDetail(missionHistoryId)
+
+        return ResponseEntity.ok(missionHistories)
     }
 
 

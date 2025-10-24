@@ -8,7 +8,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 
-interface MissionHistoryRepository : JpaRepository<UserMissionHistoryEntity, Long> {
+interface MissionHistoryRepository : JpaRepository<UserMissionHistoryEntity, Long>, MissionHistoryCustomRepository {
     fun findTop3ByMissionIdAndStatusInOrderByLikeCountDesc(
         questId: Long, missionStatus: List<MissionHistoryStatus> = listOf(
             MissionHistoryStatus.APPROVED, MissionHistoryStatus.SUBMITTED
