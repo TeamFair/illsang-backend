@@ -12,6 +12,7 @@ import com.illsang.quest.dto.response.quest.QuizResponse
 import com.illsang.quest.enums.EmojiType
 import com.illsang.quest.enums.MissionType
 import com.illsang.quest.enums.QuestRepeatFrequency
+import com.illsang.quest.enums.QuestType
 import com.querydsl.core.types.dsl.NumberPath
 import java.time.LocalDateTime
 
@@ -94,6 +95,7 @@ data class MissionHistoryOwnerResponse(
     val commercialAreaCode: String,
     val missionType: MissionType,
     val repeatFrequency: QuestRepeatFrequency? = null,
+    val questType: QuestType? = null,
 ) {
     companion object {
         fun from(missionHistory: UserMissionHistoryEntity): MissionHistoryOwnerResponse {
@@ -108,6 +110,7 @@ data class MissionHistoryOwnerResponse(
                 commercialAreaCode = missionHistory.mission.quest.commercialAreaCode,
                 missionType = missionHistory.mission.type,
                 repeatFrequency = missionHistory.mission.quest.repeatFrequency,
+                questType = missionHistory.mission.quest.type,
             )
         }
     }
@@ -148,6 +151,7 @@ data class MissionHistoryDetailResponse(
     val metroGainPoint: Int,
     val contributionGainPoint: Int,
     val quizList: List<QuizHistoryResponse> = emptyList(),
+    val questType: QuestType? = null,
 ) {
     companion object {
         fun from(missionHistory: UserMissionHistoryEntity, quizHistory : QuizHistoryModel): MissionHistoryDetailResponse {
@@ -165,7 +169,8 @@ data class MissionHistoryDetailResponse(
                 commercialGainPoint = missionHistory.mission.quest.totalPoint,
                 metroGainPoint = missionHistory.mission.quest.totalPoint,
                 contributionGainPoint = missionHistory.mission.quest.totalPoint,
-                quizList = listOf(QuizHistoryResponse.from(quizHistory))
+                quizList = listOf(QuizHistoryResponse.from(quizHistory)),
+                questType = missionHistory.mission.quest.type,
             )
         }
     }
