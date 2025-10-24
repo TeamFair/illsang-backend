@@ -9,7 +9,7 @@ data class MissionHistoryEmojiCreateRequest (
 
 data class MissionHistoryRequest (
     var userId: String?,
-    val missionType: MissionType? = MissionType.PHOTO,
+    val missionType: MissionType? = null,
     val orderRewardDesc: Boolean? = null,
     val orderCreatedAtDesc: Boolean? = true,
 )

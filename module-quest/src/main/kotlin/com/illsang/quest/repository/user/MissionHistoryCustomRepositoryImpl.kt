@@ -25,6 +25,7 @@ class MissionHistoryCustomRepositoryImpl(
             .where(
                 userMissionHistoryEntity.status.`in`(MissionHistoryStatus.APPROVED, MissionHistoryStatus.SUBMITTED),
                 userMissionHistoryEntity.userId.eq(request.userId),
+                request.missionType?.let { userMissionHistoryEntity.mission.type.eq(it) }
             )
             .orderBy(*orderCondition(request))
             .offset(pageable.offset)
@@ -37,6 +38,7 @@ class MissionHistoryCustomRepositoryImpl(
             .where(
                 userMissionHistoryEntity.status.`in`(MissionHistoryStatus.APPROVED, MissionHistoryStatus.SUBMITTED),
                 userMissionHistoryEntity.userId.eq(request.userId),
+                request.missionType?.let { userMissionHistoryEntity.mission.type.eq(it) }
             )
             .fetchOne() ?: 0L
 
