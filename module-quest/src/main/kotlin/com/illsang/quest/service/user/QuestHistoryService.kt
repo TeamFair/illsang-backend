@@ -165,4 +165,9 @@ class QuestHistoryService(
 
         return this.userQuestHistoryRepository.findAllUserRankByArea(startDate, endDate, commercialAreaCodes)
     }
+
+    fun findLastCompleteHistoryByUserId(userId: String, questIds: List<Long>): List<UserQuestHistoryEntity>?{
+        return userQuestHistoryRepository.findFirstByUserIdAndQuestIdOrderByCompletedAtDesc(userId, questIds)
+
+    }
 }

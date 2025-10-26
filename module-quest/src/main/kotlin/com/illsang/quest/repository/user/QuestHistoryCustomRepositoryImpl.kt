@@ -2,6 +2,8 @@ package com.illsang.quest.repository.user
 
 import com.illsang.quest.domain.entity.quest.QQuestEntity
 import com.illsang.quest.domain.entity.user.QUserQuestHistoryEntity
+import com.illsang.quest.domain.entity.user.QUserQuestHistoryEntity.Companion.userQuestHistoryEntity
+import com.illsang.quest.domain.entity.user.UserQuestHistoryEntity
 import com.illsang.quest.enums.QuestHistoryStatus
 import com.querydsl.core.BooleanBuilder
 import com.querydsl.jpa.impl.JPAQueryFactory
@@ -95,5 +97,29 @@ class QuestHistoryCustomRepositoryImpl(
             .fetch()
     }
 
+    override fun findFirstByUserIdAndQuestIdOrderByCompletedAtDesc(
+        userId: String,
+        questIds: List<Long>
+    ): List<UserQuestHistoryEntity> {
 
+        val results = mutableListOf<UserQuestHistoryEntity>()
+
+        questIds.forEach { questId ->
+            val latest = queryFactory
+                .selectFrom(uq)
+                .where(
+                    uq.userId.eq(userId),
+                    uq.quest.id.eq(questId),
+                    uq.status.eq(QuestHistoryStatus.COMPLETE)
+                )
+                .orderBy(uq.completedAt.desc())
+                .limit(1)
+                .fetchOne()
+
+            if (latest != null) {
+                results.add(latest)
+            }
+        }
+        return results
+    }
 }

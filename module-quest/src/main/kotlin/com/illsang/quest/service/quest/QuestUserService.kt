@@ -78,10 +78,13 @@ class QuestUserService(
         val questFavorites =
             this.userQuestFavoriteService.findAllByQuestIdAndUserId(userId, quests.mapNotNull { it.id })
 
+        val userQuestHistory = questHistoryService.findLastCompleteHistoryByUserId(userId, quests.mapNotNull { it.id })
+
         return quests.map {
             QuestUserTypeResponse.from(
                 quest = it,
-                favorite = questFavorites.find { favorite -> favorite.questId == it.id }
+                favorite = questFavorites.find { favorite -> favorite.questId == it.id },
+                lastCompleteDate = userQuestHistory?.find{userQuestHistory -> userQuestHistory.quest.id == it.id}?.completedAt
             )
         }
     }

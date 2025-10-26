@@ -89,9 +89,14 @@ data class QuestUserTypeResponse(
     var favoriteYn: Boolean,
     val questType: QuestType?,
     val repeatFrequency: QuestRepeatFrequency?,
+    val lastCompleteDate: LocalDateTime?
 ) {
     companion object {
-        fun from(quest: QuestEntity, favorite: UserQuestFavoriteEntity?): QuestUserTypeResponse {
+        fun from(
+            quest: QuestEntity,
+            favorite: UserQuestFavoriteEntity?,
+            lastCompleteDate: LocalDateTime?
+        ): QuestUserTypeResponse {
             return QuestUserTypeResponse(
                 questId = quest.id,
                 title = quest.title,
@@ -103,6 +108,7 @@ data class QuestUserTypeResponse(
                 favoriteYn = favorite?.let { true } ?: false,
                 questType = quest.type,
                 repeatFrequency = quest.repeatFrequency,
+                lastCompleteDate = lastCompleteDate,
             )
         }
     }
