@@ -84,12 +84,17 @@ class QuestUserService(
             QuestUserTypeResponse.from(
                 quest = it,
                 favorite = questFavorites.find { favorite -> favorite.questId == it.id },
-                lastCompleteDate = userQuestHistory?.find{userQuestHistory -> userQuestHistory.quest.id == it.id}?.completedAt
+                lastCompleteDate = userQuestHistory?.find { userQuestHistory -> userQuestHistory.quest.id == it.id }?.completedAt
             )
         }
     }
 
-    fun findAllBanner(userId: String, bannerId: Long, request: QuestUserBannerRequest, pageable: Pageable): Page<QuestUserBannerResponse> {
+    fun findAllBanner(
+        userId: String,
+        bannerId: Long,
+        request: QuestUserBannerRequest,
+        pageable: Pageable
+    ): Page<QuestUserBannerResponse> {
         val questRequest = QuestUserRequest(
             userId = userId,
             orderExpiredDesc = request.orderExpiredDesc,
@@ -99,8 +104,14 @@ class QuestUserService(
         )
 
         val quests = this.findUserQuest(questRequest, pageable)
+        val userQuestHistory = questHistoryService.findLastCompleteHistoryByUserId(userId, quests.mapNotNull { it.id })
 
-        return quests.map { QuestUserBannerResponse.from(it) }
+        return quests.map {
+            QuestUserBannerResponse.from(
+                quest = it,
+                lastCompleteDate = userQuestHistory?.find { userQuestHistory -> userQuestHistory.quest.id == it.id }?.completedAt
+            )
+        }
     }
 
     fun findQuestDetail(userId: String, questId: Long): QuestUserDetailResponse {
@@ -112,7 +123,7 @@ class QuestUserService(
             .filter { it.type == MissionType.PHOTO }
             .flatMap { this.missionHistoryService.findLikeCountByMissionId(it.id!!) }
 
-        var userRank : Int? = null
+        var userRank: Int? = null
         if (QuestType.REPEAT == quest.type) {
             userRank = this.questHistoryService.findCustomerRank(userId, questId)
         }

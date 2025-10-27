@@ -125,9 +125,10 @@ data class QuestUserBannerResponse(
     val questType: QuestType?,
     val repeatFrequency: QuestRepeatFrequency?,
     val commercialAreaCode: String,
+    val lastCompleteDate: LocalDateTime?,
 ) {
     companion object {
-        fun from(quest: QuestEntity): QuestUserBannerResponse {
+        fun from(quest: QuestEntity,lastCompleteDate: LocalDateTime?): QuestUserBannerResponse {
             return QuestUserBannerResponse(
                 questId = quest.id,
                 title = quest.title,
@@ -139,6 +140,7 @@ data class QuestUserBannerResponse(
                 questType = quest.type,
                 repeatFrequency = quest.repeatFrequency,
                 commercialAreaCode = quest.commercialAreaCode,
+                lastCompleteDate = lastCompleteDate,
             )
         }
     }
