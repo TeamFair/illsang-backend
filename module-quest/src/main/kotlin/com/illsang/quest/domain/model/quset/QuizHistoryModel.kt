@@ -12,14 +12,16 @@ data class QuizHistoryModel(
     val createdAt: LocalDateTime?
 ) {
     companion object{
-        fun from(quiz: QuizEntity?, userQuiz: UserQuizHistoryEntity?): QuizHistoryModel{
-            return QuizHistoryModel(
-                id = quiz?.id,
-                question = quiz?.question,
-                answers = quiz?.answers?.map { QuizAnswerModel.from(it) },
-                userAnswer = userQuiz?.answer,
-                createdAt = userQuiz?.createdAt
-            )
+        fun from(quiz: QuizEntity?, userQuiz: UserQuizHistoryEntity?): QuizHistoryModel? {
+            return quiz?.let {
+                QuizHistoryModel(
+                    id = it.id,
+                    question = it.question,
+                    answers = it.answers.map { ans -> QuizAnswerModel.from(ans) },
+                    userAnswer = userQuiz?.answer,
+                    createdAt = userQuiz?.createdAt
+                )
+            }
         }
     }
 }

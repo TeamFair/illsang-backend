@@ -1,19 +1,14 @@
 package com.illsang.quest.dto.response.user
 
 import com.illsang.common.event.user.info.UserInfoGetEvent
-import com.illsang.quest.domain.entity.user.QUserMissionHistoryEntity.Companion.userMissionHistoryEntity
 import com.illsang.quest.domain.entity.user.UserMissionHistoryEmojiEntity
 import com.illsang.quest.domain.entity.user.UserMissionHistoryEntity
-import com.illsang.quest.domain.entity.user.UserQuizHistoryEntity
 import com.illsang.quest.domain.model.quset.QuizHistoryModel
-import com.illsang.quest.dto.response.quest.QuestDetailResponse
 import com.illsang.quest.dto.response.quest.QuizHistoryResponse
-import com.illsang.quest.dto.response.quest.QuizResponse
 import com.illsang.quest.enums.EmojiType
 import com.illsang.quest.enums.MissionType
 import com.illsang.quest.enums.QuestRepeatFrequency
 import com.illsang.quest.enums.QuestType
-import com.querydsl.core.types.dsl.NumberPath
 import java.time.LocalDateTime
 
 data class MissionHistoryRandomResponse(
@@ -150,11 +145,12 @@ data class MissionHistoryDetailResponse(
     val commercialGainPoint: Int,
     val metroGainPoint: Int,
     val contributionGainPoint: Int,
-    val quizList: List<QuizHistoryResponse> = emptyList(),
+    val quizList: List<QuizHistoryResponse?> = emptyList(),
     val questType: QuestType? = null,
+    val repeatFrequency: QuestRepeatFrequency? = null,
 ) {
     companion object {
-        fun from(missionHistory: UserMissionHistoryEntity, quizHistory : QuizHistoryModel): MissionHistoryDetailResponse {
+        fun from(missionHistory: UserMissionHistoryEntity, quizHistory : QuizHistoryModel?): MissionHistoryDetailResponse {
             return MissionHistoryDetailResponse(
                 missionHistoryId = missionHistory.id,
                 title = missionHistory.mission.quest.title,
@@ -169,8 +165,9 @@ data class MissionHistoryDetailResponse(
                 commercialGainPoint = missionHistory.mission.quest.totalPoint,
                 metroGainPoint = missionHistory.mission.quest.totalPoint,
                 contributionGainPoint = missionHistory.mission.quest.totalPoint,
-                quizList = listOf(QuizHistoryResponse.from(quizHistory)),
+                quizList = listOfNotNull(quizHistory?.let { QuizHistoryResponse.from(it) }),
                 questType = missionHistory.mission.quest.type,
+                repeatFrequency = missionHistory.mission.quest.repeatFrequency,
             )
         }
     }
