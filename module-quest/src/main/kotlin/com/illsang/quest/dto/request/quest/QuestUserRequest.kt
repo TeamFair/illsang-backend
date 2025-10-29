@@ -10,7 +10,7 @@ data class QuestUserRequest(
     val questType: QuestType? = null,
     val repeatFrequency: QuestRepeatFrequency? = null,
     val orderRewardDesc: Boolean? = null,
-    val completedYn: Boolean = false,
+    val completedYn: Boolean? = null,
     val favoriteYn: Boolean? = null,
     val orderExpiredDesc: Boolean? = null,
     val bannerId: Long? = null,
@@ -22,11 +22,11 @@ data class QuestUserTypeRequest(
     val orderExpiredDesc: Boolean? = null,
     val orderRewardDesc: Boolean? = null,
     val favoriteYn: Boolean? = null,
-    val completedYn: Boolean = false,
+    val completedYn: Boolean? = null,
 )
 
 data class QuestUserBannerRequest(
-    val completedYn: Boolean = false,
+    val completedYn: Boolean? = null,
     val orderExpiredDesc: Boolean? = null,
     val orderRewardDesc: Boolean? = null,
 )

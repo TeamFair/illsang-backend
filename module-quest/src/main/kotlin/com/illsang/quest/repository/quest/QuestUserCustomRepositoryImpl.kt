@@ -149,7 +149,10 @@ class QuestUserCustomRepositoryImpl(
         return questEntity.type.eq(questType).and(questEntity.repeatFrequency.eq(repeatFrequency))
     }
 
-    private fun completedYnEq(completedYn: Boolean): BooleanExpression {
+    private fun completedYnEq(completedYn: Boolean?): BooleanExpression? {
+        if(completedYn == null){
+            return null
+        }
         if (completedYn) {
             return userQuestHistoryEntity.id.isNotNull
         }
