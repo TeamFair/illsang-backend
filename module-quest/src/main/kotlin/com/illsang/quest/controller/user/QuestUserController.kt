@@ -28,10 +28,11 @@ class QuestUserController(
     @Operation(operationId = "QUS001", summary = "미완료 인기퀘스트 조회")
     fun selectAllPopular(
         @RequestParam commercialAreaCode: String,
+        @RequestParam completedYn: Boolean? = false,
         @AuthenticationPrincipal authenticationModel: AuthenticationModel,
         @ParameterObject @PageableDefault(size = 10) pageable: Pageable,
     ): ResponseEntity<Page<QuestUserPopularResponse>> {
-        val quests = this.questUserService.findAllPopular(authenticationModel.userId, commercialAreaCode, pageable)
+        val quests = this.questUserService.findAllPopular(authenticationModel.userId, commercialAreaCode, completedYn, pageable)
 
         return ResponseEntity.ok(
             quests
@@ -43,10 +44,11 @@ class QuestUserController(
     @Operation(operationId = "QUS002", summary = "미완료 추천퀘스트 조회")
     fun selectAllRecommend(
         @RequestParam commercialAreaCode: String,
+        @RequestParam completedYn: Boolean? = false,
         @AuthenticationPrincipal authenticationModel: AuthenticationModel,
         @ParameterObject @PageableDefault(size = 10) pageable: Pageable,
     ): ResponseEntity<Page<QuestUserRecommendResponse>> {
-        val quests = this.questUserService.findAllRecommend(authenticationModel.userId, commercialAreaCode, pageable)
+        val quests = this.questUserService.findAllRecommend(authenticationModel.userId, commercialAreaCode, completedYn, pageable)
 
         return ResponseEntity.ok(
             quests
@@ -58,10 +60,11 @@ class QuestUserController(
     @Operation(operationId = "QUS003", summary = "미완료 큰 보상 퀘스트 조회")
     fun selectAllReward(
         @RequestParam commercialAreaCode: String,
+        @RequestParam completedYn: Boolean? = false,
         @AuthenticationPrincipal authenticationModel: AuthenticationModel,
         @ParameterObject @PageableDefault(size = 10) pageable: Pageable,
     ): ResponseEntity<Page<QuestUserRewardResponse>> {
-        val quests = this.questUserService.findAllReward(authenticationModel.userId, commercialAreaCode, pageable)
+        val quests = this.questUserService.findAllReward(authenticationModel.userId, commercialAreaCode, completedYn, pageable)
 
         return ResponseEntity.ok(
             quests

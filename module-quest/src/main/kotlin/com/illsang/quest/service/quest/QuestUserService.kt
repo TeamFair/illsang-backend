@@ -31,8 +31,18 @@ class QuestUserService(
     private val couponService: CouponService,
 ) {
 
-    fun findAllPopular(userId: String, commercialAreaCode: String, pageable: Pageable): Page<QuestUserPopularResponse> {
-        val questRequest = QuestUserRequest(userId = userId, commercialAreaCode = commercialAreaCode, popularYn = true)
+    fun findAllPopular(
+        userId: String,
+        commercialAreaCode: String,
+        completedYn: Boolean?,
+        pageable: Pageable
+    ): Page<QuestUserPopularResponse> {
+        val questRequest = QuestUserRequest(
+            userId = userId,
+            commercialAreaCode = commercialAreaCode,
+            completedYn = completedYn,
+            popularYn = true
+        )
         val quests = this.findUserQuest(questRequest, pageable)
 
         return quests.map { QuestUserPopularResponse.from(it) }
@@ -41,17 +51,29 @@ class QuestUserService(
     fun findAllRecommend(
         userId: String,
         commercialAreaCode: String,
+        completedYn: Boolean?,
         pageable: Pageable
     ): Page<QuestUserRecommendResponse> {
-        val questRequest = QuestUserRequest(userId = userId, commercialAreaCode = commercialAreaCode)
+        val questRequest =
+            QuestUserRequest(userId = userId, commercialAreaCode = commercialAreaCode, completedYn = completedYn)
         val quests = this.findUserQuest(questRequest, pageable)
 
         return quests.map { QuestUserRecommendResponse.from(it) }
     }
 
-    fun findAllReward(userId: String, commercialAreaCode: String, pageable: Pageable): Page<QuestUserRewardResponse> {
+    fun findAllReward(
+        userId: String,
+        commercialAreaCode: String,
+        completedYn: Boolean?,
+        pageable: Pageable
+    ): Page<QuestUserRewardResponse> {
         val questRequest =
-            QuestUserRequest(userId = userId, commercialAreaCode = commercialAreaCode, orderRewardDesc = true)
+            QuestUserRequest(
+                userId = userId,
+                commercialAreaCode = commercialAreaCode,
+                completedYn = completedYn,
+                orderRewardDesc = true
+            )
         val quests = this.findUserQuest(questRequest, pageable)
 
         return quests.map { QuestUserRewardResponse.from(it) }
