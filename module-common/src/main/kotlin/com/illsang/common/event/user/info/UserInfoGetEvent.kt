@@ -13,6 +13,7 @@ data class UserInfoGetEvent (
         val nickname: String,
         val profileImageId: String?,
         val title: UserTitleInfo?,
+        val commercialAreaCode: String?,
     )
 
     class UserTitleInfo (

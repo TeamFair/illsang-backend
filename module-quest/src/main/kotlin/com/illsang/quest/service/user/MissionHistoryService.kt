@@ -221,7 +221,15 @@ class MissionHistoryService(
         val missionHistory = this.findById(missionHistoryId)
         val quizHistory = missionHistory.quizHistory
         val quiz = quizHistory?.quiz
-        return MissionHistoryDetailResponse.from(missionHistory, QuizHistoryModel.from(quiz,quizHistory))
+
+        val userEvent = UserInfoGetEvent(listOf(missionHistory.userId))
+        this.eventPublisher.publishEvent(userEvent)
+
+        return MissionHistoryDetailResponse.from(
+            missionHistory,
+            QuizHistoryModel.from(quiz, quizHistory),
+            userEvent.response.find { user -> missionHistory.userId == user.userId }!!
+        )
     }
 
     private fun findById(missionHistoryId: Long): UserMissionHistoryEntity =

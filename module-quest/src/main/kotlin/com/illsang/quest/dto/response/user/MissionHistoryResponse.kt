@@ -148,9 +148,14 @@ data class MissionHistoryDetailResponse(
     val quizList: List<QuizHistoryResponse?> = emptyList(),
     val questType: QuestType? = null,
     val repeatFrequency: QuestRepeatFrequency? = null,
+    val contributionDoublePointYn: Boolean? = null,
 ) {
     companion object {
-        fun from(missionHistory: UserMissionHistoryEntity, quizHistory : QuizHistoryModel?): MissionHistoryDetailResponse {
+        fun from(
+            missionHistory: UserMissionHistoryEntity,
+            quizHistory: QuizHistoryModel?,
+            userInfo: UserInfoGetEvent.UserInfo,
+        ): MissionHistoryDetailResponse {
             return MissionHistoryDetailResponse(
                 missionHistoryId = missionHistory.id,
                 title = missionHistory.mission.quest.title,
@@ -168,6 +173,7 @@ data class MissionHistoryDetailResponse(
                 quizList = listOfNotNull(quizHistory?.let { QuizHistoryResponse.from(it) }),
                 questType = missionHistory.mission.quest.type,
                 repeatFrequency = missionHistory.mission.quest.repeatFrequency,
+                contributionDoublePointYn = missionHistory.mission.quest.commercialAreaCode == userInfo.commercialAreaCode,
             )
         }
     }

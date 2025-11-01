@@ -25,8 +25,10 @@ class UserInfoEventListener(
                         name = title.titleName,
                         grade = title.titleGrade,
                         type = title.titleType,
-                    )
-                }
+
+                        )
+                },
+                commercialAreaCode = it.commercialAreaCode,
             )
         }
     }
