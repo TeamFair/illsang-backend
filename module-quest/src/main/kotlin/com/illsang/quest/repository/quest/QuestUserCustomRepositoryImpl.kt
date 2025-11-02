@@ -39,7 +39,7 @@ class QuestUserCustomRepositoryImpl(
                 userQuestHistoryEntity.userId.eq(request.userId),
                 ExpressionUtils.or(
                     questEntity.type.ne(QuestType.REPEAT),
-                    repeatQuestCondition(LocalDateTime.now())
+                    repeatQuestCondition(LocalDateTime.now(),request.bannerId)
                 )
             )
             .leftJoin(userQuestFavoriteEntity).on(
@@ -77,7 +77,7 @@ class QuestUserCustomRepositoryImpl(
                 userQuestHistoryEntity.userId.eq(request.userId),
                 ExpressionUtils.or(
                     questEntity.type.ne(QuestType.REPEAT),
-                    repeatQuestCondition(LocalDateTime.now())
+                    repeatQuestCondition(LocalDateTime.now(), request.bannerId)
                 )
             ).fetchJoin()
             .leftJoin(userQuestFavoriteEntity).on(
@@ -98,7 +98,7 @@ class QuestUserCustomRepositoryImpl(
                 userQuestHistoryEntity.userId.eq(request.userId),
                 ExpressionUtils.or(
                     questEntity.type.ne(QuestType.REPEAT),
-                    repeatQuestCondition(LocalDateTime.now())
+                    repeatQuestCondition(LocalDateTime.now(),request.bannerId)
                 )
             )
             .leftJoin(userQuestFavoriteEntity).on(
@@ -181,7 +181,13 @@ class QuestUserCustomRepositoryImpl(
         return orderSpecifiers.toTypedArray()
     }
 
-    private fun repeatQuestCondition(today: LocalDateTime): Predicate? {
+    private fun repeatQuestCondition(today: LocalDateTime, bannerId: Long?): Predicate? {
+        if(bannerId != null){
+            return ExpressionUtils.and(
+                questEntity.type.eq(QuestType.REPEAT),
+                questEntity.expireDate.loe(today),
+            )
+        }
         val dailyCondition = questEntity.repeatFrequency.eq(QuestRepeatFrequency.DAILY)
             .and(userQuestHistoryEntity.completedAt.goe(today.truncatedTo(ChronoUnit.DAYS)))
         val weeklyCondition = questEntity.repeatFrequency.eq(QuestRepeatFrequency.WEEKLY)
