@@ -12,6 +12,9 @@ import com.querydsl.core.types.ExpressionUtils
 import com.querydsl.core.types.OrderSpecifier
 import com.querydsl.core.types.Predicate
 import com.querydsl.core.types.dsl.BooleanExpression
+import com.querydsl.core.types.dsl.Expressions
+import com.querydsl.core.types.dsl.NumberExpression
+import com.querydsl.jpa.JPAExpressions
 import com.querydsl.jpa.impl.JPAQueryFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
@@ -39,7 +42,7 @@ class QuestUserCustomRepositoryImpl(
                 userQuestHistoryEntity.userId.eq(request.userId),
                 ExpressionUtils.or(
                     questEntity.type.ne(QuestType.REPEAT),
-                    repeatQuestCondition(LocalDateTime.now(),request.bannerId)
+                    repeatQuestCondition(LocalDateTime.now(), request.userId, request.bannerId)
                 )
             )
             .leftJoin(userQuestFavoriteEntity).on(
@@ -77,7 +80,7 @@ class QuestUserCustomRepositoryImpl(
                 userQuestHistoryEntity.userId.eq(request.userId),
                 ExpressionUtils.or(
                     questEntity.type.ne(QuestType.REPEAT),
-                    repeatQuestCondition(LocalDateTime.now(), request.bannerId)
+                    repeatQuestCondition(LocalDateTime.now(), request.userId, request.bannerId)
                 )
             ).fetchJoin()
             .leftJoin(userQuestFavoriteEntity).on(
@@ -98,7 +101,7 @@ class QuestUserCustomRepositoryImpl(
                 userQuestHistoryEntity.userId.eq(request.userId),
                 ExpressionUtils.or(
                     questEntity.type.ne(QuestType.REPEAT),
-                    repeatQuestCondition(LocalDateTime.now(),request.bannerId)
+                    repeatQuestCondition(LocalDateTime.now(), request.userId, request.bannerId)
                 )
             )
             .leftJoin(userQuestFavoriteEntity).on(
@@ -163,6 +166,12 @@ class QuestUserCustomRepositoryImpl(
     private fun orderCondition(request: QuestUserRequest): Array<OrderSpecifier<*>> {
         val orderSpecifiers = mutableListOf<OrderSpecifier<*>>()
 
+        val isAvailableQuestOrder: NumberExpression<Int> =
+            Expressions.cases().`when`(repeatQuestCondition(LocalDateTime.now(), request.userId, null)).then(1)
+                .otherwise(0)
+
+        orderSpecifiers.add(isAvailableQuestOrder.asc())
+
         request.orderRewardDesc?.let {
             orderSpecifiers.add(if (it) questEntity.totalPoint.desc() else questEntity.totalPoint.asc())
         }
@@ -181,19 +190,29 @@ class QuestUserCustomRepositoryImpl(
         return orderSpecifiers.toTypedArray()
     }
 
-    private fun repeatQuestCondition(today: LocalDateTime, bannerId: Long?): Predicate? {
-        if(bannerId != null){
+    private fun repeatQuestCondition(today: LocalDateTime, userId: String?, bannerId: Long?): Predicate? {
+        if (bannerId != null) {
             return ExpressionUtils.and(
                 questEntity.type.eq(QuestType.REPEAT),
                 questEntity.expireDate.loe(today),
             )
         }
+
+        // ✅ [핵심] quest별 latest completedAt 을 서브쿼리로 계산
+        val lastCompletedAt = JPAExpressions
+            .select(userQuestHistoryEntity.completedAt.max())
+            .from(userQuestHistoryEntity)
+            .where(
+                userQuestHistoryEntity.quest.eq(questEntity),
+                userQuestHistoryEntity.userId.eq(userId)
+            )
+
         val dailyCondition = questEntity.repeatFrequency.eq(QuestRepeatFrequency.DAILY)
-            .and(userQuestHistoryEntity.completedAt.goe(today.truncatedTo(ChronoUnit.DAYS)))
+            .and(lastCompletedAt.goe(today.truncatedTo(ChronoUnit.DAYS)))
         val weeklyCondition = questEntity.repeatFrequency.eq(QuestRepeatFrequency.WEEKLY)
-            .and(userQuestHistoryEntity.completedAt.goe(today.minusDays(6).truncatedTo(ChronoUnit.DAYS)))
+            .and(lastCompletedAt.goe(today.minusDays(6).truncatedTo(ChronoUnit.DAYS)))
         val monthlyCondition = questEntity.repeatFrequency.eq(QuestRepeatFrequency.MONTHLY)
-            .and(userQuestHistoryEntity.completedAt.goe(today.minusDays(29).truncatedTo(ChronoUnit.DAYS)))
+            .and(lastCompletedAt.goe(today.minusDays(29).truncatedTo(ChronoUnit.DAYS)))
 
         val targetTimeCondition = ExpressionUtils.or(
             dailyCondition,
