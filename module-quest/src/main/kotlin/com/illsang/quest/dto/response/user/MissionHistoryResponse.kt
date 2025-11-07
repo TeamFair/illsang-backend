@@ -1,6 +1,8 @@
 package com.illsang.quest.dto.response.user
 
+import com.illsang.common.enums.PointType
 import com.illsang.common.event.user.info.UserInfoGetEvent
+import com.illsang.common.event.user.point.UserPointHistoryGetEvent
 import com.illsang.quest.domain.entity.user.UserMissionHistoryEmojiEntity
 import com.illsang.quest.domain.entity.user.UserMissionHistoryEntity
 import com.illsang.quest.domain.model.quset.QuizHistoryModel
@@ -155,6 +157,7 @@ data class MissionHistoryDetailResponse(
             missionHistory: UserMissionHistoryEntity,
             quizHistory: QuizHistoryModel?,
             userInfo: UserInfoGetEvent.UserInfo,
+            userPointHistory: List<UserPointHistoryGetEvent.UserPointHistory>,
         ): MissionHistoryDetailResponse {
             return MissionHistoryDetailResponse(
                 missionHistoryId = missionHistory.id,
@@ -167,13 +170,16 @@ data class MissionHistoryDetailResponse(
                 commercialAreaCode = missionHistory.mission.quest.commercialAreaCode,
                 missionType = missionHistory.mission.type,
                 writerName = missionHistory.mission.quest.writerName,
-                commercialGainPoint = missionHistory.mission.quest.totalPoint,
-                metroGainPoint = missionHistory.mission.quest.totalPoint,
-                contributionGainPoint = missionHistory.mission.quest.totalPoint,
+                commercialGainPoint = userPointHistory.filter { it.pointType == PointType.COMMERCIAL }
+                    .sumOf { it.point },
+                metroGainPoint = userPointHistory.filter { it.pointType == PointType.METRO }
+                    .sumOf { it.point },
+                contributionGainPoint = userPointHistory.filter { it.pointType == PointType.CONTRIBUTION }
+                    .sumOf { it.point },
                 quizList = listOfNotNull(quizHistory?.let { QuizHistoryResponse.from(it) }),
                 questType = missionHistory.mission.quest.type,
                 repeatFrequency = missionHistory.mission.quest.repeatFrequency,
-                contributionDoublePointYn = missionHistory.mission.quest.commercialAreaCode == userInfo.commercialAreaCode,
+                contributionDoublePointYn = userPointHistory.any { it.pointType == PointType.CONTRIBUTION && it.userCommercialAreaCode == it.commercialAreaCode },
             )
         }
     }

@@ -32,4 +32,11 @@ class UserPointHistoryEntity(
 
     @Column(name = "quest_id")
     val questId: Long,
+
+    @Column(name= "user_commercial_area_code")
+    val userCommercialAreaCode: String? = null,
+
+    @Column(name= "user_quest_history_id")
+    val userQuestHistoryId: Long? = null,
+
 ) : BaseEntity()

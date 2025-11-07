@@ -72,6 +72,7 @@ class QuestHistoryService(
                     questId = questHistory.quest.id!!,
                     request = userPointCreateRequests,
                     seasonId = questHistory.seasonId,
+                    userQuestHistoryId = questHistory.id,
                 )
             )
 

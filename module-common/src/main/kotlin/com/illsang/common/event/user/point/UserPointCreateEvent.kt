@@ -7,6 +7,7 @@ data class UserPointCreateEvent(
     val userId: String,
     val questId: Long,
     val request: List<UserPointCreateRequest>,
+    val userQuestHistoryId: Long? = null
 )
 
 data class UserPointCreateRequest(

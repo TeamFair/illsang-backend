@@ -4,6 +4,7 @@ import com.illsang.auth.domain.model.AuthenticationModel
 import com.illsang.common.enums.ResultCode
 import com.illsang.common.event.management.image.ImageExistOrThrowEvent
 import com.illsang.common.event.user.info.UserInfoGetEvent
+import com.illsang.common.event.user.point.UserPointHistoryGetEvent
 import com.illsang.quest.domain.entity.user.UserMissionHistoryEmojiEntity
 import com.illsang.quest.domain.entity.user.UserMissionHistoryEntity
 import com.illsang.quest.domain.entity.user.UserQuizHistoryEntity
@@ -225,10 +226,14 @@ class MissionHistoryService(
         val userEvent = UserInfoGetEvent(listOf(missionHistory.userId))
         this.eventPublisher.publishEvent(userEvent)
 
+        val userPointHistory = UserPointHistoryGetEvent(missionHistory.questHistory.id)
+        this.eventPublisher.publishEvent(userPointHistory)
+
         return MissionHistoryDetailResponse.from(
             missionHistory,
             QuizHistoryModel.from(quiz, quizHistory),
-            userEvent.response.find { user -> missionHistory.userId == user.userId }!!
+            userEvent.response.find { user -> missionHistory.userId == user.userId }!!,
+            userPointHistory = userPointHistory.response
         )
     }
 

@@ -5,6 +5,7 @@ import com.illsang.common.event.management.quest.CompletedQuestHistoryCountGetEv
 import com.illsang.common.event.user.point.UserPointCreateRequest
 import com.illsang.user.domain.entity.UserPointHistoryEntity
 import com.illsang.user.domain.entity.UserPointKey
+import com.illsang.user.domain.model.UserPointHistoryModel
 import com.illsang.user.domain.model.UserRankModel
 import com.illsang.user.dto.response.*
 import com.illsang.user.repository.UserPointHistoryRepository
@@ -25,7 +26,7 @@ class UserPointService(
 ) {
 
     @Transactional
-    fun createPoints(seasonId: Long, userId: String, questId: Long, request: List<UserPointCreateRequest>) {
+    fun createPoints(seasonId: Long, userId: String, questId: Long, userQuestHistoryId: Long?, request: List<UserPointCreateRequest>) {
         val user = this.userService.findById(userId)
 
         val userPoints = request.map { pointRequest ->
@@ -52,6 +53,8 @@ class UserPointService(
                     pointType = it.first.pointType,
                     point = it.second,
                     questId = questId,
+                    userCommercialAreaCode = user.commercialAreaCode,
+                    userQuestHistoryId = userQuestHistoryId,
                 )
             }
         )
@@ -180,6 +183,12 @@ class UserPointService(
     fun findUserTotalPoint(userIds: List<String>): List<UserRankModel>{
         val userPoints = this.userPointRepository.findUserRankPositionByPoint(userIds)
         return  userPoints
+    }
+
+    fun findUserPointHistory(userQuestHistoryId: Long?): List<UserPointHistoryModel>{
+
+        val userPointHistory = this.userPointHistoryRepository.findAllByUserQuestHistoryId(userQuestHistoryId)
+        return userPointHistory.map { UserPointHistoryModel.from(it) }
     }
 
 }
