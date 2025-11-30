@@ -46,6 +46,10 @@ class UserMissionHistoryEntity(
 
     @OneToMany(mappedBy = "missionHistory", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     val missionHistoryEmojis: MutableList<UserMissionHistoryEmojiEntity> = mutableListOf(),
+
+    @OneToMany(mappedBy = "missionHistory", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
+    val missionHistoryComments: MutableList<UserMissionHistoryCommentEntity> = mutableListOf(),
+
 ) : BaseEntity() {
 
     fun addQuizHistory(quizHistory: UserQuizHistoryEntity) {

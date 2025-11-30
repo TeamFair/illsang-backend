@@ -237,6 +237,11 @@ class MissionHistoryService(
         )
     }
 
+    fun getMissionHistoryById(missionHistoryId: Long): UserMissionHistoryEntity
+    {
+        return this.findById(missionHistoryId)
+    }
+
     private fun findById(missionHistoryId: Long): UserMissionHistoryEntity =
         this.missionHistoryRepository.findByIdOrNull(missionHistoryId)
             ?: throw IllegalArgumentException("Mission History not found")
