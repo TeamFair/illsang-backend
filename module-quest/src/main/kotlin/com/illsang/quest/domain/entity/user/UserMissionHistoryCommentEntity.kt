@@ -65,6 +65,7 @@ class UserMissionHistoryCommentEntity(
 
     fun delete(userId: String,){
         if(this.writerId != userId) throw IllegalArgumentException("Only writer can delete comment")
+        this.status = ReportStatusType.COMPLETED_HIDDEN
         this.deleteYn = true
     }
 

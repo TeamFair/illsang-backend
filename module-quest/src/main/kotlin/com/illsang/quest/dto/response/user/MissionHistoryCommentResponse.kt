@@ -14,6 +14,7 @@ data class MissionHistoryCommentResponse(
     val status: ReportStatusType,
     val createdAt: String,
     val hasReportedYn: Boolean = false,
+    val deleteYn: Boolean = false,
     val children: MutableList<MissionHistoryCommentResponse> = mutableListOf(),
 
     ) {
@@ -31,7 +32,8 @@ data class MissionHistoryCommentResponse(
                 writer = WriterResponse.from(userInfo),
                 createdAt = userMissionHistoryCommentEntity.createdAt!!.toString(),
                 status = userMissionHistoryCommentEntity.status,
-                hasReportedYn = hasReportedYn
+                hasReportedYn = hasReportedYn,
+                deleteYn = userMissionHistoryCommentEntity.deleteYn,
             )
         }
     }
