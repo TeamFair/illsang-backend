@@ -1,28 +1,29 @@
 package com.illsang.quest.dto.request.user
 
+import com.illsang.common.enums.ReportStatusType
 import com.illsang.quest.domain.entity.user.UserMissionHistoryCommentEntity
 import com.illsang.quest.domain.entity.user.UserMissionHistoryEntity
-import com.illsang.quest.enums.MissionHistoryCommentStatus
 
 data class MissionHistoryCommentRequest(
     val comment: String,
     val parentId: Long? = null,
-    val writerId: String,
-    val status: MissionHistoryCommentStatus? = MissionHistoryCommentStatus.SUBMITTED,
-
 ){
-    fun toEntity(missionHistory: UserMissionHistoryEntity): UserMissionHistoryCommentEntity {
+    fun toEntity(missionHistory: UserMissionHistoryEntity, userId: String): UserMissionHistoryCommentEntity {
 
         val missionHistoryComment = UserMissionHistoryCommentEntity(
             comment = this.comment,
             parentId = this.parentId,
-            writerId = this.writerId,
+            writerId = userId,
             missionHistory = missionHistory,
+            status = ReportStatusType.COMPLETED,
         )
-
         return missionHistoryComment
     }
 }
+
+data class ReportMissionHistoryCommentRequest(
+    val reason: String? = null,
+)
 
 data class MissionHistoryCommentUpdateRequest(
     val comment: String,
