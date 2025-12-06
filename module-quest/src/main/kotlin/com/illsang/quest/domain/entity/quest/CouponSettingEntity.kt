@@ -15,20 +15,30 @@ class CouponSettingEntity(
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "coupon_id")
-    var coupon: CouponEntity?= null,
+    var coupon: CouponEntity? = null,
 
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
     var type: CouponType,
 
     @Column(name = "amount")
-    var amount: Int?,
+    var amount: Int,
 
-) : BaseEntity(){
+    @Column(name = "issued_amount")
+    var issuedAmount: Int = 0,
 
-    fun update(request: CouponSettingUpdateRequest, coupon: CouponEntity?){
+    ) : BaseEntity() {
+
+    fun update(request: CouponSettingUpdateRequest, coupon: CouponEntity?) {
         this.coupon = coupon
         this.type = request.type
         this.amount = request.amount
+    }
+
+    fun increaseIssuedAmount() {
+        if (this.issuedAmount >= this.amount) {
+            throw IllegalArgumentException("쿠폰이 모두 소진되었습니다.")
+        }
+        this.issuedAmount += 1
     }
 }

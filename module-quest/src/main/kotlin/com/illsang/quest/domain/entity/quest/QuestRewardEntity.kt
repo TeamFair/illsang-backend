@@ -27,12 +27,17 @@ class QuestRewardEntity(
 
     @Column(name = "reward_value")
     var point: Int,
+
+    @Column(name= "coupon_id")
+    var couponId: Long? = null
+
 ) : BaseEntity() {
 
     fun update(request: QuestRewardUpdateRequest) {
         this.rewardType = request.rewardType
         this.pointType = request.pointType
         this.point = request.point
+        this.couponId = request.couponId
     }
 
 }

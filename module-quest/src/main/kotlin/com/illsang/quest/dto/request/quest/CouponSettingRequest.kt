@@ -7,7 +7,7 @@ import com.illsang.quest.domain.entity.quest.CouponSettingEntity
 data class CouponSettingCreateRequest(
     val couponId: Long,
     val type: CouponType,
-    val amount: Int? = null,
+    val amount: Int,
 
 ){
     fun toEntity(coupon: CouponEntity): CouponSettingEntity {
@@ -21,6 +21,6 @@ data class CouponSettingCreateRequest(
 
 data class CouponSettingUpdateRequest(
     val type: CouponType,
-    val amount: Int? = null,
+    val amount: Int,
     val couponId: Long,
 )

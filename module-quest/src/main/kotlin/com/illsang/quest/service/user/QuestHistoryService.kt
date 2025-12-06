@@ -2,11 +2,10 @@ package com.illsang.quest.service.user
 
 import com.illsang.common.enums.CouponType
 import com.illsang.common.event.management.area.CommercialAreaByMetroAreaGetEvent
-import com.illsang.common.event.management.area.CommercialAreaGetEvent
 import com.illsang.common.event.management.area.MetroAreaGetByCommercialAreaEvent
-import com.illsang.common.event.management.area.MetroAreaGetEvent
 import com.illsang.common.event.management.season.SeasonGetCurrentEvent
 import com.illsang.common.event.management.store.StoreInfoGetEvent
+import com.illsang.common.event.user.coupon.UserCouponCreateEvent
 import com.illsang.common.event.user.point.UserPointCreateEvent
 import com.illsang.common.event.user.point.UserPointCreateRequest
 import com.illsang.common.event.user.title.UserTitleQuestCompleteEvent
@@ -14,8 +13,8 @@ import com.illsang.quest.domain.entity.quest.QuestEntity
 import com.illsang.quest.domain.entity.user.UserQuestHistoryEntity
 import com.illsang.quest.enums.QuestHistoryStatus
 import com.illsang.quest.enums.RewardType
-import com.illsang.quest.repository.user.QuestHistoryCustomRepository
 import com.illsang.quest.repository.user.QuestHistoryRepository
+import com.illsang.quest.service.quest.CouponService
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -27,6 +26,7 @@ import java.time.ZoneId
 class QuestHistoryService(
     private val userQuestHistoryRepository: QuestHistoryRepository,
     private val eventPublisher: ApplicationEventPublisher,
+    private val couponService: CouponService,
 ) {
 
     @Transactional
@@ -83,6 +83,8 @@ class QuestHistoryService(
                     maxStreak = maxStreakDay
                 )
             )
+
+            issueCouponRealTime(questHistory.userId, questHistory.quest)
         }
     }
 
@@ -167,8 +169,32 @@ class QuestHistoryService(
         return this.userQuestHistoryRepository.findAllUserRankByArea(startDate, endDate, commercialAreaCodes)
     }
 
-    fun findLastCompleteHistoryByUserId(userId: String, questIds: List<Long>): List<UserQuestHistoryEntity>?{
+    fun findLastCompleteHistoryByUserId(userId: String, questIds: List<Long>): List<UserQuestHistoryEntity>? {
         return userQuestHistoryRepository.findFirstByUserIdAndQuestIdOrderByCompletedAtDesc(userId, questIds)
 
+    }
+
+    @Transactional
+    fun issueCouponRealTime(userId: String, quest: QuestEntity) {
+        val reward = quest.rewards
+            .find { it.rewardType == RewardType.COUPON }
+            ?: return  // 쿠폰 리워드 없으면 종료
+
+        val coupon = reward.couponId
+            ?.let { couponService.findById(it) }
+            ?: return  // 쿠폰 ID 없음 → 종료
+
+        val realtimeSetting = coupon.couponSettings
+            .firstOrNull { it.type == CouponType.REALTIME }
+            ?: return  // 실시간 쿠폰 설정이 없으면 종료
+
+        realtimeSetting.increaseIssuedAmount()
+
+        eventPublisher.publishEvent(
+            UserCouponCreateEvent(
+                userId = userId,
+                couponId = coupon.id
+            )
+        )
     }
 }

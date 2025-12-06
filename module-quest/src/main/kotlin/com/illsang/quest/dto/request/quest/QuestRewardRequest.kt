@@ -10,13 +10,15 @@ data class QuestRewardCreateRequest(
     val rewardType: RewardType,
     val pointType: PointType,
     val point: Int,
+    val couponId: Long? = null,
 ) {
     fun toEntity(quest: QuestEntity): QuestRewardEntity {
         return QuestRewardEntity(
             quest = quest,
             rewardType = this.rewardType,
             pointType = this.pointType,
-            point = this.point
+            point = this.point,
+            couponId = this.couponId,
         )
     }
 }
@@ -25,4 +27,5 @@ data class QuestRewardUpdateRequest(
     val rewardType: RewardType,
     val pointType: PointType,
     val point: Int,
+    val couponId: Long? = null,
 )

@@ -2,7 +2,6 @@ package com.illsang.user.service
 
 import com.illsang.common.enums.CouponType
 import com.illsang.common.enums.RankType
-import com.illsang.common.event.management.season.SeasonGetCurrentEvent
 import com.illsang.common.event.management.store.StoreInfoGetEvent
 import com.illsang.common.event.user.coupon.CouponExistOrThrowEvent
 import com.illsang.common.event.user.coupon.CouponInfoGetEvent
@@ -12,7 +11,6 @@ import com.illsang.common.event.user.quest.UserQuestHistoryRankingEvent
 import com.illsang.user.domain.entity.UserCouponEntity
 import com.illsang.user.domain.model.CouponModel
 import com.illsang.user.domain.model.UserCouponModel
-import com.illsang.user.domain.model.UserRankModel
 import com.illsang.user.dto.request.UserCouponCreateRequest
 import com.illsang.user.dto.request.UserCouponUpdateRequest
 import com.illsang.user.repository.UserCouponRepository
@@ -29,8 +27,6 @@ import java.time.ZoneId
 class UserCouponService(
     private val userCouponRepository: UserCouponRepository,
     private val eventPublisher: ApplicationEventPublisher,
-    private val userService: UserService,
-    private val userPointService: UserPointService,
 ) {
     fun getById(id: Long): UserCouponModel {
         val entity = findById(id)
