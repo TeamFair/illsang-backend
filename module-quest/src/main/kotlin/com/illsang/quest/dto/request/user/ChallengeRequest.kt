@@ -6,3 +6,4 @@ data class ChallengeCreateRequest(
     val quizId: Long?,
     val answer: String?,
 )
+

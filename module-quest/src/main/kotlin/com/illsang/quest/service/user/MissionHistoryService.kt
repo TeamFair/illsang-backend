@@ -1,8 +1,10 @@
 package com.illsang.quest.service.user
 
 import com.illsang.auth.domain.model.AuthenticationModel
+import com.illsang.common.enums.ReportType
 import com.illsang.common.enums.ResultCode
 import com.illsang.common.event.management.image.ImageExistOrThrowEvent
+import com.illsang.common.event.management.report.ReportCreateEvent
 import com.illsang.common.event.user.info.UserInfoGetEvent
 import com.illsang.common.event.user.point.UserPointHistoryGetEvent
 import com.illsang.quest.domain.entity.user.UserMissionHistoryEmojiEntity
@@ -11,6 +13,7 @@ import com.illsang.quest.domain.entity.user.UserQuizHistoryEntity
 import com.illsang.quest.domain.model.quset.QuizHistoryModel
 import com.illsang.quest.domain.model.user.ChallengeModel
 import com.illsang.quest.dto.request.user.ChallengeCreateRequest
+import com.illsang.quest.dto.request.user.MissionHistoryReportRequest
 import com.illsang.quest.dto.request.user.MissionHistoryRequest
 import com.illsang.quest.dto.response.user.MissionHistoryDetailResponse
 import com.illsang.quest.dto.response.user.MissionHistoryExampleResponse
@@ -175,9 +178,16 @@ class MissionHistoryService(
     }
 
     @Transactional
-    fun reportMissionHistory(missionHistoryId: Long) {
+    fun reportMissionHistory(missionHistoryId: Long, request: MissionHistoryReportRequest?, userId: String) {
         val missionHistoryEntity = this.findById(missionHistoryId)
-        missionHistoryEntity.report()
+        val event = ReportCreateEvent(
+            targetId = missionHistoryId,
+            type = ReportType.USER_MISSION,
+            reason = request?.reason,
+            userId = userId,
+        )
+        this.eventPublisher.publishEvent(event)
+//        missionHistoryEntity.report()
     }
 
     @Transactional
@@ -216,6 +226,12 @@ class MissionHistoryService(
         val missionHistoryEntity = this.findById(missionHistoryId)
 
         missionHistoryEntity.approve()
+    }
+
+    @Transactional
+    fun reportMissionHistory(missionHistoryId: Long) {
+        val missionHistoryEntity = this.findById(missionHistoryId)
+        missionHistoryEntity.report()
     }
 
     fun findMissionHistoryDetail(missionHistoryId: Long): MissionHistoryDetailResponse {

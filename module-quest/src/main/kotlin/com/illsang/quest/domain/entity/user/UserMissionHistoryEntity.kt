@@ -1,6 +1,7 @@
 package com.illsang.quest.domain.entity.user
 
 import com.illsang.common.entity.BaseEntity
+import com.illsang.common.enums.ReportStatusType
 import com.illsang.quest.domain.entity.quest.MissionEntity
 import com.illsang.quest.enums.EmojiType
 import com.illsang.quest.enums.MissionHistoryStatus
@@ -39,7 +40,7 @@ class UserMissionHistoryEntity(
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    var status: MissionHistoryStatus = MissionHistoryStatus.SUBMITTED,
+    var status: ReportStatusType = ReportStatusType.COMPLETED,
 
     @OneToOne(mappedBy = "missionHistory", fetch = FetchType.LAZY, cascade = [CascadeType.ALL], orphanRemoval = true)
     var quizHistory: UserQuizHistoryEntity? = null,
@@ -73,15 +74,18 @@ class UserMissionHistoryEntity(
     }
 
     fun report() {
-        this.status = MissionHistoryStatus.REPORTED
+        this.status = ReportStatusType.REPORTED
     }
 
     fun reject() {
-        this.status = MissionHistoryStatus.REJECTED
+        this.status = ReportStatusType.INVALIDATED_HARD
     }
 
     fun approve() {
-        this.status = MissionHistoryStatus.APPROVED
+        this.status = ReportStatusType.COMPLETED_CONFIRMED
     }
 
+    fun changeReportStatus(status: ReportStatusType) {
+        this.status = status
+    }
 }

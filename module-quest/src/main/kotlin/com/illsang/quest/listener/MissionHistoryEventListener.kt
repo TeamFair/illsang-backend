@@ -1,5 +1,6 @@
 package com.illsang.quest.listener
 
+import com.illsang.common.event.user.mission.ChangeUserMissionStatusEvent
 import com.illsang.common.event.user.mission.UserMissionImageExistOrThrowEvent
 import com.illsang.quest.service.user.MissionHistoryService
 import org.springframework.context.event.EventListener
@@ -13,5 +14,10 @@ class MissionHistoryEventListener(
     @EventListener
     fun existImageId(event : UserMissionImageExistOrThrowEvent){
         missionHistoryService.existUserMissionImageId(event.imageId)
+    }
+
+    @EventListener
+    fun changeReportStatus(event: ChangeUserMissionStatusEvent){
+        missionHistoryService.reportMissionHistory(event.id)
     }
 }

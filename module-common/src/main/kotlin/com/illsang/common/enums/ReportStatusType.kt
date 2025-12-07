@@ -6,5 +6,8 @@ enum class ReportStatusType {
     COMPLETED_HIDDEN,
     REPORTED,
     INVALIDATED_SOFT,
-    INVALIDATED_HARD
+    INVALIDATED_HARD,
+    APPROVED,
+    SUBMITTED,
+    REJECTED,
 }

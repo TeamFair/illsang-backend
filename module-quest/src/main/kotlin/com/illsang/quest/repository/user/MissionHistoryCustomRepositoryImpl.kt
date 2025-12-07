@@ -1,5 +1,6 @@
 package com.illsang.quest.repository.user
 
+import com.illsang.common.enums.ReportStatusType
 import com.illsang.quest.domain.entity.user.QUserMissionHistoryEntity.Companion.userMissionHistoryEntity
 import com.illsang.quest.domain.entity.user.UserMissionHistoryEntity
 import com.illsang.quest.dto.request.user.MissionHistoryRequest
@@ -23,7 +24,12 @@ class MissionHistoryCustomRepositoryImpl(
         val result = this.queryFactory
             .selectFrom(userMissionHistoryEntity)
             .where(
-                userMissionHistoryEntity.status.`in`(MissionHistoryStatus.APPROVED, MissionHistoryStatus.SUBMITTED),
+                userMissionHistoryEntity.status.`in`(
+                    ReportStatusType.COMPLETED,
+                    ReportStatusType.COMPLETED_CONFIRMED,
+                    ReportStatusType.SUBMITTED,
+                    ReportStatusType.APPROVED
+                ),
                 userMissionHistoryEntity.userId.eq(request.userId),
                 request.missionType?.let { userMissionHistoryEntity.mission.type.eq(it) }
             )
@@ -36,7 +42,12 @@ class MissionHistoryCustomRepositoryImpl(
             .select(userMissionHistoryEntity.count())
             .from(userMissionHistoryEntity)
             .where(
-                userMissionHistoryEntity.status.`in`(MissionHistoryStatus.APPROVED, MissionHistoryStatus.SUBMITTED),
+                userMissionHistoryEntity.status.`in`(
+                    ReportStatusType.COMPLETED,
+                    ReportStatusType.COMPLETED_CONFIRMED,
+                    ReportStatusType.SUBMITTED,
+                    ReportStatusType.APPROVED
+                ),
                 userMissionHistoryEntity.userId.eq(request.userId),
                 request.missionType?.let { userMissionHistoryEntity.mission.type.eq(it) }
             )

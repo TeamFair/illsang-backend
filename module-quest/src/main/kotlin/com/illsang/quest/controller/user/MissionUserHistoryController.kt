@@ -2,6 +2,7 @@ package com.illsang.quest.controller.user
 
 import com.illsang.auth.domain.model.AuthenticationModel
 import com.illsang.quest.dto.request.user.MissionHistoryEmojiCreateRequest
+import com.illsang.quest.dto.request.user.MissionHistoryReportRequest
 import com.illsang.quest.dto.request.user.MissionHistoryRequest
 import com.illsang.quest.dto.response.user.MissionHistoryDetailResponse
 import com.illsang.quest.dto.response.user.MissionHistoryExampleResponse
@@ -100,8 +101,10 @@ class MissionUserHistoryController(
     @Operation(operationId = "MIU006", summary = "신고하기")
     fun reportMissionHistory(
         @PathVariable missionHistoryId: Long,
+        @AuthenticationPrincipal authenticationModel: AuthenticationModel,
+        @RequestBody request: MissionHistoryReportRequest?,
     ): ResponseEntity<Void> {
-        this.missionHistoryService.reportMissionHistory(missionHistoryId)
+        this.missionHistoryService.reportMissionHistory(missionHistoryId, request, authenticationModel.userId)
 
         return ResponseEntity.ok().build()
     }

@@ -13,3 +13,7 @@ data class MissionHistoryRequest (
     val orderRewardDesc: Boolean? = null,
     val orderCreatedAtDesc: Boolean? = true,
 )
+
+data class MissionHistoryReportRequest(
+    val reason: String? = null,
+)

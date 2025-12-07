@@ -3,6 +3,7 @@ package com.illsang.management.service
 import com.illsang.common.enums.ReportStatusType
 import com.illsang.common.enums.ReportType
 import com.illsang.common.event.user.mission.ChangeUserMissionCommentStatusEvent
+import com.illsang.common.event.user.mission.ChangeUserMissionStatusEvent
 import com.illsang.management.dto.request.ReportRequest
 import com.illsang.management.repository.ReportRepository
 import org.springframework.context.ApplicationEventPublisher
@@ -42,7 +43,12 @@ class ReportService(
                     )
                 }
                 ReportType.USER_MISSION -> {
-
+                    eventPublisher.publishEvent(
+                        ChangeUserMissionStatusEvent(
+                            id = reportRequest.targetId,
+                            status = ReportStatusType.REPORTED
+                        )
+                    )
                 }
             }
         }
