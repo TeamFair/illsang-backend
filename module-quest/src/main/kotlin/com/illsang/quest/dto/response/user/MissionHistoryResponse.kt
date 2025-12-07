@@ -19,9 +19,16 @@ data class MissionHistoryRandomResponse(
     val title: String,
     val submitImageId: String?,
     val commercialAreaCode: String,
+    val questType: QuestType,
+    val repeatFrequency: QuestRepeatFrequency?,
+    val writerName: String?,
+    val expireDate: LocalDateTime?,
+    val lastCompleteDate: LocalDateTime?,
     val likeCount: Int,
     val hateCount: Int,
     val viewCount: Int,
+    val shareCount: Int,
+    val commentCount: Int,
     val currentUserEmojis: List<EmojiType>,
     val createdAt: LocalDateTime,
 ) {
@@ -30,6 +37,8 @@ data class MissionHistoryRandomResponse(
             missionHistory: UserMissionHistoryEntity,
             userInfo: UserInfoGetEvent.UserInfo,
             userEmojiHistory: List<UserMissionHistoryEmojiEntity>,
+            commentCount: Int,
+            lastCompleteDate: LocalDateTime?,
         ): MissionHistoryRandomResponse {
             return MissionHistoryRandomResponse(
                 missionHistoryId = missionHistory.id,
@@ -37,10 +46,17 @@ data class MissionHistoryRandomResponse(
                 title = missionHistory.mission.quest.title,
                 submitImageId = missionHistory.submitImageId,
                 commercialAreaCode = missionHistory.mission.quest.commercialAreaCode,
+                questType = missionHistory.mission.quest.type,
+                repeatFrequency = missionHistory.mission.quest.repeatFrequency,
+                writerName = missionHistory.mission.quest.writerName,
+                expireDate = missionHistory.mission.quest.expireDate,
+                lastCompleteDate = lastCompleteDate,
                 currentUserEmojis = userEmojiHistory.filter { it.missionHistory.id == missionHistory.id }.map { it.type },
                 likeCount = missionHistory.likeCount,
                 hateCount = missionHistory.hateCount,
                 viewCount = missionHistory.viewCount,
+                shareCount = missionHistory.shareCount,
+                commentCount = commentCount,
                 createdAt = missionHistory.createdAt!!,
             )
         }
@@ -56,6 +72,8 @@ data class MissionHistoryExampleResponse(
     val likeCount: Int,
     val hateCount: Int,
     val viewCount: Int,
+    val commentCount: Int,
+    val shareCount: Int,
     val currentUserEmojis: List<EmojiType>,
     val createdAt: LocalDateTime,
 ) {
@@ -64,6 +82,7 @@ data class MissionHistoryExampleResponse(
             missionHistory: UserMissionHistoryEntity,
             userInfo: UserInfoGetEvent.UserInfo,
             userEmojiHistory: List<UserMissionHistoryEmojiEntity>,
+            commentCount: Int,
         ): MissionHistoryExampleResponse {
             return MissionHistoryExampleResponse(
                 missionHistoryId = missionHistory.id,
@@ -75,6 +94,8 @@ data class MissionHistoryExampleResponse(
                 likeCount = missionHistory.likeCount,
                 hateCount = missionHistory.hateCount,
                 viewCount = missionHistory.viewCount,
+                commentCount = commentCount,
+                shareCount = missionHistory.shareCount,
                 createdAt = missionHistory.createdAt!!,
             )
         }

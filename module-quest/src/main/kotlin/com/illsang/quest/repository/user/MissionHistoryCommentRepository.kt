@@ -6,4 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 interface MissionHistoryCommentRepository : JpaRepository<UserMissionHistoryCommentEntity, Long> {
 
     fun findAllByMissionHistoryId(userMissionHistoryId: Long): List<UserMissionHistoryCommentEntity>
+
+    fun countByMissionHistoryIdAndDeleteYnFalse(userMissionHistoryId: Long): Long
 }

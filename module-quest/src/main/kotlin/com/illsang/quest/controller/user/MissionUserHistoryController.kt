@@ -95,6 +95,16 @@ class MissionUserHistoryController(
         return ResponseEntity.ok(missionHistories)
     }
 
+    @PostMapping("/{missionHistoryId}/share")
+    @PreAuthorize("hasRole('USER')")
+    @Operation(operationId = "MIU013", summary = "공유수 증가")
+    fun increaseShareCount(
+        @PathVariable missionHistoryId: Long,
+    ): ResponseEntity<Void> {
+        this.missionHistoryService.increaseShareCount(missionHistoryId)
+        return ResponseEntity.ok().build()
+    }
+
     @PutMapping("/{missionHistoryId}")
     @PreAuthorize("hasRole('USER')")
     @Operation(operationId = "MIU006", summary = "신고하기")
