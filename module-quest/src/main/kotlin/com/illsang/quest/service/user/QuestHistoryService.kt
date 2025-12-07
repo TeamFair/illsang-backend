@@ -35,14 +35,13 @@ class QuestHistoryService(
         this.eventPublisher.publishEvent(currentSeasonEvent)
         val currentSeason = currentSeasonEvent.response
 
-        var userQuestHistory = userQuestHistoryRepository.findByUserIdAndQuest(userId, quest)
-        if (userQuestHistory == null || userQuestHistory.isCompleted()) {
-            userQuestHistory = UserQuestHistoryEntity(
+        val userQuestHistory = userQuestHistoryRepository.findByUserIdAndQuestAndStatusNot(userId, quest, QuestHistoryStatus.COMPLETE)
+            ?: UserQuestHistoryEntity(
                 userId = userId,
                 quest = quest,
                 seasonId = currentSeason.seasonId,
             )
-        }
+
 
         return userQuestHistoryRepository.save(userQuestHistory)
     }
