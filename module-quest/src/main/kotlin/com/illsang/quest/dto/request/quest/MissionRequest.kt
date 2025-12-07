@@ -10,6 +10,7 @@ data class MissionCreateRequest(
     val type: MissionType,
     val sortOrder: Int = 0,
     val quizzes: List<QuizCreateWithMissionRequest>? = null,
+    val labels: List<MissionLabelCreateWithMissionRequest>? = null,
 ) {
 
     fun toEntity(quest: QuestEntity): MissionEntity {
@@ -22,6 +23,9 @@ data class MissionCreateRequest(
 
         this.quizzes?.let { quizzes ->
             mission.addQuizzes(quizzes.map { it.toEntity(mission) })
+        }
+        this.labels?.let { labels ->
+            mission.addMissions(labels.map { it.toEntity(mission) })
         }
 
         return mission

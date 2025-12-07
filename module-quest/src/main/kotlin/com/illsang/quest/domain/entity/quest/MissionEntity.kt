@@ -28,6 +28,9 @@ class MissionEntity(
 
     @OneToMany(mappedBy = "mission", cascade = [CascadeType.ALL], orphanRemoval = true)
     val quizzes: MutableList<QuizEntity> = mutableListOf(),
+
+    @OneToMany(mappedBy = "mission", cascade = [CascadeType.ALL], orphanRemoval = true)
+    val labels: MutableList<MissionLabelEntity> = mutableListOf(),
 ) : BaseEntity() {
 
     fun update(request: MissionUpdateRequest) {
@@ -45,6 +48,10 @@ class MissionEntity(
             this.quizzes.removeIf { it.id == quizId }
         } else
             throw IllegalArgumentException("Cannot remove a quiz from the quest. Require at least one quiz.")
+    }
+
+    fun addMissions(labels: List<MissionLabelEntity>) {
+        this.labels.addAll(labels)
     }
 
     private fun canRemoveQuiz(): Boolean =  !requiredQuiz() || this.quizzes.size > 1

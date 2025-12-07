@@ -91,6 +91,7 @@ subprojects {
 
 		// AWS
 		implementation("software.amazon.awssdk:s3:2.32.2")
+        implementation("software.amazon.awssdk:rekognition:2.32.2")
 		implementation("io.awspring.cloud:spring-cloud-aws-starter-parameter-store:3.4.0")
 
 		// QueryDSL
