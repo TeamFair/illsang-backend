@@ -44,7 +44,7 @@ class RekognitionService(
 
     fun detectModerationLabels(
         sourceImage: String,
-        minConfidence: Float = 0.0f,
+        minConfidence: Float = 50.0f,
     ): List<Pair<String, Float>> {
         val s3Object = S3Object.builder()
             .bucket(bucketName)
