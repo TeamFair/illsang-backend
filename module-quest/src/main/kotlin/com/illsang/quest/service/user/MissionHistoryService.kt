@@ -5,6 +5,7 @@ import com.illsang.common.enums.ResultCode
 import com.illsang.common.event.management.image.ImageExistOrThrowEvent
 import com.illsang.common.event.user.info.UserInfoGetEvent
 import com.illsang.common.event.user.point.UserPointHistoryGetEvent
+import com.illsang.common.util.logger
 import com.illsang.quest.domain.entity.user.UserMissionHistoryEmojiEntity
 import com.illsang.quest.domain.entity.user.UserMissionHistoryEntity
 import com.illsang.quest.domain.entity.user.UserQuizHistoryEntity
@@ -12,15 +13,13 @@ import com.illsang.quest.domain.model.quset.QuizHistoryModel
 import com.illsang.quest.domain.model.user.ChallengeModel
 import com.illsang.quest.dto.request.user.ChallengeCreateRequest
 import com.illsang.quest.dto.request.user.MissionHistoryRequest
-import com.illsang.quest.dto.response.user.MissionHistoryDetailResponse
-import com.illsang.quest.dto.response.user.MissionHistoryExampleResponse
-import com.illsang.quest.dto.response.user.MissionHistoryOwnerResponse
-import com.illsang.quest.dto.response.user.MissionHistoryRandomResponse
-import com.illsang.quest.dto.response.user.MissionHistoryReportedResponse
+import com.illsang.quest.dto.response.user.*
 import com.illsang.quest.enums.EmojiType
+import com.illsang.quest.enums.MissionLabelType
 import com.illsang.quest.enums.MissionType
 import com.illsang.quest.repository.user.MissionHistoryEmojiRepository
 import com.illsang.quest.repository.user.MissionHistoryRepository
+import com.illsang.quest.service.aws.RekognitionService
 import com.illsang.quest.service.quest.MissionService
 import com.illsang.quest.service.quest.QuizService
 import org.springframework.context.ApplicationEventPublisher
@@ -29,6 +28,7 @@ import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import kotlin.math.log
 
 @Service
 @Transactional(readOnly = true)
@@ -36,6 +36,7 @@ class MissionHistoryService(
     private val quizService: QuizService,
     private val missionService: MissionService,
     private val questHistoryService: QuestHistoryService,
+    private val rekognitionService: RekognitionService,
     private val missionHistoryRepository: MissionHistoryRepository,
     private val missionHistoryEmojiRepository: MissionHistoryEmojiRepository,
     private val eventPublisher: ApplicationEventPublisher,
@@ -64,6 +65,27 @@ class MissionHistoryService(
             null
         }
 
+        if(mission.type == MissionType.PHOTO) {
+            val detectModerationLabels = this.rekognitionService.detectModerationLabels(request.imageId!!)
+            logger.info("Detected Moderation Label : Request $request, Result $detectModerationLabels")
+            if (detectModerationLabels.isNotEmpty()) {
+                throw IllegalArgumentException("Detected Moderation Label Exception : Request $request, Result $detectModerationLabels")
+            }
+
+            val includeLabels = mission.labels
+                .filter { it.type == MissionLabelType.VERIFICATION_TARGET_FOR_AMAZON }
+                .map { it.label }
+                .toSet().toList()
+            if (includeLabels.isNotEmpty()) {
+                val detectLabels =
+                    this.rekognitionService.detectLabels(sourceImage = request.imageId, includeLabels = includeLabels)
+                logger.info("Detected Label Exception : Request $request, Result $detectLabels")
+                if (!includeLabels.all { detectLabels.any { detectLabel -> detectLabel.first == it } }) {
+                    throw IllegalArgumentException("Detected Label Exception : Request $request, Result $detectLabels")
+                }
+            }
+        }
+
         val questHistory = this.questHistoryService.findOrCreate(authenticationModel.userId, mission.quest)
         val missionHistory = UserMissionHistoryEntity(
             userId = authenticationModel.userId,
@@ -87,7 +109,7 @@ class MissionHistoryService(
 
         this.questHistoryService.complete(questHistory)
 
-        return Pair(ResultCode.SUCCESS, ChallengeModel.from(questHistory))
+        return Pair(ResultCode.SUCCESS, null)
     }
 
     fun findLikeCountByMissionId(missionId: Long) =
