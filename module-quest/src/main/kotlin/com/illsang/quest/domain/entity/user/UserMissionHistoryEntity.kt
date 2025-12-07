@@ -38,6 +38,9 @@ class UserMissionHistoryEntity(
     @Column(name = "view_count")
     var viewCount: Int = 0,
 
+    @Column(name = "share_count")
+    var shareCount: Int = 0,
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     var status: ReportStatusType = ReportStatusType.COMPLETED,
@@ -59,6 +62,10 @@ class UserMissionHistoryEntity(
 
     fun increaseViewCount() {
         this.viewCount++
+    }
+
+    fun increaseShareCount() {
+        this.shareCount++
     }
 
     fun addEmoji(emojiEntity: UserMissionHistoryEmojiEntity) {

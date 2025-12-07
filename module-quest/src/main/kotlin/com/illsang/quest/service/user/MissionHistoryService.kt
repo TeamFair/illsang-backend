@@ -23,6 +23,7 @@ import com.illsang.quest.dto.response.user.MissionHistoryReportedResponse
 import com.illsang.quest.enums.EmojiType
 import com.illsang.quest.enums.MissionType
 import com.illsang.quest.repository.user.MissionHistoryEmojiRepository
+import com.illsang.quest.repository.user.MissionHistoryCommentRepository
 import com.illsang.quest.repository.user.MissionHistoryRepository
 import com.illsang.quest.service.quest.MissionService
 import com.illsang.quest.service.quest.QuizService
@@ -41,6 +42,7 @@ class MissionHistoryService(
     private val questHistoryService: QuestHistoryService,
     private val missionHistoryRepository: MissionHistoryRepository,
     private val missionHistoryEmojiRepository: MissionHistoryEmojiRepository,
+    private val missionHistoryCommentRepository: MissionHistoryCommentRepository,
     private val eventPublisher: ApplicationEventPublisher,
 ) {
 
@@ -105,11 +107,22 @@ class MissionHistoryService(
         val userEmojiHistory =
             this.missionHistoryEmojiRepository.findByUserIdAndMissionHistoryIn(userId, missionHistory.content)
 
+        val questIds = missionHistory.content.mapNotNull { it.mission.quest.id }
+        val lastCompleted = this.questHistoryService.findLastCompleteHistoryByUserId(userId, questIds)
+        val lastCompletedMap = lastCompleted
+            ?.associateBy({ it.quest.id!! }, { it.completedAt })
+            ?: emptyMap()
+
         return missionHistory.map {
+            val commentCount = this.missionHistoryCommentRepository
+                .countByMissionHistoryIdAndDeleteYnFalse(it.id!!).toInt()
+
             MissionHistoryRandomResponse.from(
                 missionHistory = it,
                 userInfo = usersEvent.response.find { user -> it.userId == user.userId }!!,
                 userEmojiHistory = userEmojiHistory,
+                commentCount = commentCount,
+                lastCompleteDate = lastCompletedMap[it.mission.quest.id!!],
             )
         }
     }
@@ -129,10 +142,14 @@ class MissionHistoryService(
             this.missionHistoryEmojiRepository.findByUserIdAndMissionHistoryIn(userId, missionHistory.content)
 
         return missionHistory.map {
+            val commentCount = this.missionHistoryCommentRepository
+                .countByMissionHistoryIdAndDeleteYnFalse(it.id!!).toInt()
+
             MissionHistoryExampleResponse.from(
                 missionHistory = it,
                 userInfo = usersEvent.response.find { user -> it.userId == user.userId }!!,
                 userEmojiHistory = userEmojiHistory,
+                commentCount = commentCount,
             )
         }
     }
@@ -143,6 +160,12 @@ class MissionHistoryService(
         if (missionHistoryEntity.createdBy != userId) {
             missionHistoryEntity.increaseViewCount()
         }
+    }
+
+    @Transactional
+    fun increaseShareCount(missionHistoryId: Long) {
+        val missionHistoryEntity = this.findById(missionHistoryId)
+        missionHistoryEntity.increaseShareCount()
     }
 
     @Transactional
