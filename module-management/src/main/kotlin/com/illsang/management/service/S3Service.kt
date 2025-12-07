@@ -1,6 +1,8 @@
 package com.illsang.management.service
 
+import com.illsang.management.service.storage.StorageService
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.context.annotation.Profile
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
 import software.amazon.awssdk.core.ResponseBytes
@@ -14,14 +16,15 @@ import software.amazon.awssdk.services.s3.model.PutObjectRequest
 import java.io.IOException
 
 @Service
-class S3Service(
+@Profile("!local")
+class S3StorageService(
     private val s3Client: S3Client
-) {
+) : StorageService {
 
     @Value("\${cloud.bucket.name}")
     private val bucketName: String? = null
 
-    fun uploadImage(fileName: String, file: MultipartFile) {
+    override fun uploadImage(fileName: String, file: MultipartFile) {
         val putObjectRequest = PutObjectRequest.builder()
             .bucket(bucketName)
             .key(fileName)
@@ -31,7 +34,7 @@ class S3Service(
         s3Client.putObject(putObjectRequest, fromBytes(file.bytes))
     }
 
-    fun downloadImage(fileName: String): ByteArray {
+    override fun downloadImage(fileName: String): ByteArray {
         val getObjectRequest = GetObjectRequest.builder()
             .bucket(bucketName)
             .key(fileName)
@@ -41,7 +44,7 @@ class S3Service(
         return responseBytes.asByteArray()
     }
 
-    fun deleteImage(fileName: String) {
+    override fun deleteImage(fileName: String) {
         val deleteObjectRequest = DeleteObjectRequest.builder()
             .bucket(bucketName)
             .key(fileName)
@@ -50,7 +53,7 @@ class S3Service(
         s3Client.deleteObject(deleteObjectRequest)
     }
 
-    fun exist(fileName: String): Boolean {
+    override fun exist(fileName: String): Boolean {
         val getObjectRequest = GetObjectRequest.builder()
             .bucket(bucketName)
             .key(fileName)
@@ -58,9 +61,9 @@ class S3Service(
 
         return try {
             s3Client.getObject(getObjectRequest)
-            true // If the object is found, return true
+            true
         } catch (e: NoSuchKeyException) {
-            false // If the object is not found, return false
+            false
         } catch (e: SdkException) {
             e.printStackTrace()
             throw IOException("Error checking existence of file in S3: $fileName")

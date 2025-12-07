@@ -1,1 +1,9 @@
+ 
+spring:
+  profiles:
+    default: local
+  application:
+    name: module-common
 
+server:
+  port: 8085

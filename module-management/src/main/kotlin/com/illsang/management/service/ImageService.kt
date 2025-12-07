@@ -10,6 +10,7 @@ import com.illsang.management.domain.model.ImageModel
 import com.illsang.management.dto.request.ImageCreateRequest
 import com.illsang.management.enums.ImageType
 import com.illsang.management.repository.ImageRepository
+import com.illsang.management.service.storage.StorageService
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
@@ -22,7 +23,7 @@ import kotlin.random.Random
 @Transactional(readOnly = true)
 class ImageService(
     private val imageRepository: ImageRepository,
-    private val s3Service: S3Service,
+    private val storageService: StorageService,
     private val eventPublisher: ApplicationEventPublisher,
 ) {
 
@@ -33,7 +34,7 @@ class ImageService(
         val image = request.toEntity(fileName)
         this.imageRepository.save(image)
 
-        this.s3Service.uploadImage(
+        this.storageService.uploadImage(
             fileName = fileName,
             file=request.file,
         )
@@ -46,7 +47,7 @@ class ImageService(
     }
 
     fun downloadImage(fileName: String): ByteArray {
-        return this.s3Service.downloadImage(fileName)
+        return this.storageService.downloadImage(fileName)
     }
 
     @Transactional
@@ -60,7 +61,7 @@ class ImageService(
         this.eventPublisher.publishEvent(QuestImageExistOrThrowEvent(id))
 
         this.imageRepository.delete(image)
-        this.s3Service.deleteImage(id)
+        this.storageService.deleteImage(id)
     }
 
     fun existOrThrowImage(imageId: String) {

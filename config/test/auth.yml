@@ -1,0 +1,17 @@
+oauth:
+  token:
+    timeout:
+      access-token: 1
+      refresh-token: 24
+  client:
+    google:
+      web: "test-google-web-client-id"
+      ios: "test-google-ios-client-id"
+      aos: "test-google-aos-client-id"
+    apple:
+      ios: "test-apple-ios-client-id"
+      aos: "test-apple-aos-client-id"
+
+jwt:
+  token: "dGhpcy1pcy10ZXN0LWp3dC1rZXktbG9uZy1lbm91Z2gtZm9yLWhzMzg0"
+

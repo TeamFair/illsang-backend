@@ -1,0 +1,18 @@
+spring:
+  cloud:
+    aws:
+      # Disable AWS Parameter Store for local runs
+      parameterstore:
+        enabled: false
+      # Set a static region to avoid SDK region resolution errors when any AWS client is touched
+      region:
+        static: ap-northeast-2
+      # Use default credential chain; for local, typically your ~/.aws/credentials or env vars
+      credentials:
+        profile-name: default
+
+# Local default bucket name for services that reference it (e.g., management)
+cloud:
+  bucket:
+    name: illsang-image-bucket
+

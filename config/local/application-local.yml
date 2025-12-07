@@ -1,0 +1,9 @@
+spring:
+  config:
+    import:
+      - postgresql.yml
+      - jpa.yml
+      - redis.yml
+      - auth.yml
+      - aws.yml
+

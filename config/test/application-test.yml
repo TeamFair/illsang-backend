@@ -1,0 +1,9 @@
+spring:
+  config:
+    import:
+      - h2.yml
+      - jpa.yml
+      - redis.yml
+      - auth.yml
+      - aws.yml
+
