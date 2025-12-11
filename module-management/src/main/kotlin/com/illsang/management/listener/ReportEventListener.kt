@@ -20,7 +20,9 @@ class ReportEventListener(
             targetId = event.targetId,
             userId = event.userId,
         )
-        this.reportService.createReport(request)
+        val reportResponse = this.reportService.createReport(request)
+        event.resultCode = reportResponse
+
     }
 
     @EventListener

@@ -1,6 +1,7 @@
 package com.illsang.quest.dto.response.user
 
 import com.illsang.common.enums.ReportStatusType
+import com.illsang.common.enums.ResultCode
 import com.illsang.common.event.user.info.UserInfoGetEvent
 import com.illsang.common.event.user.info.UserInfoGetEvent.UserTitleInfo
 import com.illsang.quest.domain.entity.user.UserMissionHistoryCommentEntity
@@ -55,3 +56,7 @@ data class WriterResponse(
         }
     }
 }
+
+data class ReportCommentResponse(
+    val resultCode: String,
+)

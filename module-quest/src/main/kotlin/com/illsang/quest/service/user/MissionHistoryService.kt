@@ -223,8 +223,7 @@ class MissionHistoryService(
     }
 
     @Transactional
-    fun reportMissionHistory(missionHistoryId: Long, request: MissionHistoryReportRequest?, userId: String) {
-        val missionHistoryEntity = this.findById(missionHistoryId)
+    fun reportMissionHistory(missionHistoryId: Long, request: MissionHistoryReportRequest?, userId: String) : MissionHistoryReportResponse {
         val event = ReportCreateEvent(
             targetId = missionHistoryId,
             type = ReportType.USER_MISSION,
@@ -232,7 +231,9 @@ class MissionHistoryService(
             userId = userId,
         )
         this.eventPublisher.publishEvent(event)
-//        missionHistoryEntity.report()
+        return MissionHistoryReportResponse(
+            event.resultCode.code,
+        )
     }
 
     @Transactional

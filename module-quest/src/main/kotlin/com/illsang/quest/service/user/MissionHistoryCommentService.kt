@@ -2,6 +2,7 @@ package com.illsang.quest.service.user
 
 import com.illsang.common.enums.ReportStatusType
 import com.illsang.common.enums.ReportType
+import com.illsang.common.enums.ResultCode
 import com.illsang.common.event.management.report.ReportCreateEvent
 import com.illsang.common.event.management.report.ReportExistEvent
 import com.illsang.common.event.user.info.UserInfoGetEvent
@@ -10,6 +11,7 @@ import com.illsang.quest.dto.request.user.MissionHistoryCommentRequest
 import com.illsang.quest.dto.request.user.MissionHistoryCommentUpdateRequest
 import com.illsang.quest.dto.request.user.ReportMissionHistoryCommentRequest
 import com.illsang.quest.dto.response.user.MissionHistoryCommentResponse
+import com.illsang.quest.dto.response.user.ReportCommentResponse
 import com.illsang.quest.repository.user.MissionHistoryCommentRepository
 import org.springframework.context.ApplicationEventPublisher
 import org.springframework.data.repository.findByIdOrNull
@@ -79,7 +81,7 @@ class MissionHistoryCommentService(
     }
 
     @Transactional
-    fun reportComment(request: ReportMissionHistoryCommentRequest, userId: String, commentId: Long) {
+    fun reportComment(request: ReportMissionHistoryCommentRequest, userId: String, commentId: Long): ReportCommentResponse {
         val comment = this.findById(commentId)
         val event = ReportCreateEvent(
             targetId = commentId,
@@ -88,7 +90,10 @@ class MissionHistoryCommentService(
             userId = userId,
         )
         this.eventPublisher.publishEvent(event)
-        comment.increaseReportedCount()
+        if(event.resultCode == ResultCode.SUCCESS){
+            comment.increaseReportedCount()
+        }
+        return ReportCommentResponse(event.resultCode.code)
     }
 
     @Transactional

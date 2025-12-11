@@ -5,6 +5,7 @@ import com.illsang.quest.dto.request.user.MissionHistoryCommentRequest
 import com.illsang.quest.dto.request.user.MissionHistoryCommentUpdateRequest
 import com.illsang.quest.dto.request.user.ReportMissionHistoryCommentRequest
 import com.illsang.quest.dto.response.user.MissionHistoryCommentResponse
+import com.illsang.quest.dto.response.user.ReportCommentResponse
 import com.illsang.quest.service.user.MissionHistoryCommentService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -84,8 +85,8 @@ class MissionUserHistoryCommentController(
         @PathVariable commentId: Long,
         @AuthenticationPrincipal authenticationModel: AuthenticationModel,
         @RequestBody request: ReportMissionHistoryCommentRequest,
-    ): ResponseEntity<Void> {
-        this.missionHistoryCommentService.reportComment(request, authenticationModel.userId, commentId)
-        return ResponseEntity.ok().build()
+    ): ResponseEntity<ReportCommentResponse> {
+        val reportResult = this.missionHistoryCommentService.reportComment(request, authenticationModel.userId, commentId)
+        return ResponseEntity.ok(reportResult)
     }
 }

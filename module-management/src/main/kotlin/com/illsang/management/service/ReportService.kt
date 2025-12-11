@@ -2,6 +2,7 @@ package com.illsang.management.service
 
 import com.illsang.common.enums.ReportStatusType
 import com.illsang.common.enums.ReportType
+import com.illsang.common.enums.ResultCode
 import com.illsang.common.event.user.mission.ChangeUserMissionCommentStatusEvent
 import com.illsang.common.event.user.mission.ChangeUserMissionStatusEvent
 import com.illsang.management.dto.request.ReportRequest
@@ -18,11 +19,11 @@ class ReportService(
 ) {
 
     @Transactional
-    fun createReport(reportRequest: ReportRequest) {
+    fun createReport(reportRequest: ReportRequest): ResultCode {
         val existingReport = this.checkExistReport(reportRequest.targetId, reportRequest.type, reportRequest.userId)
 
         if (existingReport) {
-            throw IllegalArgumentException("이미 신고한 내역이 존재합니다.")
+            return ResultCode.REPORT_DUPLICATE
         }
 
         reportRepository.save(reportRequest.toEntity())
@@ -52,6 +53,7 @@ class ReportService(
                 }
             }
         }
+        return ResultCode.SUCCESS
     }
 
     fun checkExistReport(targetId: Long, type: ReportType, userId: String): Boolean {

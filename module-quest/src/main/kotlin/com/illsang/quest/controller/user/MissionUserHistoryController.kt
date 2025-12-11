@@ -8,6 +8,7 @@ import com.illsang.quest.dto.response.user.MissionHistoryDetailResponse
 import com.illsang.quest.dto.response.user.MissionHistoryExampleResponse
 import com.illsang.quest.dto.response.user.MissionHistoryOwnerResponse
 import com.illsang.quest.dto.response.user.MissionHistoryRandomResponse
+import com.illsang.quest.dto.response.user.MissionHistoryReportResponse
 import com.illsang.quest.dto.response.user.MissionHistoryReportedResponse
 import com.illsang.quest.enums.EmojiType
 import com.illsang.quest.enums.MissionType
@@ -113,10 +114,10 @@ class MissionUserHistoryController(
         @PathVariable missionHistoryId: Long,
         @AuthenticationPrincipal authenticationModel: AuthenticationModel,
         @RequestBody request: MissionHistoryReportRequest?,
-    ): ResponseEntity<Void> {
-        this.missionHistoryService.reportMissionHistory(missionHistoryId, request, authenticationModel.userId)
+    ): ResponseEntity<MissionHistoryReportResponse> {
 
-        return ResponseEntity.ok().build()
+        val reportMissionHistory = this.missionHistoryService.reportMissionHistory(missionHistoryId, request, authenticationModel.userId)
+        return ResponseEntity.ok(reportMissionHistory)
     }
 
     @DeleteMapping("/{missionHistoryId}")
