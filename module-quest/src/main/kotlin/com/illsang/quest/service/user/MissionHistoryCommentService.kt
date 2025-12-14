@@ -117,4 +117,8 @@ class MissionHistoryCommentService(
         eventPublisher.publishEvent(event)
         return event.response
     }
+
+    fun findAllById(id: Long): UserMissionHistoryCommentEntity{
+        return this.findById(id)
+    }
 }

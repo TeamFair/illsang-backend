@@ -19,3 +19,19 @@ data class ReportRequest(
         )
     }
 }
+
+data class ReportSearchRequest(
+    val type: ReportType? = null,
+    val userId: String? = null,
+)
+
+data class ReportUpdateRequest(
+    val status: ReportStatusType,
+    val targetId: Long,
+    val type: ReportType,
+)
+
+data class ReportDetailRequest(
+    val targetId: Long,
+    val type: ReportType,
+)

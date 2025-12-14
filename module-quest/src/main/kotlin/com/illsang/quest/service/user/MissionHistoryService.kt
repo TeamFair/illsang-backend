@@ -1,6 +1,7 @@
 package com.illsang.quest.service.user
 
 import com.illsang.auth.domain.model.AuthenticationModel
+import com.illsang.common.enums.ReportStatusType
 import com.illsang.common.enums.ReportType
 import com.illsang.common.enums.ResultCode
 import com.illsang.common.event.management.image.ImageExistOrThrowEvent
@@ -275,9 +276,9 @@ class MissionHistoryService(
     }
 
     @Transactional
-    fun reportMissionHistory(missionHistoryId: Long) {
+    fun changeReportStatus(missionHistoryId: Long, status: ReportStatusType) {
         val missionHistoryEntity = this.findById(missionHistoryId)
-        missionHistoryEntity.report()
+        missionHistoryEntity.changeReportStatus(status)
     }
 
     fun findMissionHistoryDetail(missionHistoryId: Long): MissionHistoryDetailResponse {
