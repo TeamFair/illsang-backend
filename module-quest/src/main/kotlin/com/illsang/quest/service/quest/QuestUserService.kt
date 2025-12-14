@@ -2,6 +2,7 @@ package com.illsang.quest.service.quest
 
 import com.illsang.common.event.management.store.StoreInfoGetEvent
 import com.illsang.common.event.user.info.UserInfoGetEvent
+import com.illsang.quest.domain.model.quset.CouponModel
 import com.illsang.quest.dto.request.quest.QuestUserBannerRequest
 import com.illsang.quest.dto.request.quest.QuestUserRequest
 import com.illsang.quest.dto.request.quest.QuestUserTypeRequest
@@ -9,6 +10,7 @@ import com.illsang.quest.dto.response.quest.CouponRewardResponse
 import com.illsang.quest.dto.response.user.*
 import com.illsang.quest.enums.MissionType
 import com.illsang.quest.enums.QuestType
+import com.illsang.quest.enums.RewardType
 import com.illsang.quest.repository.quest.QuestRepository
 import com.illsang.quest.service.user.MissionHistoryService
 import com.illsang.quest.service.user.QuestHistoryService
@@ -156,7 +158,12 @@ class QuestUserService(
         this.eventPublisher.publishEvent(storeEvent)
         val store = storeEvent.response
 
-        val coupons = couponService.listByStore(quest.storeId)
+        val rewards = quest.rewards
+            .filter { it.rewardType == RewardType.COUPON }
+
+        val coupons = rewards.mapNotNull { reward ->
+            reward.couponId?.let { CouponModel.from(couponService.findById(it)) }
+        }
 
         return QuestUserDetailResponse.from(
             quest = quest,
