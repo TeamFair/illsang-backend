@@ -9,6 +9,7 @@ import com.illsang.quest.dto.response.quest.CouponRewardResponse
 import com.illsang.quest.enums.MissionType
 import com.illsang.quest.enums.QuestRepeatFrequency
 import com.illsang.quest.enums.QuestType
+import com.illsang.quest.enums.RewardType
 import java.time.LocalDateTime
 
 data class QuestUserDetailResponse(
@@ -46,7 +47,7 @@ data class QuestUserDetailResponse(
                 expireDate = quest.expireDate,
                 favoriteYn = favoriteYn,
                 userRank = userRank,
-                rewards = quest.rewards.map { QuestUserReward.from(it) },
+                rewards = quest.rewards.filter { it.rewardType == RewardType.POINT }.map { QuestUserReward.from(it) },
                 missions = quest.missions.map {
                     MissionUserDetailResponse.from(
                         mission = it,
