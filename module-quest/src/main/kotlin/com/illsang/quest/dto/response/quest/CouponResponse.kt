@@ -1,5 +1,6 @@
 package com.illsang.quest.dto.response.quest
 
+import com.illsang.common.enums.CouponType
 import com.illsang.quest.domain.model.quset.CouponModel
 import java.time.LocalDateTime
 
@@ -30,6 +31,7 @@ data class CouponResponse(
 data class CouponRewardResponse(
     val id: Long,
     val name: String,
+    val type: CouponType?,
     val imageId: String?,
     val validTo: LocalDateTime?,
     val storeName: String?,
@@ -42,7 +44,8 @@ data class CouponRewardResponse(
             imageId = model.imageId,
             validTo = model.validTo,
             storeName = storeName,
-            description = model.description
+            description = model.description,
+            type = model.type,
         )
     }
 }

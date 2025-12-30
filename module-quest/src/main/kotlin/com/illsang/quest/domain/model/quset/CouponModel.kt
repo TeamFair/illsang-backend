@@ -1,6 +1,7 @@
 package com.illsang.quest.domain.model.quset
 
 import com.illsang.common.domain.model.BaseModel
+import com.illsang.common.enums.CouponType
 import com.illsang.quest.domain.entity.quest.CouponEntity
 import java.time.LocalDateTime
 
@@ -14,6 +15,7 @@ data class CouponModel(
     val storeId: Long? = null,
     val description: String?,
     val deleteYn: Boolean,
+    val type: CouponType? = null,
     override val createdBy: String?,
     override val createdAt: LocalDateTime?,
     override val updatedBy: String?,
@@ -34,6 +36,7 @@ data class CouponModel(
             createdAt = entity.createdAt,
             updatedBy = entity.updatedBy,
             updatedAt = entity.updatedAt,
+            type = entity.couponSettings.firstOrNull { it.type == CouponType.REALTIME || it.type == CouponType.WEEK }?.type
         )
     }
 }
