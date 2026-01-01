@@ -1,5 +1,6 @@
 package com.illsang.quest.service.quest
 
+import com.illsang.common.event.management.area.CommercialAreaByMetroAreaGetEvent
 import com.illsang.common.event.management.area.CommercialAreaExistOrThrowEvent
 import com.illsang.common.event.management.banner.BannerExistOrThrowEvent
 import com.illsang.common.event.management.image.ImageExistOrThrowEvent
@@ -8,9 +9,12 @@ import com.illsang.quest.domain.entity.quest.QuestEntity
 import com.illsang.quest.domain.model.quset.QuestDetailModel
 import com.illsang.quest.domain.model.quset.QuestModel
 import com.illsang.quest.dto.request.quest.QuestCreateRequest
+import com.illsang.quest.dto.request.quest.QuestGetListRequest
 import com.illsang.quest.dto.request.quest.QuestUpdateRequest
 import com.illsang.quest.repository.quest.QuestRepository
 import org.springframework.context.ApplicationEventPublisher
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -81,8 +85,14 @@ class QuestService(
         return QuestDetailModel.from(quest)
     }
 
-    fun getAllQuest(): List<QuestModel> {
-        val quests = this.questRepository.findAll()
+    fun getAllQuest(request: QuestGetListRequest, pageable: Pageable): Page<QuestModel> {
+        request.metroAreaCode?.let {
+            val event = CommercialAreaByMetroAreaGetEvent(request.metroAreaCode)
+            this.eventPublisher.publishEvent(event)
+            request.appendCommercialAreaCodes(event.response.map { it.code })
+        }
+
+        val quests = this.questRepository.findByRequest(request, pageable)
 
         return quests.map { QuestModel.from(it) }
     }

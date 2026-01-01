@@ -1,6 +1,8 @@
 package com.illsang.quest.dto.request.quest
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import com.illsang.quest.domain.entity.quest.QuestEntity
+import com.illsang.quest.enums.MissionType
 import com.illsang.quest.enums.QuestRepeatFrequency
 import com.illsang.quest.enums.QuestType
 import java.time.LocalDateTime
@@ -53,3 +55,29 @@ data class QuestUpdateRequest(
     val useYn: Boolean,
     val storeId: Long? = null,
 )
+
+data class QuestGetListRequest(
+    val type: QuestType? = null,
+    val missionType: MissionType? = null,
+    val repeatFrequency: QuestRepeatFrequency? = null,
+    val commercialAreaCode: String? = null,
+    val metroAreaCode: String? = null,
+) {
+    @JsonIgnore
+    var commercialAreaCodes: MutableList<String>? = null
+
+    init {
+        commercialAreaCode?.let {
+            commercialAreaCodes = mutableListOf(it)
+        }
+    }
+
+    fun appendCommercialAreaCodes(commercialAreaCodes: List<String>) {
+        val currentCodes = this.commercialAreaCodes
+        if (currentCodes != null) {
+            this.commercialAreaCodes = commercialAreaCodes.intersect(currentCodes.toSet()).toMutableList()
+        } else {
+            this.commercialAreaCodes = commercialAreaCodes.toMutableList()
+        }
+    }
+}
