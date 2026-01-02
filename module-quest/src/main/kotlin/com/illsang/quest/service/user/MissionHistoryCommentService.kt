@@ -35,7 +35,13 @@ class MissionHistoryCommentService(
                 val isReported = checkReportSync(comment.id!!, userId)
 
                 MissionHistoryCommentResponse.from(
-                    userInfo = userInfo,
+                    userInfo = userInfo ?: UserInfoGetEvent.UserInfo(
+                        userId = comment.writerId,
+                        nickname = "삭제된 회원 입니다.",
+                        profileImageId = null,
+                        title = null,
+                        commercialAreaCode = null,
+                    ),
                     userMissionHistoryCommentEntity = comment,
                     hasReportedYn = isReported
                 )
@@ -106,10 +112,10 @@ class MissionHistoryCommentService(
         this.missionHistoryCommentRepository.findByIdOrNull(id)
             ?: throw IllegalArgumentException("comment id not found")
 
-    private fun getUserInfoSync(userId: String): UserInfoGetEvent.UserInfo {
+    private fun getUserInfoSync(userId: String): UserInfoGetEvent.UserInfo? {
         val event = UserInfoGetEvent(listOf(userId))
         eventPublisher.publishEvent(event)
-        return event.response.first { it.userId == userId }
+        return event.response.firstOrNull { it.userId == userId }
     }
 
     private fun checkReportSync(targetId: Long, userId: String): Boolean {
