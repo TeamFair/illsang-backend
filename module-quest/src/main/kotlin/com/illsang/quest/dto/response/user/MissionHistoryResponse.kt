@@ -207,3 +207,7 @@ data class MissionHistoryDetailResponse(
         }
     }
 }
+
+data class MissionHistoryReportResponse(
+    val resultCode: String,
+)
