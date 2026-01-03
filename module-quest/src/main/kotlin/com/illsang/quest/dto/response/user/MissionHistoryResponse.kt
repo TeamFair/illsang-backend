@@ -15,6 +15,7 @@ import java.time.LocalDateTime
 
 data class MissionHistoryRandomResponse(
     val missionHistoryId: Long?,
+    val questId: Long?,
     val user: UserResponse,
     val title: String,
     val submitImageId: String?,
@@ -42,6 +43,7 @@ data class MissionHistoryRandomResponse(
         ): MissionHistoryRandomResponse {
             return MissionHistoryRandomResponse(
                 missionHistoryId = missionHistory.id,
+                questId = missionHistory.mission.quest.id,
                 user = UserResponse.from(userInfo),
                 title = missionHistory.mission.quest.title,
                 submitImageId = missionHistory.submitImageId,
@@ -205,7 +207,3 @@ data class MissionHistoryDetailResponse(
         }
     }
 }
-
-data class MissionHistoryReportResponse(
-    val resultCode: String,
-)
